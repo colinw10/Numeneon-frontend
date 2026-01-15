@@ -1,18 +1,18 @@
 /**
- * Groups posts by USER ONLY for Timeline River layout
- * All posts from the same user go into ONE row (carousel navigates between them)
- * Posts are capped at MAX_POSTS_PER_TYPE for carousel performance
- * @param {Array} posts - Flat array of posts
- * @param {Object} options - Configuration options
- * @param {number} options.maxPostsPerType - Max posts per type (default: 12)
- * @returns {Object} Structure: { orderId: { user, thoughts[], media[], milestones[], mostRecentDate } }
+ * groupPosts.js - Post Grouping Utility for Timeline River Feed
+ *
+ * USED BY: TimelineRiverFeed.jsx (Home page component)
+ * TRIGGERED BY: User navigating to Home page → PostsContext fetches posts → this groups them
+ *
+ * BACKEND CONNECTION:
+ * - PostsContext calls postsService.js → GET /api/posts/
+ * - Backend returns flat array of posts with author objects {id, username, first_name, last_name}
+ * - This utility transforms that flat array into user-grouped buckets for the 3-column river layout
+ *
+ * DATA FLOW: Backend → PostsContext → TimelineRiverFeed → groupPostsByUserAndDay() → TimelineRiverRow
  */
 
-// Maximum posts per type in carousel (prevents excessive clicking)
-const MAX_POSTS_PER_TYPE = 12;
-
-export const groupPostsByUserAndDay = (posts, options = {}) => {
-  const maxPosts = options.maxPostsPerType ?? MAX_POSTS_PER_TYPE;
+export const groupPostsByUserAndDay = (posts) => {
   const grouped = {}; // 🔵 Keyed by userId only (not date!)
 
   posts.forEach((post) => {
@@ -60,7 +60,6 @@ export const groupPostsByUserAndDay = (posts, options = {}) => {
         media: [],
         milestones: [],
         mostRecentDate: postDate, // Track most recent post date
-        totalCounts: { thoughts: 0, media: 0, milestones: 0 }, // Track total before cap
       };
     }
 
@@ -70,13 +69,10 @@ export const groupPostsByUserAndDay = (posts, options = {}) => {
     }
 
     // Add post to correct category (thoughts/media/milestones)
-    // Cap at maxPosts per type for carousel performance
+    // No cap - row-chunking in TimelineRiverFeed handles overflow
     const type = post.type || "thoughts";
     if (grouped[orderId][type]) {
-      grouped[orderId].totalCounts[type]++; // Track total count
-      if (grouped[orderId][type].length < maxPosts) {
-        grouped[orderId][type].push(post);
-      }
+      grouped[orderId][type].push(post);
     }
   });
 
