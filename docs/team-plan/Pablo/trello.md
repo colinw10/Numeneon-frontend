@@ -74,6 +74,8 @@ Est. Hours: 2h
 As a user, I want a home feed page, so that I can see posts from people I follow.
 Acceptance Criteria:
 
+✅✅✅✅✅✅✅✅✅✅
+
 Page container with layout
 Fetches posts on mount
 Loading and error states
@@ -82,6 +84,8 @@ Empty state for no posts
 Files: src/pages/Home/
 Dependencies: Colin's PostsContext
 Est. Hours: 3h
+✅✅✅✅✅✅✅✅✅✅
+
 
 #P-006 - TimelineRiverFeed Container
 As a user, I want posts grouped in a river layout, so that I can browse by author.

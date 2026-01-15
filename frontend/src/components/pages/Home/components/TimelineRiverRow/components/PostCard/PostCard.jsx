@@ -25,7 +25,8 @@ import {
 } from '@assets/icons';
 import './PostCard.scss';
 
-function PostCard({
+function PostCard({ 
+  // Props
   post,
   type,
   user,
@@ -73,11 +74,11 @@ function PostCard({
   
   // Type-based heart colors
   const heartColors = {
-    thoughts: '#4fffff',    // cyan/blue
-    media: '#c9a8ff',       // purple  
-    milestones: '#1ae784'   // green
+    thoughts: '#31fcfcff',    // cyan/blue
+    media: '#ad7afeff',       // purple  
+    milestones: '#0ce77dff'   // green
   };
-  const heartColor = heartColors[type] || '#4fffff';
+  const heartColor = heartColors[type] || '#2fcefaff';
   
   return (
     <>
@@ -131,7 +132,7 @@ function PostCard({
         <div 
           className={`river-post-likes ${post.is_liked ? 'is-liked' : ''} ${isHeartAnimating ? 'heart-pulse' : ''}`}
           onClick={async (e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // stop propagation means the click event won't bubble up to parent elements
             setIsHeartAnimating(true);
             setTimeout(() => setIsHeartAnimating(false), 300);
             await onLike(post.id);
