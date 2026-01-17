@@ -209,13 +209,25 @@ function TimelineRiverRow({ rowData, onCommentClick, activeCommentPostId, commen
     setShowAllReplies(prev => ({ ...prev, [postId]: !prev[postId] }));
   };
   
-  // Handle edit post
+  // Handle edit post - opens dedicated edit modal (separate from comment composer)
   const handleEditPost = (post) => {
     setEditingPostId(post.id);
+    setEditingPostContent(post.content);
+  };
+
+  // Handle card click - opens expanded view with comments
+  const handleCardClick = async (post) => {
     setActiveCommentPostId(post.id);
-    setCommentText(post.content);
-    setIsEditMode(true);
     setIsComposerFullPage(true);
+    // Fetch replies if not already loaded
+    if (!threadReplies[post.id]) {
+      setLoadingThread(post.id);
+      const result = await fetchReplies(post.id);
+      if (result.success) {
+        setThreadReplies(prev => ({ ...prev, [post.id]: result.data }));
+      }
+      setLoadingThread(null);
+    }
   };
   
   // Render a post card with all necessary props
@@ -247,6 +259,7 @@ function TimelineRiverRow({ rowData, onCommentClick, activeCommentPostId, commen
         onEdit={handleEditPost}
         onDelete={(id) => setDeleteModalPostId(id)}
         onExpandMedia={handleExpandMedia}
+        onCardClick={handleCardClick}
         // Thread props
         onToggleThread={toggleThread}
         expandedThreadId={expandedThreadId}
@@ -265,12 +278,7 @@ function TimelineRiverRow({ rowData, onCommentClick, activeCommentPostId, commen
 
         isComposerFullPage={isComposerFullPage}
         setIsComposerFullPage={setIsComposerFullPage}
-        isEditMode={isEditMode}
-        setIsEditMode={setIsEditMode}
-        editingPostId={editingPostId}
-        setEditingPostId={setEditingPostId}
-        onUpdatePost={onUpdatePost}
-        isSaving={isSaving}
+        isSaving={false}
       />
     );
   };
