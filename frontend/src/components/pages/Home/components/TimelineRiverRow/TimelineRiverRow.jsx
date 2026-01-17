@@ -12,7 +12,8 @@ import './TimelineRiverRow.scss';
 import MediaLightbox from '../MediaLightbox/MediaLightbox';
 import DeleteConfirmModal from '../DeleteConfirmModal/DeleteConfirmModal';
 import { useAuth, usePosts, useMessages } from '@contexts';
-import { ChevronLeftIcon, ChevronRightIcon } from '@assets/icons';
+import { ChevronLeftIcon, ChevronRightIcon, EditIcon, CheckIcon, CloseIcon } from '@assets/icons';
+import { createPortal } from 'react-dom';
 
 // Extracted components
 import { PostCard, SmartDeck, MobileTabNav } from './components';
@@ -69,9 +70,10 @@ function TimelineRiverRow({ rowData, onCommentClick, activeCommentPostId, commen
   
   const mostRecentType = getMostRecentType();
   
-  // State for edit mode
+  // State for edit mode (dedicated edit modal, separate from comment composer)
   const [editingPostId, setEditingPostId] = useState(null);
-  const [isSaving] = useState(false);
+  const [editingPostContent, setEditingPostContent] = useState('');
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
   
   // State for delete modal
   const [deleteModalPostId, setDeleteModalPostId] = useState(null);
