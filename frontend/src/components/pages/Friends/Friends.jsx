@@ -2,51 +2,7 @@
 // 🟣 CRYSTAL - Friends Lead
 // Friends.jsx - Friends list and requests page
 // =============================================================================
-//
-// TODO: Create the friends management page
-//
-// This page displays three tabs:
-// 1. All Friends - Shows your confirmed friends
-// 2. Requests - Shows pending incoming friend requests
-// 3. Suggestions - Shows suggested friends (mock data for now)
-//
-// STATE:
-// - activeTab: 'all' | 'requests' | 'suggestions'
-// - friendToRemove: Friend object (for delete confirmation modal)
-// - isRemoving: Boolean loading state for removal
-//
-// DATA FROM CONTEXT:
-// - friends: Array of friend objects
-// - pendingRequests: Array of pending request objects
-// - isLoading, error
-// - acceptRequest, declineRequest, removeFriend functions
-//
-// FEATURES:
-// 1. Tab navigation (3 tabs)
-// 2. Friend cards with click to view profile
-// 3. Message button (opens MessageModal via context)
-// 4. Remove friend button with confirmation modal
-// 5. Accept/Decline buttons on request cards
-// 6. Suggestions tab with "Add" button (mock)
-//
-// HELPER FUNCTIONS:
-// - getColorVariant(id): Assign color class based on friend id
-// - getInitials(firstName, lastName, username): Get avatar initials
-// - getDisplayName(friend): Get display name (username preferred)
-//
-// NAVIGATION:
-// - Click friend card → navigate to /profile/:username
-// - Click message button → openMessages() from MessageContext
-//
-// Think about:
-// - Why use a confirmation modal for removal?
-// - How do you stop click propagation on action buttons?
-// - What should loading state look like?
-//
-// Hint: const { friends, pendingRequests, ... } = useFriends();
-// Hint: const { openMessages } = useMessages();
-// Hint: navigate(`/profile/${friend.username}`);
-// =============================================================================
+
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -55,41 +11,300 @@ import DeleteConfirmModal from '@Home/components/DeleteConfirmModal/DeleteConfir
 import { MessageBubbleIcon, UnlinkIcon, PlusIcon } from '@assets/icons';
 import './Friends.scss';
 
-// TODO: Create helper functions
-// const getColorVariant = (id) => {...}
-// const getInitials = (firstName, lastName, username) => {...}
-// const getDisplayName = (friend) => {...}
+const getColorVariant = (id) => {
+  const variants = ["pink", "blue", "purple", "green"];
+  return variants[id % variants.length];
+};
+
+const getInitials = (first, last, username) => {
+  if (first && last) return `${first[0]}${last[0]}`.toUpperCase();
+  return username.slice(0, 2).toUpperCase();
+};
+
+const getDisplayName = (friend) => {
+  if (friend.first_name) {
+    return `${friend.first_name} ${friend.last_name || ""}`;
+  }
+  return friend.username;
+};
+
+/* ================== COMPONENT ================== */
 
 function Friends() {
-  // TODO: Set up state
-  // const [activeTab, setActiveTab] = useState('all');
-  // const [friendToRemove, setFriendToRemove] = useState(null);
-  // const [isRemoving, setIsRemoving] = useState(false);
+  const [activeTab, setActiveTab] = useState("all");
+  const [friendToRemove, setFriendToRemove] = useState(null);
+  const [isRemoving, setIsRemoving] = useState(false);
 
-  // TODO: Get hooks
-  // const navigate = useNavigate();
-  // const { friends, pendingRequests, isLoading, error, acceptRequest, declineRequest, removeFriend } = useFriends();
-  // const { openMessages } = useMessages();
+  const navigate = useNavigate();
+  const {
+    friends,
+    pendingRequests,
+    isLoading,
+    error,
+    acceptRequest,
+    declineRequest,
+    removeFriend,
+  } = useFriends();
 
-  // TODO: Mock suggestions data (future API feature)
-  // const suggestions = [...];
+  const { openMessages } = useMessages();
 
-  // TODO: Implement handlers
-  // handleAccept, handleDecline, handleRemoveClick, handleConfirmRemove
-  // handleFriendClick, handleMessageFriend
+  /* ================== MOCK SUGGESTIONS ================== */
 
-  // TODO: Return JSX with:
-  // - Header with title and stats
-  // - Tab navigation
-  // - Conditional content based on activeTab:
-  //   - 'all': Grid of friend cards with message/remove buttons
-  //   - 'requests': Grid of request cards with accept/decline buttons
-  //   - 'suggestions': Grid of suggestion cards with add button
-  // - DeleteConfirmModal for remove confirmation
+  const suggestions = [
+    { id: 99, username: "nova" },
+    { id: 98, username: "zenith" },
+    { id: 97, username: "pixel" },
+  ];
+
+  /* ================== HANDLERS ================== */
+
+  const handleFriendClick = (friend) => {
+    navigate(`/profile/${friend.username}`);
+  };
+
+  const handleMessageFriend = (friend, e) => {
+    e.stopPropagation();
+    openMessages(friend);
+  };
+
+  const handleRemoveClick = (friend, e) => {
+    e.stopPropagation();
+    setFriendToRemove(friend);
+  };
+
+  const handleConfirmRemove = async () => {
+    if (!friendToRemove) return;
+
+    setIsRemoving(true);
+    await removeFriend(friendToRemove.id);
+    setIsRemoving(false);
+    setFriendToRemove(null);
+  };
+
+  const handleAccept = async (id) => {
+    await acceptRequest(id);
+  };
+
+  const handleDecline = async (id) => {
+    await declineRequest(id);
+  };
+
+  /* ================== RENDER ================== */
 
   return (
     <div className="friends-page">
-      {/* Your code here */}
+
+      {/* HEADER */}
+      <div className="friends-header">
+        <h1 className="friends-title">Friends</h1>
+
+        <div className="friends-stats">
+          <div className="stat-item">
+            <span className="stat-value">{friends.length}</span>
+            <span className="stat-label">connected</span>
+          </div>
+
+          <div className="stat-dot" />
+
+          <div className="stat-item">
+            <span className="stat-value">
+              {pendingRequests.length}
+            </span>
+            <span className="stat-label">pending</span>
+          </div>
+        </div>
+      </div>
+
+      {/* TABS */}
+      <div className="friends-tabs">
+        <button
+          className={`tab-btn ${
+            activeTab === "all" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("all")}
+        >
+          All Friends
+        </button>
+
+        <button
+          className={`tab-btn ${
+            activeTab === "requests" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("requests")}
+        >
+          Requests
+        </button>
+
+        <button
+          className={`tab-btn ${
+            activeTab === "suggestions" ? "active" : ""
+          }`}
+          onClick={() => setActiveTab("suggestions")}
+        >
+          Suggestions
+        </button>
+      </div>
+
+      {/* CONTENT */}
+      <div className="friends-content">
+
+        {/* LOADING */}
+        {isLoading && <p className="empty-state">Loading...</p>}
+
+        {error && (
+          <p className="empty-state error">{error}</p>
+        )}
+
+        {/* ALL FRIENDS */}
+        {activeTab === "all" && (
+          <div className="friends-grid">
+            {friends.length === 0 && (
+              <p className="empty-state">
+                No friends yet 
+              </p>
+            )}
+
+            {friends.map((friend) => (
+              <div
+                key={friend.id}
+                className={`friend-card card-${getColorVariant(
+                  friend.id
+                )}`}
+                onClick={() =>
+                  handleFriendClick(friend)
+                }
+              >
+                <span className="scan-line" />
+
+                <div className="friend-avatar">
+                  <span>
+                    {getInitials(
+                      friend.first_name,
+                      friend.last_name,
+                      friend.username
+                    )}
+                  </span>
+                  <span className="status-dot online" />
+                </div>
+
+                <div className="friend-info">
+                  <h3 className="friend-name">
+                    {getDisplayName(friend)}
+                  </h3>
+                  <p className="friend-username">
+                    @{friend.username}
+                  </p>
+                  <p className="friend-mutual">
+                    2 mutual friends
+                  </p>
+                </div>
+
+                <button
+                  className="friend-action-btn"
+                  onClick={(e) =>
+                    handleMessageFriend(friend, e)
+                  }
+                >
+                  <MessageBubbleIcon />
+                </button>
+
+                <button
+                  className="friend-remove-btn"
+                  onClick={(e) =>
+                    handleRemoveClick(friend, e)
+                  }
+                >
+                  <UnlinkIcon />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* REQUESTS */}
+        {activeTab === "requests" && (
+          <div className="friends-grid">
+            {pendingRequests.length === 0 && (
+              <p className="empty-state">
+                No pending requests ✨
+              </p>
+            )}
+
+            {pendingRequests.map((req) => (
+              <div
+                key={req.id}
+                className="friend-card"
+              >
+                <span className="scan-line" />
+
+                <div className="friend-info">
+                  <h3 className="friend-name">
+                    {req.from_user.username}
+                  </h3>
+                </div>
+
+                <div className="request-actions">
+                  <button
+                    className="btn-accept"
+                    onClick={() =>
+                      handleAccept(req.id)
+                    }
+                  >
+                    Accept
+                  </button>
+
+                  <button
+                    className="btn-decline"
+                    onClick={() =>
+                      handleDecline(req.id)
+                    }
+                  >
+                    Decline
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* SUGGESTIONS */}
+        {activeTab === "suggestions" && (
+          <div className="friends-grid">
+            {suggestions.map((user) => (
+              <div
+                key={user.id}
+                className="friend-card"
+              >
+                <span className="scan-line" />
+
+                <div className="friend-info">
+                  <h3 className="friend-name">
+                    {user.username}
+                  </h3>
+                </div>
+
+                <button className="btn-add-friend">
+                  <PlusIcon /> Add
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* CONFIRM MODAL */}
+      {friendToRemove && (
+        <DeleteConfirmModal
+          isOpen={true}
+          title="Remove Friend"
+          message={`Remove ${friendToRemove.username}?`}
+          onCancel={() =>
+            setFriendToRemove(null)
+          }
+          onConfirm={handleConfirmRemove}
+          isLoading={isRemoving}
+        />
+      )}
     </div>
   );
 }

@@ -47,41 +47,130 @@ import { useAuth } from './AuthContext';
 const FriendsContext = createContext(null);
 
 export const FriendsProvider = ({ children }) => {
-  // TODO: Get auth state from AuthContext
-  // const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
 
-  // TODO: Set up state
-  // const [friends, setFriends] = useState([]);
-  // const [pendingRequests, setPendingRequests] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState(null);
+  const [friends, setFriends] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // TODO: useEffect to fetch when user logs in
-  // Hint: if (authLoading) return;
-  // Hint: if (user) fetchFriends();
-  // Hint: else { setFriends([]); setPendingRequests([]); }
 
-  // TODO: Implement fetchFriends
-  // Hint: const [friendsData, pendingData] = await Promise.all([...]);
+  useEffect(() => {
+    if (authLoading) return;
 
-  // TODO: Implement sendRequest(userId)
+    if (user) {
+      fetchFriends();
+    } else {
+      setFriends([]);
+      setPendingRequests([]);
+    }
 
-  // TODO: Implement acceptRequest(requestId)
-  // Hint: setFriends(prev => [...prev, newFriend]);
-  // Hint: setPendingRequests(prev => prev.filter(req => req.id !== requestId));
+  }, [user, authLoading]);
 
-  // TODO: Implement declineRequest(requestId)
+  const fetchFriends = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-  // TODO: Implement removeFriend(userId)
-  // Hint: setFriends(prev => prev.filter(friend => friend.id !== userId));
+      const [friendsData, pendingData] = await Promise.all ([
+        friendsService.getAll(),
+        friendsService.getPendingRequests(),
+      ]);
+      setFriends(friendsData);
+      setPendingRequests(pendingData);
 
-  // TODO: Return provider with all state and functions
-  // Your code here
+      return { success: true};
+    } catch (err) {
+      setError('Failed to load friends');
+      return { success: false, error: err };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sendRequest = async (userId) => {
+    try {
+      await friendsService.sendRequest(userId);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err };
+    }
+  };
+
+  const acceptRequest = async (requestId) => {
+    try {
+      const newFriend = await friendsService.acceptRequest(requestId);
+
+      setFriends((prev) => [...prev, newFriend]);
+      setPendingRequests((prev) =>
+        prev.filter((req) => req.id !== requestId)
+      );
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err };
+    }
+  };
+
+  const declineRequest = async (requestId) => {
+    try {
+      await friendsService.declineRequest(requestId);
+
+      setPendingRequests((prev) => 
+        prev.filter((req) => req.id !== requestId)
+      );
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err };
+    }
+  };
+
+
+  const removeFriend = async (userId) => {
+    try {
+      await friendsService.remove(userId);
+
+      setFriends((prev) => 
+        prev.filter((friend) => friend.id !== userId)
+      );
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err };
+    }
+  };
+
+  return (
+    <FriendsContext.Provider
+      value={{
+        friends,
+        pendingRequests,
+        isLoading,
+        error,
+        fetchFriends,
+        sendRequest,
+        acceptRequest,
+        declineRequest,
+        removeFriend,
+      }}
+    >
+      {children}
+    </FriendsContext.Provider>
+  );
+  
 };
 
 export const useFriends = () => {
-  // TODO: Return useContext(FriendsContext) with error check
-  // Your code here
+  const context = useContext(FriendsContext);
+
+
+  if(!context) {
+    throw new Error (
+      'userFriends must be used within a FriendsProvider'
+    );
+  }
+  return context;
 };
 
 export default FriendsContext;
