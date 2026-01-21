@@ -1,14 +1,61 @@
-// 🔵 PABLO - UI/Styling | 🟡 NATALIA - API Logic
-// Signup.jsx - User registration page
+/**
+ * =============================================================================
+ * SIGNUP PAGE - TODO: NATALIA
+ * =============================================================================
+ * File: frontend/src/components/pages/Signup/Signup.jsx
+ * Assigned to: NATALIA (API Logic) + PABLO (UI/Styling)
+ * Status: TODO 🟡
+ * 
+ * REFERENCE: See branch 'pablo-working-backup' for working implementation
+ * =============================================================================
+ * 
+ * WHAT THIS FILE DOES:
+ * - Renders signup form with username, email, password, confirmPassword
+ * - Validates form input before submission
+ * - POSTs to /api/auth/signup/ endpoint
+ * - Redirects to /login on success
+ * - Shows error messages on failure
+ * 
+ * =============================================================================
+ * IMPLEMENTATION HINTS:
+ * =============================================================================
+ * 
+ * 1. STATE YOU NEED:
+ *    - formData: { username: '', email: '', password: '', confirmPassword: '' }
+ *    - errors: {} for validation errors
+ *    - isLoading: boolean for submit button state
+ *    - showPassword: boolean for password visibility toggle
+ *    - showConfirmPassword: boolean for confirm password visibility
+ * 
+ * 2. FORM VALIDATION:
+ *    - Username: required, min 3 characters
+ *    - Email: required, must match email pattern
+ *    - Password: required, min 6 characters
+ *    - ConfirmPassword: required, must match password
+ * 
+ * 3. HANDLE SUBMIT:
+ *    - Validate form
+ *    - POST to http://localhost:8000/api/auth/signup/
+ *    - Body: { username, email, password }
+ *    - If success: navigate('/login')
+ *    - If fail: show error message
+ * 
+ * 4. ICONS AVAILABLE:
+ *    - BackArrowGradientIcon - for back button
+ *    - EyeIcon, EyeOffIcon - for password visibility toggle
+ * 
+ * =============================================================================
+ */
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.scss';
 import { BackArrowGradientIcon, EyeIcon, EyeOffIcon } from '@assets/icons';
-// BackButton styles now in main.scss
 
 function Signup() {
   const navigate = useNavigate();
+  
+  // TODO: Add form state
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -20,87 +67,34 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // TODO: Implement handleChange
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+    // HINT: Update formData[e.target.name] with e.target.value
+    // HINT: Clear errors[e.target.name] when user types
   };
 
+  // TODO: Implement validateForm
   const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.username) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-    }
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-    
-    return newErrors;
+    // HINT: Return object of errors
+    // Check: username required, min 3 chars
+    // Check: email required, email format valid
+    // Check: password required, min 6 chars
+    // Check: confirmPassword required, must match password
+    return {};
   };
 
+  // TODO: Implement handleSubmit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch('http://localhost:8000/api/auth/signup/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        setErrors({ submit: data.error || 'Signup failed. Please try again.' });
-        return;
-      }
-      
-      // Navigate to login on success
-      navigate('/login');
-    } catch {
-      setErrors({ submit: 'Signup failed. Please try again.' });
-    } finally {
-      setIsLoading(false);
-    }
+    // HINT:
+    // 1. Validate form
+    // 2. If errors, setErrors and return
+    // 3. setIsLoading(true)
+    // 4. POST to 'http://localhost:8000/api/auth/signup/' with fetch()
+    // 5. Body: { username, email, password } (NOT confirmPassword)
+    // 6. If success: navigate('/login')
+    // 7. If fail: setErrors({ submit: data.error })
+    // 8. setIsLoading(false) in finally block
   };
 
   return (
@@ -109,6 +103,7 @@ function Signup() {
         <button onClick={() => navigate('/')} className="back-button" title="Back to Home">
           <BackArrowGradientIcon size={32} />
         </button>
+        
         <div className="signup-header">
           <h1 className="signup-title">
             <span className="title-word-left" data-word="Join">Join</span>
@@ -119,6 +114,7 @@ function Signup() {
         </div>
 
         <form onSubmit={handleSubmit} className="signup-form">
+          {/* TODO: Username input field */}
           <div className="form-group">
             <label htmlFor="username" className="form-label">Username</label>
             <input
@@ -127,13 +123,14 @@ function Signup() {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className={`form-input ${errors.username ? 'error' : ''} ${formData.username ? 'has-value' : ''}`}
+              className={`form-input ${errors.username ? 'error' : ''}`}
               placeholder="Choose a username…"
               autoComplete="username"
             />
             {errors.username && <span className="error-message">{errors.username}</span>}
           </div>
 
+          {/* TODO: Email input field */}
           <div className="form-group">
             <label htmlFor="email" className="form-label">Email</label>
             <input
@@ -142,13 +139,14 @@ function Signup() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`form-input ${errors.email ? 'error' : ''} ${formData.email ? 'has-value' : ''}`}
+              className={`form-input ${errors.email ? 'error' : ''}`}
               placeholder="Enter your email…"
               autoComplete="email"
             />
             {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
 
+          {/* TODO: Password input field with visibility toggle */}
           <div className="form-group">
             <label htmlFor="password" className="form-label">Password</label>
             <div className="password-input-wrapper">
@@ -158,7 +156,7 @@ function Signup() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`form-input ${errors.password ? 'error' : ''} ${formData.password ? 'has-value' : ''}`}
+                className={`form-input ${errors.password ? 'error' : ''}`}
                 placeholder="Create a password…"
                 autoComplete="new-password"
               />
@@ -174,6 +172,7 @@ function Signup() {
             {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
 
+          {/* TODO: Confirm Password input field with visibility toggle */}
           <div className="form-group">
             <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
             <div className="password-input-wrapper">
@@ -183,7 +182,7 @@ function Signup() {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className={`form-input ${errors.confirmPassword ? 'error' : ''} ${formData.confirmPassword ? 'has-value' : ''}`}
+                className={`form-input ${errors.confirmPassword ? 'error' : ''}`}
                 placeholder="Confirm your password…"
                 autoComplete="new-password"
               />
@@ -199,28 +198,17 @@ function Signup() {
             {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
           </div>
 
+          {/* Submit error message */}
           {errors.submit && <div className="error-message submit-error">{errors.submit}</div>}
 
-          <button 
-            type="submit" 
-            className={`btn-submit ${isLoading ? 'loading' : ''}`}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <span className="spinner"></span>
-                Creating account...
-              </>
-            ) : (
-              'Create Account'
-            )}
+          {/* Submit button */}
+          <button type="submit" className="submit-button" disabled={isLoading}>
+            {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
         <div className="signup-footer">
-          <p className="footer-text">
-            Already have an account? <button onClick={() => navigate('/login')} className="footer-link">Sign in</button>
-          </p>
+          <p>Already have an account? <button onClick={() => navigate('/login')} className="link-button">Sign in</button></p>
         </div>
       </div>
     </div>

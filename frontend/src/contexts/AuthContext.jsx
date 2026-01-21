@@ -1,15 +1,59 @@
 /**
  * =============================================================================
- * AUTH CONTEXT
+ * AUTH CONTEXT - TODO: NATALIA
  * =============================================================================
  * File: frontend/src/contexts/AuthContext.jsx
- * Assigned to: PABLO
+ * Assigned to: NATALIA
  * Responsibility: Global authentication state management
- * Status: IMPLEMENTED ✅
+ * Status: TODO 🟡
+ * 
+ * REFERENCE: See branch 'pablo-working-backup' for working implementation
  * =============================================================================
- */// ⬆️ RECEIVES: nothing - this is a provider that GIVES data to others
-// ⬇️ SENDS: user, isLoading, isAuthenticated, login(), signup(), logout(), updateProfile()
-
+ * 
+ * WHAT THIS FILE DOES:
+ * - Provides authentication state to entire app (user, isAuthenticated, isLoading)
+ * - Handles login, signup, logout functions
+ * - Checks localStorage for existing tokens on app load
+ * - Auto-fetches user info if token exists
+ * 
+ * =============================================================================
+ * IMPLEMENTATION HINTS:
+ * =============================================================================
+ * 
+ * 1. STATE YOU NEED:
+ *    - user (object or null) - the logged in user's data
+ *    - isLoading (boolean) - true while checking auth on mount
+ *    - isAuthenticated (boolean) - true if user is logged in
+ * 
+ * 2. useEffect ON MOUNT:
+ *    - Check if 'accessToken' exists in localStorage
+ *    - If yes, call GET /api/auth/me/ to get user info
+ *    - If that succeeds, setUser and setIsAuthenticated(true)
+ *    - If fails (401), clear tokens from localStorage
+ *    - Always setIsLoading(false) at the end
+ * 
+ * 3. LOGIN FUNCTION:
+ *    - POST to /api/auth/login/ with { email, password }
+ *    - Response gives { access: "token", refresh: "token" }
+ *    - Store both in localStorage as 'accessToken' and 'refreshToken'
+ *    - Then GET /api/auth/me/ to get user info
+ *    - Return { success: true } or { success: false, error: "message" }
+ * 
+ * 4. SIGNUP FUNCTION:
+ *    - POST to /api/auth/signup/ with { username, email, password }
+ *    - On success, auto-login the user (call login function)
+ *    - Return { success: true } or { success: false, error: "message" }
+ * 
+ * 5. LOGOUT FUNCTION:
+ *    - Remove 'accessToken' and 'refreshToken' from localStorage
+ *    - setUser(null)
+ *    - setIsAuthenticated(false)
+ * 
+ * 6. PROVIDER VALUE:
+ *    - Expose: user, isLoading, isAuthenticated, login, signup, logout
+ * 
+ * =============================================================================
+ */
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import apiClient from '@services/apiClient';
@@ -17,100 +61,57 @@ import apiClient from '@services/apiClient';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  // children = whatever is inside <AuthProvider>...</AuthProvider>
-  // In main.jsx, children is <PostsProvider><FriendsProvider><App/></FriendsProvider></PostsProvider>
+  // TODO: Add state for user, isLoading, isAuthenticated
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // useEfffect is triggered only when a user mounts the component, this happens when a user loads the app. UseEffect gets the data from localStorage and checks if the user is authenticated
-  // Check if user is logged in on mount
+
+  // TODO: useEffect to check auth on mount
+  // HINT: Check localStorage for 'accessToken', then call /api/auth/me/
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('accessToken');
-      console.log('AuthContext checkAuth - token exists:', !!token);
-      if (token) {
-        try {
-          const response = await apiClient.get('/auth/me/');
-          console.log('Auth /me response:', response.data);
-          setUser(response.data);
-          setIsAuthenticated(true);
-        } catch (error) {
-          console.error('Auth check failed:', error);
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
-        }
-      } else {
-        console.log('No token found, user not logged in');
-      }
+      // TODO: Implement auth check
+      // 1. Get token from localStorage
+      // 2. If token exists, try GET /api/auth/me/
+      // 3. If success, setUser and setIsAuthenticated(true)
+      // 4. If error, clear localStorage tokens
+      // 5. Always setIsLoading(false) at end
       setIsLoading(false);
     };
 
     checkAuth();
   }, []);
 
-  // Login function
+  // TODO: Implement login function
+  // HINT: POST /api/auth/login/ → store tokens → GET /api/auth/me/
   const login = async (email, password) => {
-    try {
-      const response = await apiClient.post('/auth/login/', { email, password });
-      localStorage.setItem('accessToken', response.data.access);
-      localStorage.setItem('refreshToken', response.data.refresh);
-      
-      // Fetch user info
-      const userResponse = await apiClient.get('/auth/me/');
-      setUser(userResponse.data);
-      setIsAuthenticated(true);
-      
-      return { success: true };
-    } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.detail || 'Login failed' 
-      };
-    }
+    // TODO: Implement
+    // 1. POST to /api/auth/login/ with { email, password }
+    // 2. Store response.data.access as 'accessToken' in localStorage
+    // 3. Store response.data.refresh as 'refreshToken' in localStorage
+    // 4. GET /api/auth/me/ to fetch user data
+    // 5. setUser and setIsAuthenticated(true)
+    // 6. Return { success: true } or { success: false, error: message }
+    return { success: false, error: 'Not implemented' };
   };
 
-  // Signup function
+  // TODO: Implement signup function
+  // HINT: POST /api/auth/signup/ → then call login()
   const signup = async (username, email, password) => {
-    try {
-      await apiClient.post('/auth/signup/', { 
-        username, 
-        email, 
-        password 
-      });
-      
-      // Auto-login after signup
-      const loginResult = await login(username, password);
-      return loginResult;
-    } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.error || 'Signup failed' 
-      };
-    }
+    // TODO: Implement
+    // 1. POST to /api/auth/signup/ with { username, email, password }
+    // 2. On success, call login(email, password) to auto-login
+    // 3. Return the result of login
+    return { success: false, error: 'Not implemented' };
   };
 
-  // Update user profile
-  const updateProfile = async (profileData) => {
-    try {
-      const response = await apiClient.put(`/auth/profile/${user.profile.id}/`, profileData);
-      setUser(prev => ({
-        ...prev,
-        profile: response.data
-      }));
-      return { success: true };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.response?.data?.error || 'Profile update failed'
-      };
-    }
-  };
-
+  // TODO: Implement logout function
   const logout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    setUser(null);
-    setIsAuthenticated(false);
+    // TODO: Implement
+    // 1. localStorage.removeItem('accessToken')
+    // 2. localStorage.removeItem('refreshToken')
+    // 3. setUser(null)
+    // 4. setIsAuthenticated(false)
   };
 
   return (
@@ -122,7 +123,6 @@ export const AuthProvider = ({ children }) => {
         login,
         signup,
         logout,
-        updateProfile,
       }}
     >
       {children}

@@ -1,13 +1,44 @@
 /**
  * =============================================================================
- * PROTECTED ROUTE COMPONENT
+ * PROTECTED ROUTE COMPONENT - TODO: NATALIA
+ * =============================================================================
+ * File: frontend/src/components/ui/ProtectedRoute.jsx
+ * Assigned to: NATALIA
+ * Status: TODO 🟡
+ * 
+ * REFERENCE: See branch 'pablo-working-backup' for working implementation
  * =============================================================================
  * 
- * Wraps routes that require authentication.
- * Redirects to landing page if user is not logged in.
+ * WHAT THIS FILE DOES:
+ * - Wraps routes that require authentication
+ * - If user is logged in: render the child component
+ * - If user is NOT logged in: redirect to /login
+ * - Pass current location so login can redirect back after success
  * 
- * Usage in App.jsx:
+ * USAGE IN App.jsx:
  *   <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+ * 
+ * =============================================================================
+ * IMPLEMENTATION HINTS:
+ * =============================================================================
+ * 
+ * 1. GET FROM AuthContext:
+ *    const { isAuthenticated, isLoading } = useAuth();
+ * 
+ * 2. GET CURRENT LOCATION:
+ *    const location = useLocation();
+ * 
+ * 3. IF isLoading IS TRUE:
+ *    - Return a loading spinner div
+ *    - This prevents flash of redirect while checking auth
+ * 
+ * 4. IF NOT isAuthenticated:
+ *    - Return <Navigate to="/login" state={{ from: location, message: 'Please sign in...' }} replace />
+ *    - The state passes info to Login page about where user came from
+ * 
+ * 5. IF isAuthenticated:
+ *    - Return children (the protected component)
+ * 
  * =============================================================================
  */
 
@@ -18,7 +49,7 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
-  // Show loading state while checking auth
+  // TODO: Show loading state while checking auth
   if (isLoading) {
     return (
       <div className="auth-loading">
@@ -27,13 +58,15 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // Redirect to login page if not authenticated
-  // Pass the attempted URL so we can redirect back after login
+  // TODO: Redirect to login if not authenticated
+  // HINT: Use Navigate component with state prop
+  // state={{ from: location, message: 'Please sign in to access this page' }}
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location, message: 'Please sign in to access this page' }} replace />;
+    // TODO: Return Navigate to /login with state
+    return <Navigate to="/login" replace />;
   }
 
-  // User is authenticated, render the protected content
+  // TODO: Render protected content if authenticated
   return children;
 };
 

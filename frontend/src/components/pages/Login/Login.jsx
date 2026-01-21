@@ -1,22 +1,72 @@
-// 🔵 PABLO - UI/Styling | 🟡 NATALIA - API Logic
-// Login.jsx - User login page
+/**
+ * =============================================================================
+ * LOGIN PAGE - TODO: NATALIA
+ * =============================================================================
+ * File: frontend/src/components/pages/Login/Login.jsx
+ * Assigned to: NATALIA (API Logic) + PABLO (UI/Styling)
+ * Status: TODO 🟡
+ * 
+ * REFERENCE: See branch 'pablo-working-backup' for working implementation
+ * =============================================================================
+ * 
+ * WHAT THIS FILE DOES:
+ * - Renders login form with email and password fields
+ * - Validates form input before submission
+ * - Calls AuthContext login() function
+ * - Redirects to /home on success (or back to where user came from)
+ * - Shows error messages on failure
+ * 
+ * =============================================================================
+ * IMPLEMENTATION HINTS:
+ * =============================================================================
+ * 
+ * 1. STATE YOU NEED:
+ *    - formData: { email: '', password: '' }
+ *    - errors: {} for validation errors
+ *    - isLoading: boolean for submit button state
+ *    - showPassword: boolean for password visibility toggle
+ * 
+ * 2. GET login FROM AuthContext:
+ *    const { login } = useAuth();
+ * 
+ * 3. HANDLE REDIRECT FROM PROTECTED ROUTE:
+ *    - useLocation() to get location.state?.from?.pathname
+ *    - This is where user tried to go before being redirected to login
+ *    - After successful login, navigate(from, { replace: true })
+ * 
+ * 4. FORM VALIDATION:
+ *    - Email: required, must match email pattern
+ *    - Password: required, min 6 characters
+ * 
+ * 5. HANDLE SUBMIT:
+ *    - Validate form
+ *    - Call login(email, password)
+ *    - If success: navigate to destination
+ *    - If fail: show error message
+ * 
+ * 6. ICONS AVAILABLE:
+ *    - BackArrowGradientIcon - for back button
+ *    - EyeIcon, EyeOffIcon - for password visibility toggle
+ * 
+ * =============================================================================
+ */
 
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 import './Login.scss';
 import { BackArrowGradientIcon, EyeIcon, EyeOffIcon } from '@assets/icons';
-// BackButton styles now in main.scss
 
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
   
-  // Check if redirected from ProtectedRoute
+  // TODO: Get redirect destination from location.state
   const from = location.state?.from?.pathname || '/home';
   const redirectMessage = location.state?.message;
   
+  // TODO: Add form state
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -25,62 +75,31 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => { 
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+  // TODO: Implement handleChange
+  const handleChange = (e) => {
+    // HINT: Update formData[e.target.name] with e.target.value
+    // HINT: Clear errors[e.target.name] when user types
   };
 
+  // TODO: Implement validateForm
   const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    return newErrors;
+    // HINT: Return object of errors like { email: 'Email is required' }
+    // Check: email required, email format valid
+    // Check: password required, min 6 chars
+    return {};
   };
 
+  // TODO: Implement handleSubmit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setIsLoading(true);
-    
-    try {
-      const result = await login(formData.email, formData.password);
-      if (result.success) {
-        navigate(from, { replace: true }); // Go back to where they tried to access
-      } else {
-        setErrors({ submit: result.error });
-      }
-    } catch {
-      setErrors({ submit: 'Login failed. Please try again.' });
-    } finally {
-      setIsLoading(false);
-    }
+    // HINT:
+    // 1. Validate form
+    // 2. If errors, setErrors and return
+    // 3. setIsLoading(true)
+    // 4. Call login(formData.email, formData.password)
+    // 5. If success: navigate(from, { replace: true })
+    // 6. If fail: setErrors({ submit: result.error })
+    // 7. setIsLoading(false) in finally block
   };
 
   return (
@@ -89,6 +108,7 @@ function Login() {
         <button onClick={() => navigate('/')} className="back-button" title="Back to Home">
           <BackArrowGradientIcon size={32} />
         </button>
+        
         <div className="login-header">
           <h1 className="login-title">Welcome Back</h1>
           <p className="login-subtitle">Sign in to continue to Numeneon</p>
@@ -102,6 +122,7 @@ function Login() {
         )}
 
         <form onSubmit={handleSubmit} className="login-form">
+          {/* TODO: Email input field */}
           <div className="form-group">
             <label htmlFor="email" className="form-label">Email</label>
             <input
@@ -117,6 +138,7 @@ function Login() {
             {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
 
+          {/* TODO: Password input field with visibility toggle */}
           <div className="form-group">
             <label htmlFor="password" className="form-label">Password</label>
             <div className="password-input-wrapper">
@@ -142,34 +164,17 @@ function Login() {
             {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
 
-          <div className="form-options">
-            <label className="checkbox-label">
-              <input type="checkbox" className="form-checkbox" />
-              <span>Remember me</span>
-            </label>
-            <button type="button" className="forgot-password">Forgot password?</button>
-          </div>
-
+          {/* Submit error message */}
           {errors.submit && <div className="error-message submit-error">{errors.submit}</div>}
 
-          <button 
-            type="submit" 
-            className={`btn-submit ${isLoading ? 'loading' : ''}`}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <span className="spinner"></span>
-                Signing in...
-              </>
-            ) : (
-              'Sign In'
-            )}
+          {/* Submit button */}
+          <button type="submit" className="submit-button" disabled={isLoading}>
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
         <div className="login-footer">
-          <p>Don't have an account? <button onClick={() => navigate('/signup')} className="link-button">Sign up</button></p>
+          <p>Don&apos;t have an account? <button onClick={() => navigate('/signup')} className="link-button">Sign up</button></p>
         </div>
       </div>
     </div>
