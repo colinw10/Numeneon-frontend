@@ -49,37 +49,43 @@ const friendsService = {
   // TODO: getAll - GET /api/friends/
   // Returns array of friend user objects
   getAll: async () => {
-    // Your code here
+    const response = await apiClient.get('/friends/');
+    return response.data;
   },
 
   // TODO: getPendingRequests - GET /api/friends/requests/
   // Returns array of incoming friend request objects
   getPendingRequests: async () => {
-    // Your code here
+    const response = await apiClient.get('/friends/request/');
+    return response.data;
   },
 
   // TODO: sendRequest - POST /api/friends/request/:userId/
   // Sends friend request to specified user
   sendRequest: async (userId) => {
-    // Your code here
+    const response = await apiClient.post(`/friends/request/${userId}/`);
+    return response.data;
   },
 
   // TODO: acceptRequest - POST /api/friends/accept/:requestId/
   // Accepts incoming request, returns the new friend object
   acceptRequest: async (requestId) => {
-    // Your code here
+    const response = await apiClient.post(`/friends/accept/${requestId}/`);
+    return response.data;
   },
 
   // TODO: declineRequest - POST /api/friends/decline/:requestId/
   // Declines incoming request
   declineRequest: async (requestId) => {
-    // Your code here
+    const response = await apiClient.post(`/friends/decline/${requestId}/`);
+    return response.data;
   },
 
   // TODO: remove - DELETE /api/friends/remove/:userId/
   // Removes existing friend (no return value)
   remove: async (userId) => {
-    // Your code here
+    const response = await apiClient.delete(`/friends/remove/$userId/`);
+    return response.data;
   },
 };
 
