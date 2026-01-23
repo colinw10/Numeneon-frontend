@@ -67,34 +67,91 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // TODO: Implement handleChange
+  // Update form state when user types
   const handleChange = (e) => {
-    // HINT: Update formData[e.target.name] with e.target.value
-    // HINT: Clear errors[e.target.name] when user types
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
-  // TODO: Implement validateForm
+  // Validate all form fields
   const validateForm = () => {
-    // HINT: Return object of errors
-    // Check: username required, min 3 chars
-    // Check: email required, email format valid
-    // Check: password required, min 6 chars
-    // Check: confirmPassword required, must match password
-    return {};
+    const newErrors = {};
+    
+    // Username: required, min 3 chars
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
+    } else if (formData.username.trim().length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
+    }
+    
+    // Email: required, valid format
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    
+    // Password: required, min 6 chars
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    // Confirm password: required, must match
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    return newErrors;
   };
 
-  // TODO: Implement handleSubmit
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // HINT:
-    // 1. Validate form
-    // 2. If errors, setErrors and return
-    // 3. setIsLoading(true)
-    // 4. POST to 'http://localhost:8000/api/auth/signup/' with fetch()
-    // 5. Body: { username, email, password } (NOT confirmPassword)
-    // 6. If success: navigate('/login')
-    // 7. If fail: setErrors({ submit: data.error })
-    // 8. setIsLoading(false) in finally block
+    
+    // Validate form
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    
+    setIsLoading(true);
+    setErrors({});
+    
+    try {
+      const response = await fetch('http://localhost:8000/api/auth/signup/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password
+          // Note: confirmPassword is NOT sent to backend
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Success - redirect to login
+        navigate('/login');
+      } else {
+        // Show error from backend
+        setErrors({ submit: data.error || 'Signup failed. Please try again.' });
+      }
+    } catch (error) {
+      setErrors({ submit: 'Network error. Please check your connection.' });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
