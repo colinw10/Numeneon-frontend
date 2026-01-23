@@ -67,7 +67,7 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // TODO: Implement handleChange
+  // Update form state when user types
   const handleChange = (e) => {
     const { name, value } = e.target;
     // update specific field in formData
@@ -81,7 +81,7 @@ function Signup() {
     // HINT: Clear errors[e.target.name] when user types
   };
 
-  // TODO: Implement validateForm
+  // Validate all form fields
   const validateForm = () => {
     const newErrors = {};
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -106,7 +106,7 @@ function Signup() {
     return newErrors;
   };
 
-  // TODO: Implement handleSubmit
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     //validate before calling API
