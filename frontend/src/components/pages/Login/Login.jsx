@@ -75,31 +75,52 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // TODO: Implement handleChange
+  // Update form state when user types
   const handleChange = (e) => {
-    // HINT: Update formData[e.target.name] with e.target.value
-    // HINT: Clear errors[e.target.name] when user types
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
-  // TODO: Implement validateForm
+  // Validate form fields
   const validateForm = () => {
-    // HINT: Return object of errors like { email: 'Email is required' }
-    // Check: email required, email format valid
-    // Check: password required, min 6 chars
-    return {};
+    const newErrors = {};
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    return newErrors;
   };
 
-  // TODO: Implement handleSubmit
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // HINT:
-    // 1. Validate form
-    // 2. If errors, setErrors and return
-    // 3. setIsLoading(true)
-    // 4. Call login(formData.email, formData.password)
-    // 5. If success: navigate(from, { replace: true })
-    // 6. If fail: setErrors({ submit: result.error })
-    // 7. setIsLoading(false) in finally block
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const result = await login(formData.email, formData.password);
+      if (result.success) {
+        navigate(from, { replace: true });
+      } else {
+        setErrors({ submit: result.error });
+      }
+    } catch {
+      setErrors({ submit: 'Login failed. Please try again.' });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

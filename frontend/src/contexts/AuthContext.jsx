@@ -70,48 +70,64 @@ export const AuthProvider = ({ children }) => {
   // HINT: Check localStorage for 'accessToken', then call /api/auth/me/
   useEffect(() => {
     const checkAuth = async () => {
-      // TODO: Implement auth check
-      // 1. Get token from localStorage
-      // 2. If token exists, try GET /api/auth/me/
-      // 3. If success, setUser and setIsAuthenticated(true)
-      // 4. If error, clear localStorage tokens
-      // 5. Always setIsLoading(false) at end
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        try {
+          const response = await apiClient.get('/auth/me/');
+          setUser(response.data);
+          setIsAuthenticated(true);
+        } catch (error) {
+          // Token invalid - clear it
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+        }
+      }
       setIsLoading(false);
     };
 
     checkAuth();
   }, []);
 
-  // TODO: Implement login function
-  // HINT: POST /api/auth/login/ → store tokens → GET /api/auth/me/
+  // Login function - POST /api/auth/login/ → store tokens → GET /api/auth/me/
   const login = async (email, password) => {
-    // TODO: Implement
-    // 1. POST to /api/auth/login/ with { email, password }
-    // 2. Store response.data.access as 'accessToken' in localStorage
-    // 3. Store response.data.refresh as 'refreshToken' in localStorage
-    // 4. GET /api/auth/me/ to fetch user data
-    // 5. setUser and setIsAuthenticated(true)
-    // 6. Return { success: true } or { success: false, error: message }
-    return { success: false, error: 'Not implemented' };
+    try {
+      const response = await apiClient.post('/auth/login/', { email, password });
+      const { access, refresh } = response.data;
+      
+      // Store tokens
+      localStorage.setItem('accessToken', access);
+      localStorage.setItem('refreshToken', refresh);
+      
+      // Fetch user info
+      const userResponse = await apiClient.get('/auth/me/');
+      setUser(userResponse.data);
+      setIsAuthenticated(true);
+      
+      return { success: true };
+    } catch (error) {
+      const message = error.response?.data?.error || error.response?.data?.detail || 'Login failed';
+      return { success: false, error: message };
+    }
   };
 
-  // TODO: Implement signup function
-  // HINT: POST /api/auth/signup/ → then call login()
+  // Signup function - POST /api/auth/signup/ → then call login()
   const signup = async (username, email, password) => {
-    // TODO: Implement
-    // 1. POST to /api/auth/signup/ with { username, email, password }
-    // 2. On success, call login(email, password) to auto-login
-    // 3. Return the result of login
-    return { success: false, error: 'Not implemented' };
+    try {
+      await apiClient.post('/auth/signup/', { username, email, password });
+      // Auto-login after signup
+      return await login(email, password);
+    } catch (error) {
+      const message = error.response?.data?.error || 'Signup failed';
+      return { success: false, error: message };
+    }
   };
 
-  // TODO: Implement logout function
+  // Logout function
   const logout = () => {
-    // TODO: Implement
-    // 1. localStorage.removeItem('accessToken')
-    // 2. localStorage.removeItem('refreshToken')
-    // 3. setUser(null)
-    // 4. setIsAuthenticated(false)
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    setUser(null);
+    setIsAuthenticated(false);
   };
 
   return (
