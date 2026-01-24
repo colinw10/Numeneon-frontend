@@ -28,7 +28,6 @@ export {
   UserIcon,
   GlobeIcon,
   LockIcon,
-  FriendsIcon,
   HexProfileIcon,
   VisibilityIcon,
 } from "./user";
@@ -76,7 +75,7 @@ export {
 export {
   HexHomeIcon,
   SignalIcon,
-  NetworkIcon,
+  FriendsIcon,
   CircuitInfoIcon,
 } from "./sidenav";
 
