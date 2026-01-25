@@ -58,6 +58,16 @@
   }
 }
 
+/* Animated color trail for story borders - clockwise */
+@keyframes borderColorTrail {
+  0% {
+    --angle: 0deg;
+  }
+  100% {
+    --angle: 360deg;
+  }
+}
+
 .stories-section {
   margin-bottom: 2rem;
   overflow: visible;
@@ -181,6 +191,44 @@
 .story-avatar svg {
   color: var(--cyan);
   filter: drop-shadow(0 0 6px rgba(79, 255, 255, 0.6));
+}
+
+/* Animated color trail border for users with stories */
+.story-avatar.has-story {
+  --angle: 0deg;
+  border: 2px solid transparent;
+  background: 
+    linear-gradient(145deg, rgba(15, 20, 30, 0.95), rgba(8, 12, 20, 0.98)) padding-box,
+    conic-gradient(
+      from var(--angle),
+      #1ae784 0deg,
+      transparent 20deg,
+      transparent 60deg,
+      rgba(26, 231, 132, 0.05) 90deg,
+      rgba(26, 231, 132, 0.1) 140deg,
+      rgba(26, 115, 231, 0.25) 180deg,
+      rgba(220, 8, 188, 0.5) 210deg,
+      #dc08bc 240deg,
+      #1a73e7 300deg,
+      #1ae784 360deg
+    ) border-box;
+  animation: borderColorTrail 6s linear infinite;
+  box-shadow: 
+    0 0 8px rgba(26, 231, 132, 0.2),
+    0 0 12px rgba(26, 115, 231, 0.1);
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.story-avatar.has-story:hover {
+  box-shadow: 
+    0 0 12px rgba(26, 231, 132, 0.4),
+    0 0 20px rgba(26, 115, 231, 0.3),
+    0 0 28px rgba(220, 8, 188, 0.2);
 }
 
 /* Dual-colored initials for story avatars */
@@ -842,9 +890,64 @@ textarea.composer-input {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
   }
 
-  .story-avatar {
+  .story-avatar:not(.has-story) {
     border-color: rgba(0, 0, 0, 0.1) !important;
     background: rgba(26, 115, 231, 0.1) !important;
+  }
+
+  .story-avatar.has-story {
+    position: relative !important;
+    border: none !important;
+    background: rgba(26, 115, 231, 0.1) !important;
+    z-index: 1 !important;
+  }
+
+  .story-avatar.has-story::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: -1px !important;
+    border-radius: 50% !important;
+    background: conic-gradient(
+      #1ae784 0deg,
+      transparent 20deg,
+      transparent 60deg,
+      rgba(26, 231, 132, 0.05) 90deg,
+      rgba(26, 231, 132, 0.1) 140deg,
+      rgba(26, 115, 231, 0.25) 180deg,
+      rgba(220, 8, 188, 0.5) 210deg,
+      #dc08bc 240deg,
+      #1a73e7 300deg,
+      #1ae784 360deg
+    ) !important;
+    z-index: -2 !important;
+    animation: spinRing 8s linear infinite !important;
+  }
+
+  .story-avatar.has-story::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: 1px !important;
+    border-radius: 50% !important;
+    background: #f0f4ff !important;
+    z-index: -1 !important;
+  }
+
+  /* Avatar icon color variants for light mode */
+  .story-avatar.avatar-color-0 svg {
+    color: #5ef0a8 !important;
+  }
+
+  .story-avatar.avatar-color-1 svg {
+    color: #5a9ff0 !important;
+  }
+
+  .story-avatar.avatar-color-2 svg {
+    color: #f05ad8 !important;
+  }
+
+  @keyframes spinRing {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 
   .story-username {
