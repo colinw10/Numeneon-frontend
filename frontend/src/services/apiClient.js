@@ -3,11 +3,11 @@
 
 import axios from "axios";
 
-// Toggle between local and production:
-// - Local dev: "http://localhost:8000/api"
-// - Production: "https://numeneon-backend.onrender.com/api"
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+// Production: Render backend | Local: localhost
+const API_BASE_URL = 
+  window.location.hostname === "localhost" 
+    ? "http://localhost:8000/api"
+    : "https://numeneon-backend.onrender.com/api";
 
 // For quick local testing, uncomment the line you need:
 // const API_BASE_URL = "http://localhost:8000/api";
