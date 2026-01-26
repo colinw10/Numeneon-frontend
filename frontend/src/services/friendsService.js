@@ -44,6 +44,11 @@ const friendsService = {
     return response.data;
   },
 
+  // DELETE /api/friends/cancel/:user_id/ → cancel outgoing friend request
+  cancelRequest: async (userId) => {
+    await apiClient.delete(`/friends/cancel/${userId}/`);
+  },
+
   // DELETE /api/friends/remove/:user_id/ → remove a friend
   remove: async (userId) => {
     await apiClient.delete(`/friends/remove/${userId}/`);

@@ -78,6 +78,19 @@ export const FriendsProvider = ({ children }) => {
     }
   };
 
+  // CANCEL OUTGOING FRIEND REQUEST
+  const cancelRequest = async (userId) => {
+    try {
+      await friendsService.cancelRequest(userId);
+      return { success: true };
+    } catch (err) {
+      return { 
+        success: false, 
+        error: err.response?.data?.detail || 'Failed to cancel request' 
+      };
+    }
+  };
+
   // ACCEPT REQUEST
   const acceptRequest = async (requestId) => {
     try {
@@ -132,6 +145,7 @@ export const FriendsProvider = ({ children }) => {
         // Actions
         fetchFriends,
         sendRequest,
+        cancelRequest,
         acceptRequest,
         declineRequest,
         removeFriend,

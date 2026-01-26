@@ -32,7 +32,7 @@ function ProfileCardFront({ setIsFlipped, posts, user, isOwnProfile = true }) {
   const [showShareToast, setShowShareToast] = useState(false);
   const [friendRequestPending, setFriendRequestPending] = useState(false);
   
-  const { friends, pendingRequests, sendRequest } = useFriends();
+  const { friends, pendingRequests, sendRequest, cancelRequest } = useFriends();
   const { openMessages } = useMessages();
   
   // Check friendship status
@@ -46,8 +46,20 @@ function ProfileCardFront({ setIsFlipped, posts, user, isOwnProfile = true }) {
     const result = await sendRequest(user.id);
     if (!result.success) {
       console.error('Failed to send friend request:', result.error);
+      setFriendRequestPending(false);
     }
     // Keep pending state to show "Request Sent"
+  };
+  
+  // Handle canceling friend request
+  const handleCancelRequest = async () => {
+    if (!user?.id) return;
+    const result = await cancelRequest(user.id);
+    if (result.success) {
+      setFriendRequestPending(false);
+    } else {
+      console.error('Failed to cancel friend request:', result.error);
+    }
   };
   
   // Handle opening messages with this user
@@ -257,7 +269,11 @@ function ProfileCardFront({ setIsFlipped, posts, user, isOwnProfile = true }) {
                 </button>
               </>
             ) : hasPendingRequest || friendRequestPending ? (
-              <button className="action-icon-btn pending-btn" title="Request Pending" disabled>
+              <button 
+                className="action-icon-btn pending-btn" 
+                title="Cancel Request" 
+                onClick={handleCancelRequest}
+              >
                 <ClockIcon size={18} />
               </button>
             ) : (

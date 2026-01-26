@@ -112,16 +112,21 @@ function SearchModal({ isOpen, onClose }) {
   // Filter based on search query
   const query = searchQuery.toLowerCase().trim();
   
-  // If we have API results, show them; otherwise filter local users
-  const filteredUsers = query ? (apiUsers.length > 0 
-    ? allUsers // API results + local (already combined and deduped)
-    : allUsers.filter(user => 
-        user.username?.toLowerCase().includes(query) ||
-        user.first_name?.toLowerCase().includes(query) ||
-        user.last_name?.toLowerCase().includes(query) ||
-        user.displayName?.toLowerCase().includes(query)
-      )
-  ) : [];
+  // Filter function for matching users
+  const matchesQuery = (user) => 
+    user.username?.toLowerCase().includes(query) ||
+    user.first_name?.toLowerCase().includes(query) ||
+    user.last_name?.toLowerCase().includes(query) ||
+    user.displayName?.toLowerCase().includes(query);
+  
+  // Show API results first, then add matching local users (deduped)
+  const filteredUsers = query ? [
+    ...apiUsers, // API results are already filtered by backend
+    ...allUsers.filter(user => 
+      // Only include local users that match AND aren't already in API results
+      !apiUsers.find(u => u.username === user.username) && matchesQuery(user)
+    )
+  ] : [];
 
   const filteredPosts = query ? posts.filter(post =>
     post.content?.toLowerCase().includes(query) ||
