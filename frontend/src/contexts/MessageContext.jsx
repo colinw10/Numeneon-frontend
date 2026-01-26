@@ -4,7 +4,7 @@
 // UPDATED WITH WEBSOCKETS 
 // Now receives real-time message notifications instead of polling
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { useAuth } from "./AuthContext";
 import { useWebSocket } from "./WebSocketContext";
 import messagesService from "@services/messagesService";
@@ -184,7 +184,8 @@ export function MessageProvider({ children }) {
   };
 
   // Find the conversation object for the currently selected user
-  const getSelectedConversation = () => {
+  // Using useMemo to ensure proper React dependency tracking
+  const selectedConversation = useMemo(() => {
     const existing = conversations.find((c) => c.user.id === selectedUserId);
     if (existing) return existing;
     
@@ -198,7 +199,7 @@ export function MessageProvider({ children }) {
       };
     }
     return null;
-  };
+  }, [conversations, selectedUserId, selectedUserInfo, selectedMessages]);
 
   // Helper: Build display name from user object
   const getDisplayName = (userObj) => {
@@ -228,7 +229,7 @@ export function MessageProvider({ children }) {
         conversations,
         selectedUserId,
         selectedMessages,
-        selectedConversation: getSelectedConversation(),
+        selectedConversation,
         newMessageNotification,
 
         // Actions
