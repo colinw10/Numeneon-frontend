@@ -78,7 +78,7 @@ function MessageModal({ onClose }) {
   // 🔵 Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [selectedConversation?.messages]);
+  }, [selectedMessages]);
   
   // 🔵 Calculate charge level (0-4) based on message length
   // This creates the "charging up" visual effect on the send button
