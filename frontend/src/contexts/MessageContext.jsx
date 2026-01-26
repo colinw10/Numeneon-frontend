@@ -118,11 +118,10 @@ export function MessageProvider({ children }) {
     setIsMessageModalOpen(true);
 
     if (targetUser) {
-      // Store user info for display (useful when no conversation exists yet)
-      setSelectedUserInfo(targetUser);
-      await fetchConversation(targetUser.id);
+      // Use selectConversation which properly handles new conversations
+      await selectConversation(targetUser.id, targetUser);
     } else if (conversations.length > 0 && !selectedUserId) {
-      await fetchConversation(conversations[0].user.id);
+      await selectConversation(conversations[0].user.id);
     }
   };
 
