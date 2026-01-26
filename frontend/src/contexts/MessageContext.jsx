@@ -132,10 +132,24 @@ export function MessageProvider({ children }) {
 
   // Select a conversation and mark as read
   const selectConversation = async (userId, userInfo = null) => {
+    // Set user info FIRST so it's available immediately
     if (userInfo) {
       setSelectedUserInfo(userInfo);
     }
-    await fetchConversation(userId);
+    // Set the user ID immediately so UI updates
+    setSelectedUserId(userId);
+    setSelectedMessages([]);
+    
+    // Then fetch existing messages (if any)
+    try {
+      const messages = await messagesService.getConversation(userId);
+      setSelectedMessages(messages || []);
+    } catch (err) {
+      console.log("No existing conversation, starting fresh");
+      // Already set empty messages above
+    }
+    
+    // Mark as read (don't block on this)
     try {
       await messagesService.markAllAsRead(userId);
       fetchConversations();
