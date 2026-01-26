@@ -112,8 +112,10 @@ function Friends() {
   // Handle clicking the message icon - open message modal with this friend
   const handleMessageFriend = (e, friend) => {
     e.stopPropagation(); // Prevent triggering card click
+    console.log("🔍 Friend object from API:", friend);
+    console.log("🔍 friend.id:", friend.id, "friend.user_id:", friend.user_id);
     openMessages({
-      id: friend.id,
+      id: friend.id || friend.user_id,  // Try both possible field names
       username: friend.username,
       displayName: friend.first_name && friend.last_name 
         ? `${friend.first_name} ${friend.last_name}`
