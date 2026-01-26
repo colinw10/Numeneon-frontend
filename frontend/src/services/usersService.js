@@ -14,7 +14,7 @@ export const searchUsers = async (query) => {
   }
 
   try {
-    const response = await apiClient.get("/users/search/", {
+    const response = await apiClient.get("/auth/search/", {
       params: { q: query.trim() },
     });
     return response.data;
