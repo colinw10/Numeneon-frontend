@@ -100,6 +100,10 @@ export function MessageProvider({ children }) {
 
   // GET /api/messages/conversation/?user_id=X - Load messages for one conversation
   const fetchConversation = async (userId) => {
+    if (!userId) {
+      console.error("fetchConversation called without userId!", new Error().stack);
+      return;
+    }
     try {
       const messages = await messagesService.getConversation(userId);
       setSelectedMessages(messages || []);
