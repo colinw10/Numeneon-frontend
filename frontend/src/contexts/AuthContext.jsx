@@ -116,7 +116,13 @@ export const AuthProvider = ({ children }) => {
     try {
       await authService.signup({ username, email, password });
       // user signed up successfully, now use the login function to log them in
-      return await login(email, password);
+      const loginResult = await login(email, password);
+      if (!loginResult.success) {
+        // Signup worked but auto-login failed - still a "success" but user needs to login manually
+        console.warn("Signup succeeded but auto-login failed:", loginResult.error);
+        return { success: true, autoLoginFailed: true };
+      }
+      return loginResult;
     } catch (error) {
       return { success: false, error: error.response?.data || "Signup failed" };
     }

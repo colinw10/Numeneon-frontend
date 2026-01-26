@@ -123,8 +123,13 @@ function Signup() {
       // Use AuthContext signup which also auto-logs in the user
       const result = await signup(formData.username, formData.email, formData.password);
       if (result.success) {
-        // Signup + auto-login succeeded, navigate to home
-        navigate("/home");
+        if (result.autoLoginFailed) {
+          // Signup worked but auto-login failed - redirect to login page
+          navigate("/login", { state: { message: "Account created! Please log in." } });
+        } else {
+          // Signup + auto-login succeeded, navigate to home
+          navigate("/home");
+        }
       } else {
         // Signup or login failed
         const errorMsg = typeof result.error === 'string' 
