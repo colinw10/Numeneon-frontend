@@ -19,7 +19,7 @@ import NotFound from './components/pages/NotFound';
 // Protected Route
 import ProtectedRoute from './components/ui/ProtectedRoute';
 // Contexts
-import { WebSocketProvider, MessageProvider, SideNavProvider } from './contexts';
+import { MessageProvider, SideNavProvider } from './contexts';
 // Global styles now imported via main.scss in main.jsx
 
 function AppContent() {
@@ -70,14 +70,11 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
-      {/* ✨ WebSocketProvider wraps everything that needs real-time updates */}
-      <WebSocketProvider>
-        <SideNavProvider>
-          <MessageProvider>
-            <AppContent />
-          </MessageProvider>
-        </SideNavProvider>
-      </WebSocketProvider>
+      <SideNavProvider>
+        <MessageProvider>
+          <AppContent />
+        </MessageProvider>
+      </SideNavProvider>
     </BrowserRouter>
   );
 }

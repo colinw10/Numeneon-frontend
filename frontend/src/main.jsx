@@ -7,17 +7,20 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { PostsProvider } from "./contexts/PostsContext";
 import { FriendsProvider } from "./contexts/FriendsContext";
 import { SearchProvider } from "./contexts/SearchContext";
+import { WebSocketProvider } from "./contexts/WebSocketContext";
 
 createRoot(document.getElementById('root')).render(
    <StrictMode>
-    <AuthProvider>        {/* Must be first - other contexts may need auth */}
-      <PostsProvider>
-        <FriendsProvider>
-          <SearchProvider>
-            <App />       {/* App and all children can now access all contexts */}
-          </SearchProvider>
-        </FriendsProvider>
-      </PostsProvider>
+    <AuthProvider>           {/* Must be first - provides token */}
+      <WebSocketProvider>    {/* Needs token, provides WS connection */}
+        <PostsProvider>
+          <FriendsProvider>  {/* Uses WebSocket */}
+            <SearchProvider>
+              <App />
+            </SearchProvider>
+          </FriendsProvider>
+        </PostsProvider>
+      </WebSocketProvider>
     </AuthProvider>
   </StrictMode>,
 )
