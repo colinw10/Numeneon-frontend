@@ -32,8 +32,8 @@ NUMENEON's signature feature is the **River Timeline** — a feed that flows lik
 
 Modern social feeds suffer from "Information Congestion"—everything fights for the same narrow vertical space. The River Timeline treats UI as a traffic management system:
 
-1.  **Horizontal Currents:** Instead of a congested single lane, we created parallel flows for **Thoughts**, **Media**, and **Milestones**.
-2.  **The "Sluice Gate" (The Split):** By limiting each row to 12 items, we curate the flood. The code stops the scroll before it becomes overwhelming.
+1.  **Horizontal Currents:** Instead of a congested single lane, the design creates parallel flows for **Thoughts**, **Media**, and **Milestones**.
+2.  **The "Sluice Gate" (The Split):** By limiting each row to 12 items, the feed curates the flood. The code stops the scroll before it becomes overwhelming.
 3.  **Congestion Control:** Grouping data enables a "3-lane highway" of visibility vs. a single-lane jam.
 
 **How it works:**
@@ -74,7 +74,7 @@ See [docs/features/RiverTimeline.md](./docs/features/RiverTimeline.md) for the f
 
 ### 🔌 Stretch Feature: WebSockets
 
-Beyond the MVP, we implemented **real-time notifications** using Django Channels + WebSockets:
+As a stretch goal, the team implemented **real-time notifications** using Django Channels + WebSockets:
 
 - **Friend request accepted** — Toast notification appears instantly
 - **New friend request** — Badge updates in real-time
@@ -172,6 +172,16 @@ numeneon/
 - [Implemented Features](./docs/features-implemented/README.md)
 - [Visual Identity](./docs/features/VisualIdentitySystem.md)
 
+### 📐 Planning & Design
+
+**ERD (Entity Relationship Diagram)**
+
+![NUMENEON ERD](./frontend/src/assets/numeneon-erd.png)
+
+**Wireframe Flow**
+
+![NUMENEON Wireframe](./frontend/src/assets/numeneon-wireframe-v3.png)
+
 ---
 
 ## 🛠️ Tech Stack
@@ -184,13 +194,27 @@ numeneon/
 
 ---
 
-## 👥 Team
+## 👥 Contributors
 
-- **Pablo** — UI Architecture, Visual Design
-- **Natalia** — Backend, Auth, Migrations
-- **Colin** — Posts, Team Lead
-- **Crystal** — Friends, Frontend
-- **Tito** — Infrastructure, Utilities
+NUMENEON was built as a collaborative bootcamp project by:
+
+| Name               | Role                         | Responsibilities                                                                                                                                       |
+| ------------------ | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Colin Weir**     | Team Lead & Posts System     | Posts backend/frontend, data flow architecture, PostsContext, code review                                                                              |
+| **Crystal Ruiz**   | Friends System               | Friends backend/frontend, FriendsContext, friend request UI, social features                                                                           |
+| **Natalia Pricop** | Auth & Backend               | Authentication system, user registration/login, Django migrations, backend APIs                                                                        |
+| **Tito**           | ⚙️ Infrastructure            | API client setup, theme system, app entry points, utilities                                                                                            |
+| **Pablo Cordero**  | UI Architect & Visual Design | Timeline River UI, Profile Card flip system, Activity Visualization (Wave Chart + Heatmap), Messaging Modal, Mobile responsiveness, SCSS design system |
+
+### Collective Contributions
+
+This project represents a true team effort. Key achievements include:
+
+- **River Timeline** — A unique 3-column feed design that reimagines social media scrolling
+- **Real-time Messaging** — Full DM system with conversation management
+- **Activity Analytics** — Wave chart and GitHub-style heatmap visualizations
+- **Cyberpunk Design System** — Cohesive glassmorphic UI with neon aesthetics
+- **Full-stack Integration** — Seamless Django REST + React architecture
 
 ---
 
