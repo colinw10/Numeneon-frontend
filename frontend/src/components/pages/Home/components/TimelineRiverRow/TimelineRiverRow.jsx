@@ -23,8 +23,27 @@ function TimelineRiverRow({ rowData, onCommentClick, activeCommentPostId, commen
   const { openMessages } = useMessages();
   const navigate = useNavigate();
   
-  // Per-row collapsed state (NOT global - each user row manages its own)
-  const [rowCollapsedDecks, setRowCollapsedDecks] = useState(new Set());
+  // Generate unique storage key for this user's row
+  const storageKey = `numeneon-collapsed-${user?.id || user?.username || 'unknown'}`;
+  
+  // Per-row collapsed state with localStorage persistence
+  const [rowCollapsedDecks, setRowCollapsedDecks] = useState(() => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+  
+  // Persist collapsed state to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify([...rowCollapsedDecks]));
+    } catch {
+      // Ignore storage errors
+    }
+  }, [rowCollapsedDecks, storageKey]);
   
   // View mode state for each deck (carousel vs grid)
   const [deckViewModes, setDeckViewModes] = useState({
