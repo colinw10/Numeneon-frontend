@@ -38,11 +38,15 @@ export function SmartDeckHeader({
 }) {
   const config = typeConfig[type];
   
+  // className: highlight if this is the newest type AND open, dim if collapsed
+  // onClick: if collapsed → expand it, if open → collapse it
+  // title: shows tooltip based on current state
   return (
     <button 
       className={`smart-deck-header smart-deck-header--${type}${isRecentType && !isCollapsed ? ' smart-deck-header--recent' : ''}${isCollapsed ? ' smart-deck-header--collapsed' : ''}`}
       onClick={() => isCollapsed ? onExpand?.(type) : onCollapse?.(type)}
       title={isCollapsed ? "Click to expand" : "Click to collapse"}
+      
     >
       <span className="smart-deck-icon">{typeIcons[type]}</span>
       <span className="smart-deck-label">{config.label}</span>

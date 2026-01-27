@@ -172,6 +172,39 @@ numeneon/
 - [Implemented Features](./docs/features-implemented/README.md)
 - [Visual Identity](./docs/features/VisualIdentitySystem.md)
 
+---
+
+## 📸 Screenshots
+
+### Core Pages
+
+![Landing Page](./frontend/src/assets/screenshots/landing.png)
+![Sign In](./frontend/src/assets/screenshots/sign-in.png)
+![Sign Up](./frontend/src/assets/screenshots/sign-up.png)
+![Feed Page (River Timeline)](./frontend/src/assets/screenshots/feed.png)
+![Profile Page](./frontend/src/assets/screenshots/profile-page.png)
+![Friends Page](./frontend/src/assets/screenshots/friends-page.png)
+
+### Activity Visualizations
+
+![Wave Chart](./frontend/src/assets/screenshots/wave-chart.png)
+![Heat Map](./frontend/src/assets/screenshots/heatmap.png)
+
+### Mobile Responsive
+
+![Mobile Feed](./frontend/src/assets/screenshots/feed-mobile.png)
+![Mobile Profile](./frontend/src/assets/screenshots/profile-mobile.png)
+![Mobile Friends](./frontend/src/assets/screenshots/friends-mobile.png)
+![Mobile Messages](./frontend/src/assets/screenshots/messages-mobile.png)
+![Mobile Side Nav](./frontend/src/assets/screenshots/side-nav-mobile.png)
+
+### Light Mode
+
+![Light Mode Feed](./frontend/src/assets/screenshots/feed-lightmode.png)
+![Light Mode Profile](./frontend/src/assets/screenshots/profile-lightmode.png)
+![Light Mode Wave Chart](./frontend/src/assets/screenshots/wave-chart-lightmode.png)
+![Light Mode Heat Map](./frontend/src/assets/screenshots/heatmap-lightmode.png)
+
 ### 📐 Planning & Design
 
 **ERD (Entity Relationship Diagram)**

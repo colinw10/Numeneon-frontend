@@ -10,27 +10,42 @@ import { MessageBubbleIcon, ClockIcon } from '@assets/icons';
 import './TimelineRiverFeed.scss';
 
 const CAROUSEL_LIMIT = 12;
+// ↑ Max posts per category per row — design decision
 
 /**
  * Chunk posts into groups of max CAROUSEL_LIMIT (12)
  * Newest posts in first chunk, older in subsequent chunks
  */
 const chunkPostsIntoRows = (posts) => {
+  // GUARD 1: No posts? Return one empty row
   if (!posts || posts.length === 0) return [[]];
-  if (posts.length <= CAROUSEL_LIMIT) return [posts];
-  
+  if (posts.length <= CAROUSEL_LIMIT) return [posts];// GUARD 2: 12 or fewer? No splitting needed — return as single row
+
+
+  // MORE THAN 12 — need to split
   const rows = [];
   const totalPosts = posts.length;
   const remainder = totalPosts % CAROUSEL_LIMIT;
-  
+  // e.g. 13 % 12 = 1
+  // IF there's leftover ↑ modulo gives us the "leftover" after dividing by 12
   if (remainder > 0) {
+    // FIRST ROW: gets the remainder (the newest posts)
     rows.push(posts.slice(0, remainder));
+    // ↑ posts.slice(0, 1) → grabs posts at index 0 up to (not including) index 1
+    // since new post gets pushed to the front of array in PostsContext logic
+
+    // REMAINING ROWS: get 12 each
+    // i=1 start when the first row ends
+    // keep going while i < totalPosts(13)
     for (let i = remainder; i < totalPosts; i += CAROUSEL_LIMIT) {
       rows.push(posts.slice(i, i + CAROUSEL_LIMIT));
+      // ↑ posts.slice(1, 13) → grabs posts at index 1 through 12 to fill up the row that was left
     }
   } else {
+    // EVENLY DIVISIBLE (e.g. 24 posts)
     for (let i = 0; i < totalPosts; i += CAROUSEL_LIMIT) {
       rows.push(posts.slice(i, i + CAROUSEL_LIMIT));
+      // we
     }
   }
   
@@ -67,7 +82,7 @@ const splitGroupIntoRows = (groupData) => {
 function TimelineRiverFeed({ posts, activeCommentPostId, setActiveCommentPostId, commentText, setCommentText, onDeletePost, onUpdatePost }) {
   // Transform flat posts array into grouped structure (no memoization - always fresh)
   const grouped = groupPostsByUser(posts);
-  const groupedAndSortedPosts = sortGroupedPosts(grouped);
+  const groupedAndSortedPosts = sortGroupedPosts(grouped); //custom util to convert grouped object into sorted array
 
   // 🔵 Handle comment toggle (open/close comment box)
   const handleCommentClick = (postId) => {
