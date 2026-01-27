@@ -67,4 +67,24 @@
   }
 }
 
-/* Close button uses global .close-btn-glow class */
+/* Close button - pink accent to match plus button */
+.message-modal-header .close-btn-glow {
+  background: transparent;
+  border: none;
+  color: rgba(255, 85, 221, 0.8);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+
+  &:hover {
+    color: #ff55dd;
+    background: rgba(255, 85, 221, 0.1);
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(255, 85, 221, 0.4));
+  }
+}

@@ -58,7 +58,8 @@ function MessageModal({ onClose }) {
     selectConversation, 
     sendMessage,
     getDisplayName,
-    getInitials: contextGetInitials
+    getInitials: contextGetInitials,
+    openMessages
   } = useMessages();
   
   // 🔵 Local state for the text input
@@ -67,7 +68,7 @@ function MessageModal({ onClose }) {
   // 🔵 Local state for search filtering
   const [searchQuery, setSearchQuery] = useState('');
   
-  // 🔵 New message mode - search for any user to message
+  // 🔵 NEW MESSAGE MODE - search for any user
   const [isNewMessageMode, setIsNewMessageMode] = useState(false);
   const [userSearchQuery, setUserSearchQuery] = useState('');
   const [userSearchResults, setUserSearchResults] = useState([]);
@@ -85,46 +86,7 @@ function MessageModal({ onClose }) {
   // 🔵 Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [selectedMessages]);
-  
-  // 🔵 Search for users when typing in new message mode
-  useEffect(() => {
-    if (!isNewMessageMode || !userSearchQuery.trim()) {
-      setUserSearchResults([]);
-      return;
-    }
-    
-    const searchTimeout = setTimeout(async () => {
-      setIsSearching(true);
-      try {
-        const results = await usersService.searchUsers(userSearchQuery);
-        setUserSearchResults(results);
-      } catch (err) {
-        console.error('User search failed:', err);
-        setUserSearchResults([]);
-      } finally {
-        setIsSearching(false);
-      }
-    }, 300); // Debounce search
-    
-    return () => clearTimeout(searchTimeout);
-  }, [userSearchQuery, isNewMessageMode]);
-  
-  // 🔵 Handle selecting a user from search results
-  const handleSelectUser = (user) => {
-    // Pass user info so it can be displayed even without existing conversation
-    selectConversation(user.id, {
-      id: user.id,
-      username: user.username,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      displayName: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username,
-    });
-    setIsNewMessageMode(false);
-    setUserSearchQuery('');
-    setUserSearchResults([]);
-    setMobileView('chat');
-  };
+  }, [selectedConversation?.messages]);
   
   // 🔵 Calculate charge level (0-4) based on message length
   // This creates the "charging up" visual effect on the send button
@@ -175,9 +137,49 @@ function MessageModal({ onClose }) {
     return false;
   });
   
+  // 🔵 Handle user search for new message mode
+  const handleUserSearch = async (query) => {
+    setUserSearchQuery(query);
+    if (query.trim().length < 2) {
+      setUserSearchResults([]);
+      return;
+    }
+    setIsSearching(true);
+    try {
+      const results = await usersService.searchUsers(query);
+      setUserSearchResults(results || []);
+    } catch (err) {
+      console.error('User search failed:', err);
+      setUserSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+  
+  // 🔵 Handle selecting a user from search results (new conversation)
+  const handleSelectUser = (user) => {
+    // Create proper user object for openMessages
+    const targetUser = {
+      id: user.id,
+      username: user.username,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      profile_picture: user.profile_picture
+    };
+    
+    // Use openMessages to set up the conversation
+    openMessages(targetUser);
+    
+    // Reset new message mode
+    setIsNewMessageMode(false);
+    setUserSearchQuery('');
+    setUserSearchResults([]);
+    setMobileView('chat');
+  };
+  
   return (
     <div className="message-modal-overlay" onClick={onClose}>
-      <div className={`message-modal ${isFullscreen ? 'fullscreen' : ''}`} onClick={(e) => e.stopPropagation()}>
+      <div className={`message-modal ${isFullscreen ? 'fullscreen' : ''} ${mobileView === 'chat' ? 'mobile-chat-view' : ''}`} onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="message-modal-header">
           <h2 className="message-modal-title">Messages</h2>
@@ -203,175 +205,178 @@ function MessageModal({ onClose }) {
         <div className="message-modal-body">
           {/* Left: Conversations List */}
           <div className={`message-conversations ${mobileView === 'list' ? 'show' : ''}`}>
-            <div className="conversations-header">
-              {/* New Message Button */}
-              <button 
-                className={`new-message-btn ${isNewMessageMode ? 'active' : ''}`}
-                onClick={() => setIsNewMessageMode(!isNewMessageMode)}
-                title="New message"
-              >
-                <PlusIcon size={22} />
+            {/* Mobile title row */}
+            <div className="conversations-title-row">
+              <h2 className="conversations-title">Messages</h2>
+              <button className="conversations-close-btn" onClick={onClose}>
+                <CloseIcon size={20} />
               </button>
-              
-              {/* User Search (when in new message mode) */}
+            </div>
+            <div className="conversations-header">
               {isNewMessageMode ? (
-                <div className="conversations-search-wrapper">
-                  <input 
-                    type="text"
-                    id="user-search"
-                    name="user-search"
-                    autoComplete="off"
-                    placeholder="Search users to message..." 
-                    className="conversations-search"
-                    value={userSearchQuery}
-                    onChange={(e) => setUserSearchQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Escape') {
-                        setIsNewMessageMode(false);
-                        setUserSearchQuery('');
-                      }
-                    }}
-                    autoFocus
-                  />
-                  {userSearchQuery && (
+                <>
+                  <div className="conversations-search-wrapper">
+                    <input 
+                      type="text" 
+                      placeholder="Search users..." 
+                      className="conversations-search"
+                      value={userSearchQuery}
+                      onChange={(e) => handleUserSearch(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') {
+                          setIsNewMessageMode(false);
+                          setUserSearchQuery('');
+                          setUserSearchResults([]);
+                        }
+                      }}
+                      autoFocus
+                    />
                     <button 
                       className="conversations-search-clear"
-                      onClick={() => setUserSearchQuery('')}
-                      title="Clear search"
+                      onClick={() => {
+                        setIsNewMessageMode(false);
+                        setUserSearchQuery('');
+                        setUserSearchResults([]);
+                      }}
+                      title="Cancel"
                     >
                       <CloseIcon size={14} />
                     </button>
-                  )}
-                </div>
+                  </div>
+                </>
               ) : (
-                <div className="conversations-search-wrapper">
-                  <input 
-                    type="text"
-                    id="conversations-search"
-                    name="conversations-search"
-                    autoComplete="off"
-                    placeholder="Search conversations..." 
-                    className="conversations-search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Escape') setSearchQuery('');
-                    }}
-                  />
-                {searchQuery && (
+                <>
+                  <div className="conversations-search-wrapper">
+                    <input 
+                      type="text" 
+                      placeholder="Search conversations..." 
+                      className="conversations-search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') setSearchQuery('');
+                      }}
+                    />
+                    {searchQuery && (
+                      <button 
+                        className="conversations-search-clear"
+                        onClick={() => setSearchQuery('')}
+                        title="Clear search"
+                      >
+                        <CloseIcon size={14} />
+                      </button>
+                    )}
+                  </div>
                   <button 
-                    className="conversations-search-clear"
-                    onClick={() => setSearchQuery('')}
-                    title="Clear search"
+                    className="new-message-btn"
+                    onClick={() => setIsNewMessageMode(true)}
+                    title="New message"
                   >
-                    <CloseIcon size={14} />
+                    <PlusIcon size={18} />
                   </button>
-                )}
-              </div>
+                </>
               )}
             </div>
-            
-            {/* User Search Results (new message mode) */}
-            {isNewMessageMode ? (
-              <div className="conversations-list">
-                {isSearching && (
-                  <div className="conversations-empty">
-                    <p>Searching...</p>
-                  </div>
-                )}
-                
-                {!isSearching && userSearchResults.length > 0 && userSearchResults.map((user) => {
-                  const displayName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username;
-                  return (
-                    <div 
-                      key={user.id}
-                      className="conversation-item"
-                      onClick={() => handleSelectUser(user)}
-                    >
-                      <div className="conversation-avatar">
-                        <span className="initial-1">{getInitials(displayName)[0]}</span>
-                        {getInitials(displayName).length > 1 && (
-                          <span className="initial-2">{getInitials(displayName)[1]}</span>
-                        )}
-                      </div>
-                      <div className="conversation-info">
-                        <span className="conversation-name">{displayName}</span>
-                        <span className="conversation-preview">@{user.username}</span>
-                      </div>
-                    </div>
-                  );
-                })}
-                
-                {!isSearching && userSearchQuery.trim() && userSearchResults.length === 0 && (
-                  <div className="conversations-empty">
-                    <p>No users found</p>
-                    <p className="empty-hint">Try a different search</p>
-                  </div>
-                )}
-                
-                {!isSearching && !userSearchQuery.trim() && (
-                  <div className="conversations-empty">
-                    <p>Search for users</p>
-                    <p className="empty-hint">Type a name or username</p>
-                  </div>
-                )}
-              </div>
-            ) : (
             <div className="conversations-list">
-              {/* 🔵 Map through filtered conversations from context */}
-              {filteredConversations.map((conv) => {
-                // Support both API format (last_message) and mock format (messages array)
-                const lastMessage = conv.last_message || (conv.messages && conv.messages[conv.messages.length - 1]);
-                const displayName = conv.user?.displayName || `${conv.user?.first_name || ''} ${conv.user?.last_name || ''}`.trim() || conv.user?.username || 'Unknown';
-                const isActive = conv.user?.id === selectedUserId;
-                const messagePreview = lastMessage?.content || lastMessage?.text || 'No messages yet';
-                
-                return (
-                  <div 
-                    key={conv.id || conv.user?.id}
-                    className={`conversation-item ${isActive ? 'active' : ''}`}
-                    onClick={() => {
-                      selectConversation(conv.user?.id);
-                      setMobileView('chat'); // Switch to chat view on mobile
-                    }}
-                  >
-                    {/* Avatar - show initials */}
-                    <div className="conversation-avatar">
-                      <span className="initial-1">{getInitials(displayName)[0]}</span>
-                      {getInitials(displayName).length > 1 && (
-                        <span className="initial-2">{getInitials(displayName)[1]}</span>
-                      )}
+              {/* 🔵 NEW MESSAGE MODE: Show user search results */}
+              {isNewMessageMode ? (
+                <>
+                  {isSearching && (
+                    <div className="conversations-empty">
+                      <p>Searching...</p>
                     </div>
-                    <div className="conversation-info">
-                      <span className="conversation-name">{displayName}</span>
-                      <span className="conversation-preview">
-                        {messagePreview.substring(0, 30) + (messagePreview.length > 30 ? '...' : '')}
-                      </span>
+                  )}
+                  {!isSearching && userSearchResults.map((user) => {
+                    const displayName = `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'Unknown';
+                    return (
+                      <div 
+                        key={user.id}
+                        className="conversation-item"
+                        onClick={() => handleSelectUser(user)}
+                      >
+                        <div className="conversation-avatar">
+                          <span className="initial-1">{getInitials(displayName)[0]}</span>
+                          {getInitials(displayName).length > 1 && (
+                            <span className="initial-2">{getInitials(displayName)[1]}</span>
+                          )}
+                        </div>
+                        <div className="conversation-info">
+                          <span className="conversation-name">{displayName}</span>
+                          <span className="conversation-preview">@{user.username}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {!isSearching && userSearchQuery.length >= 2 && userSearchResults.length === 0 && (
+                    <div className="conversations-empty">
+                      <p>No users found</p>
+                      <p className="empty-hint">Try a different search</p>
                     </div>
-                    <span className="conversation-time">
-                      {formatRelativeTime(lastMessage?.created_at || conv.lastMessageTime)}
-                    </span>
-                  </div>
-                );
-              })}
+                  )}
+                  {!isSearching && userSearchQuery.length < 2 && (
+                    <div className="conversations-empty">
+                      <p>Search for a user</p>
+                      <p className="empty-hint">Type at least 2 characters</p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {/* 🔵 Map through filtered conversations from context */}
+                  {filteredConversations.map((conv) => {
+                    // Support both API format (last_message) and mock format (messages array)
+                    const lastMessage = conv.last_message || (conv.messages && conv.messages[conv.messages.length - 1]);
+                    const displayName = conv.user?.displayName || `${conv.user?.first_name || ''} ${conv.user?.last_name || ''}`.trim() || conv.user?.username || 'Unknown';
+                    const isActive = conv.user?.id === selectedUserId;
+                    const messagePreview = lastMessage?.content || lastMessage?.text || 'No messages yet';
+                    
+                    return (
+                      <div 
+                        key={conv.id || conv.user?.id}
+                        className={`conversation-item ${isActive ? 'active' : ''}`}
+                        onClick={() => {
+                          selectConversation(conv.user?.id);
+                          setMobileView('chat'); // Switch to chat view on mobile
+                        }}
+                      >
+                        {/* Avatar - show initials */}
+                        <div className="conversation-avatar">
+                          <span className="initial-1">{getInitials(displayName)[0]}</span>
+                          {getInitials(displayName).length > 1 && (
+                            <span className="initial-2">{getInitials(displayName)[1]}</span>
+                          )}
+                        </div>
+                        <div className="conversation-info">
+                          <span className="conversation-name">{displayName}</span>
+                          <span className="conversation-preview">
+                            {messagePreview.substring(0, 30) + (messagePreview.length > 30 ? '...' : '')}
+                          </span>
+                        </div>
+                        <span className="conversation-time">
+                          {formatRelativeTime(lastMessage?.created_at || conv.lastMessageTime)}
+                        </span>
+                      </div>
+                    );
+                  })}
               
-              {/* Empty state - no search results */}
-              {filteredConversations.length === 0 && searchQuery.trim() && (
-                <div className="conversations-empty">
-                  <p>No results for "{searchQuery}"</p>
-                  <p className="empty-hint">Try a different search term</p>
-                </div>
-              )}
+                  {/* Empty state - no search results */}
+                  {filteredConversations.length === 0 && searchQuery.trim() && (
+                    <div className="conversations-empty">
+                      <p>No results for "{searchQuery}"</p>
+                      <p className="empty-hint">Try a different search term</p>
+                    </div>
+                  )}
               
-              {/* Empty state - no conversations at all */}
-              {conversations.length === 0 && (
-                <div className="conversations-empty">
-                  <p>No conversations yet</p>
-                  <p className="empty-hint">Click "New" to message someone!</p>
-                </div>
+                  {/* Empty state - no conversations at all */}
+                  {conversations.length === 0 && (
+                    <div className="conversations-empty">
+                      <p>No conversations yet</p>
+                      <p className="empty-hint">Message someone from their post!</p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
-            )}
           </div>
 
           {/* Right: Chat View */}
@@ -393,15 +398,11 @@ function MessageModal({ onClose }) {
                   >
                     <ChevronLeftIcon size={20} />
                   </button>
-                  <div className="chat-user-info">
-                    <div className="chat-avatar">
-                      <span className="initial-1">{getInitials(chatDisplayName)[0]}</span>
-                      {getInitials(chatDisplayName).length > 1 && (
-                        <span className="initial-2">{getInitials(chatDisplayName)[1]}</span>
-                      )}
-                    </div>
-                    <span className="chat-username">{chatDisplayName}</span>
-                  </div>
+                  <span className="chat-username">{chatDisplayName}</span>
+                  {/* Mobile close button */}
+                  <button className="chat-close-btn" onClick={onClose}>
+                    <CloseIcon size={20} />
+                  </button>
                 </div>
                 
                 {/* Messages */}
@@ -413,12 +414,11 @@ function MessageModal({ onClose }) {
                     const messageTime = msg.created_at || msg.timestamp;
                     
                     return (
-                      <div 
-                        key={msg.id} 
-                        className={`chat-message ${isSent ? 'sent' : 'received'}`}
-                      >
-                        <p>{messageContent}</p>
+                      <div key={msg.id} className={`message-row ${isSent ? 'sent' : 'received'}`}>
                         <span className="message-time">{formatMessageTime(messageTime)}</span>
+                        <div className={`chat-message ${isSent ? 'sent' : 'received'}`}>
+                          <p>{messageContent}</p>
+                        </div>
                       </div>
                     );
                   })}

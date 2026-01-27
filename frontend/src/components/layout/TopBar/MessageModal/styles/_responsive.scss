@@ -157,6 +157,30 @@
     max-height: 100vh;
     border-radius: 0;
   }
+  
+  /* Hide main header on mobile - each view has its own header */
+  .message-modal-header {
+    display: none;
+  }
+  
+  /* Show mobile title row in conversations list */
+  .conversations-title-row {
+    display: flex;
+  }
+  
+  /* Conversations header - stack search and plus button better */
+  .conversations-header {
+    gap: 0.5rem;
+  }
+  
+  .conversations-search {
+    width: 200px;
+  }
+  
+  .new-message-btn {
+    width: 34px;
+    height: 34px;
+  }
 
   .message-conversations {
     width: 100%;
@@ -195,8 +219,8 @@
     color: rgba(201, 168, 255, 0.8);
     cursor: pointer;
     transition: all 0.2s ease;
-    margin-right: 8px;
-    flex-shrink: 0;
+    position: absolute;
+    left: 1rem;
     padding: 0;
     
     &:hover {
@@ -207,5 +231,55 @@
       width: 24px;
       height: 24px;
     }
+  }
+  
+  /* Show close button in chat header on mobile */
+  .chat-close-btn {
+    display: flex;
+  }
+}
+
+/* iPhone 6/7/8 and similar (375px width) */
+@media (max-width: 414px) {
+  .message-modal-header {
+    padding: 1rem;
+  }
+  
+  .message-modal-title {
+    font-size: 1rem;
+  }
+  
+  .modal-header-actions {
+    gap: 0.25rem;
+  }
+  
+  .fullscreen-btn,
+  .message-modal-header .close-btn-glow {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .conversations-header {
+    padding: 0.5rem;
+  }
+  
+  .conversations-search {
+    padding: 8px 12px;
+    font-size: 14px;
+    width: 180px;
+  }
+  
+  .new-message-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .conversation-item {
+    padding: 10px 12px;
+  }
+  
+  .conversation-avatar {
+    width: 40px;
+    height: 40px;
   }
 }

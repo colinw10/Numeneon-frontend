@@ -4,7 +4,7 @@
 // UPDATED WITH WEBSOCKETS 
 // Now receives real-time message notifications instead of polling
 
-import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import { useWebSocket } from "./WebSocketContext";
 import messagesService from "@services/messagesService";
@@ -26,7 +26,9 @@ export function MessageProvider({ children }) {
   // Currently selected conversation
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [selectedMessages, setSelectedMessages] = useState([]);
-  const [selectedUserInfo, setSelectedUserInfo] = useState(null); // Store user info for new conversations
+  
+  // NEW: Store user info for new conversations (before any messages exist)
+  const [selectedUserInfo, setSelectedUserInfo] = useState(null);
 
   // NEW: Notification state for new messages
   const [newMessageNotification, setNewMessageNotification] = useState(null);
@@ -100,20 +102,12 @@ export function MessageProvider({ children }) {
 
   // GET /api/messages/conversation/?user_id=X - Load messages for one conversation
   const fetchConversation = async (userId) => {
-    if (!userId) {
-      console.error("fetchConversation called without userId!", new Error().stack);
-      return;
-    }
     try {
       const messages = await messagesService.getConversation(userId);
-      setSelectedMessages(messages || []);
+      setSelectedMessages(messages);
       setSelectedUserId(userId);
     } catch (err) {
-      // If no conversation exists yet, just set empty messages and the user ID
-      // This allows starting a new conversation
-      console.log("No existing conversation, starting fresh");
-      setSelectedMessages([]);
-      setSelectedUserId(userId);
+      console.error("Failed to fetch conversation:", err);
     }
   };
 
@@ -122,10 +116,21 @@ export function MessageProvider({ children }) {
     setIsMessageModalOpen(true);
 
     if (targetUser) {
-      // Use selectConversation which properly handles new conversations
-      await selectConversation(targetUser.id, targetUser);
+      // Store user info so we can show header even without existing conversation
+      setSelectedUserInfo(targetUser);
+      setSelectedUserId(targetUser.id);
+      setSelectedMessages([]);
+      
+      // Try to fetch existing messages (may return empty for new conversations)
+      try {
+        const messages = await messagesService.getConversation(targetUser.id);
+        setSelectedMessages(messages || []);
+      } catch (err) {
+        // No existing conversation - that's fine, we'll start fresh
+        setSelectedMessages([]);
+      }
     } else if (conversations.length > 0 && !selectedUserId) {
-      await selectConversation(conversations[0].user.id);
+      await fetchConversation(conversations[0].user.id);
     }
   };
 
@@ -134,36 +139,8 @@ export function MessageProvider({ children }) {
   };
 
   // Select a conversation and mark as read
-  const selectConversation = async (userId, userInfo = null) => {
-    console.log("selectConversation called:", { userId, userInfo });
-    
-    // Set user info FIRST so name shows immediately in UI
-    // If no userInfo provided, clear it (we'll rely on conversations.find())
-    setSelectedUserInfo(userInfo);
-    
-    // Guard against undefined userId - but still show the UI with user info
-    if (!userId) {
-      console.error("selectConversation called without userId! userInfo:", userInfo);
-      // Still set empty state so UI shows
-      setSelectedMessages([]);
-      return;
-    }
-    
-    // Set the user ID immediately so UI updates
-    console.log("Setting selectedUserId:", userId);
-    setSelectedUserId(userId);
-    setSelectedMessages([]);
-    
-    // Then fetch existing messages (if any)
-    try {
-      const messages = await messagesService.getConversation(userId);
-      setSelectedMessages(messages || []);
-    } catch (err) {
-      console.log("No existing conversation, starting fresh");
-      // Already set empty messages above
-    }
-    
-    // Mark as read (don't block on this)
+  const selectConversation = async (userId) => {
+    await fetchConversation(userId);
     try {
       await messagesService.markAllAsRead(userId);
       fetchConversations();
@@ -199,34 +176,22 @@ export function MessageProvider({ children }) {
   };
 
   // Find the conversation object for the currently selected user
-  // Using useMemo to ensure proper React dependency tracking
-  const selectedConversation = useMemo(() => {
-    console.log("useMemo recomputing selectedConversation:", { 
-      selectedUserId, 
-      selectedUserInfo, 
-      conversationsCount: conversations.length 
-    });
+  const getSelectedConversation = () => {
+    // First check if there's an existing conversation
     const existing = conversations.find((c) => c.user.id === selectedUserId);
-    if (existing) {
-      console.log("Found existing conversation:", existing);
-      return existing;
-    }
+    if (existing) return existing;
     
-    // If we have user info, create a fake conversation object
+    // If no existing conversation but we have user info, create a fake conversation object
     // This allows the UI to display properly for new conversations
-    // (even if userId is undefined, we can still show the user's name)
-    if (selectedUserInfo) {
-      const fakeConv = {
+    if (selectedUserId && selectedUserInfo) {
+      return {
         user: selectedUserInfo,
         messages: selectedMessages,
         last_message: null,
       };
-      console.log("Created fake conversation:", fakeConv);
-      return fakeConv;
     }
-    console.log("No conversation found, returning null");
     return null;
-  }, [conversations, selectedUserId, selectedUserInfo, selectedMessages]);
+  };
 
   // Helper: Build display name from user object
   const getDisplayName = (userObj) => {
@@ -256,7 +221,7 @@ export function MessageProvider({ children }) {
         conversations,
         selectedUserId,
         selectedMessages,
-        selectedConversation,
+        selectedConversation: getSelectedConversation(),
         newMessageNotification,
 
         // Actions
