@@ -119,4 +119,10 @@ export {
 } from "./messaging";
 
 // Misc
-export { MusicIcon, MapPinIcon, PostTriangleIcon } from "./misc";
+export {
+  MusicIcon,
+  MapPinIcon,
+  PostTriangleIcon,
+  GuitarIcon,
+  SparkleStarIcon,
+} from "./misc";

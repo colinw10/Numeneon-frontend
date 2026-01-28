@@ -13,6 +13,7 @@ import Home from './components/pages/Home';
 import Login from './components/pages/Login';
 import SignUp from './components/pages/Signup';
 import Profile from './components/pages/Profile';
+import MySpace from './components/pages/MySpace';
 import About from './components/pages/About';
 import Friends from './components/pages/Friends';
 import NotFound from './components/pages/NotFound';
@@ -54,6 +55,8 @@ function AppContent() {
           <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
           <Route path="/profile/:username" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
+          <Route path="/myspace" element={<ProtectedRoute><MySpace/></ProtectedRoute>}/>
+          <Route path="/myspace/:username" element={<ProtectedRoute><MySpace/></ProtectedRoute>}/>
           <Route path="/about" element={<ProtectedRoute><About/></ProtectedRoute>}/>
           <Route path="/friends" element={<ProtectedRoute><Friends/></ProtectedRoute>}/>
           {/* 404 Catch-all - must be last */}

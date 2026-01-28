@@ -225,6 +225,33 @@
   filter: drop-shadow(0 0 6px rgba(255, 105, 180, 0.7));
 }
 
+/* Neon icon effect for MySpace music note */
+.setting-btn.throwback-btn svg.neon-icon {
+  color: #ff69b4;
+  filter: 
+    drop-shadow(0 0 2px #ff69b4)
+    drop-shadow(0 0 4px #ff69b4)
+    drop-shadow(0 0 8px rgba(255, 105, 180, 0.6))
+    drop-shadow(0 0 12px rgba(255, 215, 0, 0.4));
+  animation: neon-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes neon-pulse {
+  0% {
+    filter: 
+      drop-shadow(0 0 2px #ff69b4)
+      drop-shadow(0 0 4px #ff69b4)
+      drop-shadow(0 0 8px rgba(255, 105, 180, 0.6));
+  }
+  100% {
+    filter: 
+      drop-shadow(0 0 3px #ff69b4)
+      drop-shadow(0 0 6px #ff69b4)
+      drop-shadow(0 0 12px rgba(255, 105, 180, 0.8))
+      drop-shadow(0 0 16px rgba(255, 215, 0, 0.5));
+  }
+}
+
 /* ============================================
    LIGHT MODE OVERRIDES
    ============================================ */
