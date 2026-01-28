@@ -79,22 +79,38 @@ const splitGroupIntoRows = (groupData) => {
   return rows;
 };
 
-function TimelineRiverFeed({ posts, activeCommentPostId, setActiveCommentPostId, commentText, setCommentText, onDeletePost, onUpdatePost }) {
-  // Transform flat posts array into grouped structure (no memoization - always fresh)
-  const grouped = groupPostsByUser(posts);
-  const groupedAndSortedPosts = sortGroupedPosts(grouped); //custom util to convert grouped object into sorted array
 
-  // 🔵 Handle comment toggle (open/close comment box)
+import { useMemo } from 'react';
+
+function TimelineRiverFeed(props) {
+  const {
+    posts,
+    activeCommentPostId,
+    setActiveCommentPostId,
+    commentText,
+    setCommentText,
+    onDeletePost,
+    onUpdatePost,
+  } = props;
+
+  // Memoize grouped and sorted posts for performance
+  const groupedAndSortedPosts = useMemo(() => {
+    const grouped = groupPostsByUser(posts);
+    return sortGroupedPosts(grouped);
+  }, [posts]);
+
+  // Handle comment toggle (open/close comment box)
   const handleCommentClick = (postId) => {
     if (activeCommentPostId === postId) {
-      setActiveCommentPostId(null);  // Close if already open
+      setActiveCommentPostId(null);
       setCommentText('');
     } else {
-      setActiveCommentPostId(postId); // Open this post's comment box
+      setActiveCommentPostId(postId);
       setCommentText('');
     }
   };
-// 🔵 Empty state: Show message if no posts
+
+  // Empty state: Show message if no posts
   if (!posts || posts.length === 0) {
     return (
       <div className="timeline-river-empty">
@@ -103,30 +119,25 @@ function TimelineRiverFeed({ posts, activeCommentPostId, setActiveCommentPostId,
       </div>
     );
   }
-// 🟢 Main render: Loop through grouped posts
+
+  // Main render: Loop through grouped posts
   return (
     <div className="timeline-river-feed">
-      {/* Canopy shadow overlay */}
       <div className="timeline-canopy"></div>
       {groupedAndSortedPosts.map(({ date, orderId, data }) => {
-        // Split user's posts into multiple rows if any category exceeds 12
         const rowDataArray = splitGroupIntoRows(data);
-        
         return (
           <div key={orderId} className="timeline-river-section">
-            {/* 🎨 Last Active Header - only show once per user+day */}
             <div className="river-date-header">
               <div className="river-date-badge">
                 <ClockIcon size={16} />
-                Last active: {new Date(date).toLocaleDateString('en-US', { 
-                  month: 'short', 
-                  day: 'numeric'
+                Last active: {new Date(date).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
                 })}
               </div>
               <div className="river-divider"></div>
             </div>
-
-            {/* 🟢 Timeline River Rows - one per chunk of 12 */}
             {rowDataArray.map((rowData, rowIndex) => (
               <TimelineRiverRow
                 key={`${orderId}-row-${rowIndex}`}
