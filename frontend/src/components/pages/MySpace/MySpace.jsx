@@ -9,6 +9,9 @@ import './MySpace.scss';
 import { useAuth, useFriends } from '@contexts';
 import { ChevronLeftIcon } from '@assets/icons';
 
+// Subcomponents
+import { MusicPlayer, Top8Friends, ThemePicker, ProfileSection } from './components';
+
 // Import local rebel avatars
 
 import av2 from '@assets/icons/avatars/av2.jpg';
@@ -35,11 +38,11 @@ import myAvatar from '@assets/icons/avatars/my-avatar.png';
 // Example: av3 for slot 1, av7 for slot 2, etc.
 // ═══════════════════════════════════════════════════════════════
 const TOP8_AVATARS = [
-  av2,    // Friend slot 1
-  av16,   // Friend slot 2  
-  av3,    // Friend slot 3
-  av4,    // Friend slot 4
-  av17,   // Friend slot 5
+  av16,    // Friend slot 1
+  av15,   // Friend slot 2  
+  av17,    // Friend slot 3
+  av8,    // Friend slot 4
+  av13,   // Friend slot 5
   av6,    // Friend slot 6
   av7,    // Friend slot 7
   av8,    // Friend slot 8
@@ -60,43 +63,20 @@ const DEFAULT_MYSPACE_DATA = {
   customBio: '',
   theme: 'classic',
   topFriends: [],
+  // Music player playlist
+  playlist: [
+    { id: 1, title: 'Welcome to the Black Parade', artist: 'My Chemical Romance', duration: '5:11' },
+    { id: 2, title: 'Mr. Brightside', artist: 'The Killers', duration: '3:42' },
+    { id: 3, title: 'Sugar, We\'re Goin Down', artist: 'Fall Out Boy', duration: '3:49' },
+  ],
+  currentTrack: 0,
+  isPlaying: false,
+  volume: 75,
+  sliderStyle: 1, // 1-10 for different slider styles
 };
-
-// Text-only moods - no emojis, rebel style
-const MOOD_OPTIONS = [
-  { id: 'chillin', label: 'chillin' },
-  { id: 'hyped', label: 'hyped' },
-  { id: 'tired', label: 'tired' },
-  { id: 'in-love', label: 'in love' },
-  { id: 'pissed', label: 'pissed' },
-  { id: 'rockin', label: 'rockin' },
-  { id: 'bored', label: 'bored' },
-  { id: 'on-fire', label: 'on fire' },
-  { id: 'whatever', label: 'whatever' },
-  { id: 'emo', label: 'emo' },
-];
-
-const THEME_OPTIONS = [
-  { id: 'classic', name: 'Classic', preview: '#003366' },
-  { id: 'emo', name: 'Emo', preview: '#1a0a0a' },
-  { id: 'scene', name: 'Scene', preview: '#ff69b4' },
-  { id: 'starry', name: 'Starry', preview: '#0a0a2e' },
-  { id: 'glitter', name: 'Glitter', preview: '#2a1a00' },
-];
 
 // Get friend avatar from TOP8_AVATARS config
 const getFriendAvatar = (index) => TOP8_AVATARS[index] || REBEL_AVATARS[0];
-
-// Get rebel avatar based on username hash (fallback)
-const getRebelAvatar = (seed) => {
-  let hash = 0;
-  const str = String(seed || 'default');
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash) % REBEL_AVATARS.length;
-  return REBEL_AVATARS[index];
-};
 
 function MySpace() {
   const { username } = useParams();
@@ -105,18 +85,43 @@ function MySpace() {
   const { friends } = useFriends();
   
   // Determine if viewing own MySpace or someone else's
+  // These will recalculate on every render when username changes
   const isOwnSpace = !username || username === currentUser?.username;
   const displayUsername = username || currentUser?.username;
+  
+  // Get the viewed user's data (for avatar when viewing someone else's space)
+  // Must be before useState so it's available on first render
+  const viewedUser = isOwnSpace 
+    ? currentUser 
+    : friends.find(f => f.username === username);
   
   // MySpace profile state (will connect to backend later)
   const [mySpaceData, setMySpaceData] = useState(() => {
     // Try to load from localStorage for now
     const saved = localStorage.getItem(`myspace_${displayUsername}`);
-    return saved ? JSON.parse(saved) : DEFAULT_MYSPACE_DATA;
+    // Merge with defaults to ensure all fields exist
+    return saved ? { ...DEFAULT_MYSPACE_DATA, ...JSON.parse(saved) } : DEFAULT_MYSPACE_DATA;
   });
   
   const [isEditing, setIsEditing] = useState(false);
   
+  // Re-load data when username changes (navigating to different user's space)
+  useEffect(() => {
+    // Only re-fetch if we have a username to load
+    const targetUsername = username || currentUser?.username;
+    if (!targetUsername) return;
+    
+    const saved = localStorage.getItem(`myspace_${targetUsername}`);
+    const newData = saved ? { ...DEFAULT_MYSPACE_DATA, ...JSON.parse(saved) } : DEFAULT_MYSPACE_DATA;
+    
+    // Only update if data actually changed
+    setMySpaceData(prev => {
+      if (JSON.stringify(prev) === JSON.stringify(newData)) return prev;
+      return newData;
+    });
+    setIsEditing(false); // Reset editing mode
+  }, [username, currentUser?.username]);
+
   // Save to localStorage when data changes (temporary until backend)
   useEffect(() => {
     if (isOwnSpace && mySpaceData !== DEFAULT_MYSPACE_DATA) {
@@ -140,10 +145,14 @@ function MySpace() {
   const updateField = (field, value) => {
     setMySpaceData(prev => ({ ...prev, [field]: value }));
   };
+
+  // Get avatar for current view
+  const avatarSrc = isOwnSpace 
+    ? (currentUser?.profile_picture || MY_AVATAR)
+    : (viewedUser?.profile_picture || TOP8_AVATARS[topFriends.findIndex(f => f?.username === username)] || REBEL_AVATARS[0]);
   
   return (
     <div className={`myspace-page theme-${mySpaceData.theme}`}>
-      {/* Header */}
       <header className="myspace-header">
         <button className="back-btn" onClick={handleBack}>
           <ChevronLeftIcon size={20} />
@@ -176,143 +185,42 @@ function MySpace() {
       {/* Main Content */}
       <main className="myspace-content">
         {/* Left Column - Profile Info */}
-        <section className="profile-section">
-          {/* Avatar */}
-          <div className="avatar-container">
-            <img 
-              src={currentUser?.profile_picture || MY_AVATAR}
-              alt={displayUsername}
-              className="myspace-avatar"
-            />
-          </div>
-          
-          {/* Song Display */}
-          <div className="song-section">
-            <p className="song-label">currently vibing to</p>
-            {isEditing ? (
-              <div className="song-edit">
-                <input
-                  type="text"
-                  placeholder="song name"
-                  value={mySpaceData.songTitle}
-                  onChange={(e) => updateField('songTitle', e.target.value)}
-                  className="song-input"
-                />
-                <input
-                  type="text"
-                  placeholder="artist"
-                  value={mySpaceData.songArtist}
-                  onChange={(e) => updateField('songArtist', e.target.value)}
-                  className="song-input"
-                />
-              </div>
-            ) : (
-              <p className="song-display">
-                {mySpaceData.songTitle 
-                  ? `${mySpaceData.songTitle} - ${mySpaceData.songArtist}`
-                  : 'nothing playing...'}
-              </p>
-            )}
-          </div>
-          
-          {/* Mood */}
-          <div className="mood-section">
-            <span className="mood-label">mood:</span>
-            {isEditing ? (
-              <div className="mood-picker">
-                {MOOD_OPTIONS.map(({ id, label }) => (
-                  <button
-                    key={id}
-                    className={`mood-option ${mySpaceData.mood === id ? 'selected' : ''}`}
-                    onClick={() => updateField('mood', id)}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <span className="mood-display">
-                {MOOD_OPTIONS.find(m => m.id === mySpaceData.mood)?.label || mySpaceData.mood}
-              </span>
-            )}
-          </div>
-        </section>
+        <ProfileSection
+          avatarSrc={avatarSrc}
+          displayUsername={displayUsername}
+          songTitle={mySpaceData.songTitle}
+          songArtist={mySpaceData.songArtist}
+          mood={mySpaceData.mood}
+          customBio={mySpaceData.customBio}
+          isEditing={isEditing}
+          onUpdateField={updateField}
+        />
         
-        {/* Right Column - About & Friends */}
+        {/* Right Column - Music Player & Friends */}
         <section className="content-section">
-          {/* About Me */}
-          <div className="about-section">
-            <h2 className="section-title">about me</h2>
-            <div className="about-box">
-              {isEditing ? (
-                <textarea
-                  className="about-textarea"
-                  placeholder="tell the world about yourself..."
-                  value={mySpaceData.customBio}
-                  onChange={(e) => updateField('customBio', e.target.value)}
-                  rows={4}
-                />
-              ) : (
-                <div 
-                  className="about-content"
-                  dangerouslySetInnerHTML={{ 
-                    __html: mySpaceData.customBio || 'this user hasn\'t written anything yet...' 
-                  }}
-                />
-              )}
-            </div>
-          </div>
+          {/* RETRO MUSIC PLAYER */}
+          <MusicPlayer
+            playlist={mySpaceData.playlist}
+            currentTrack={mySpaceData.currentTrack}
+            isPlaying={mySpaceData.isPlaying}
+            volume={mySpaceData.volume}
+            sliderStyle={mySpaceData.sliderStyle}
+            isEditing={isEditing}
+            onUpdateField={updateField}
+          />
           
           {/* Top 8 Friends */}
-          <div className="friends-section">
-            <h2 className="section-title">top 8</h2>
-            <div className="top-friends-grid">
-              {[...Array(8)].map((_, index) => {
-                const friend = topFriends[index];
-                return (
-                  <div 
-                    key={index} 
-                    className={`friend-slot ${friend ? 'filled' : 'empty'}`}
-                    onClick={() => friend && navigate(`/myspace/${friend.username}`)}
-                  >
-                    {friend ? (
-                      <>
-                        <img 
-                          src={friend.profile_picture || getFriendAvatar(index)}
-                          alt={friend.username}
-                          className="friend-avatar"
-                        />
-                        <span className="friend-name">{friend.username}</span>
-                        <span className="friend-rank">{index + 1}</span>
-                      </>
-                    ) : (
-                      <span className="empty-slot">?</span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <Top8Friends
+            topFriends={topFriends}
+            getFriendAvatar={getFriendAvatar}
+          />
           
           {/* Theme Picker */}
-          {isOwnSpace && (
-            <div className="theme-section">
-              <h2 className="section-title">theme</h2>
-              <div className="theme-picker">
-                {THEME_OPTIONS.map(({ id, name, preview }) => (
-                  <button
-                    key={id}
-                    className={`theme-option ${mySpaceData.theme === id ? 'selected' : ''}`}
-                    onClick={() => updateField('theme', id)}
-                    style={{ '--preview-color': preview }}
-                  >
-                    <span className="theme-preview" />
-                    <span className="theme-name">{name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+          <ThemePicker
+            currentTheme={mySpaceData.theme}
+            onUpdateField={updateField}
+            isVisible={isOwnSpace}
+          />
         </section>
       </main>
       
