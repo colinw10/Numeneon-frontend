@@ -1,0 +1,140 @@
+// ============================================
+// MySpace.scss - Base Layout & Themes
+// ============================================
+// 
+// PURPOSE: Contains only base page layout, theme variables,
+// header, footer, and content grid.
+// Component-specific styles are in their own files.
+//
+// IMPORT: @use './_shared' as *;
+//
+// ============================================
+// 1. THEME CSS VARIABLES (Base)
+// ============================================
+// .myspace-page
+//   --ms-accent: #0066cc
+//   --ms-text: #ffffff
+//   --ms-text-muted: #aaaaaa
+//   --ms-glow: rgba(26, 115, 231, 0.3)
+
+// ============================================
+// 2. THEME VARIATIONS
+// ============================================
+// .myspace-page.theme-classic
+//   --ms-bg: gradient from #0d7dec to #03000e
+//   --ms-accent: #00d4ff (cyan)
+//   --ms-glow: rgba(0, 212, 255, 0.3)
+
+// .myspace-page.theme-emo
+//   --ms-bg: gradient from #0a0505 to #050202
+//   --ms-accent: #8b0000 (dark red)
+//   --ms-glow: rgba(139, 0, 0, 0.3)
+
+// .myspace-page.theme-scene
+//   --ms-bg: gradient 135deg #0a050a through #050a05
+//   --ms-accent: #ff69b4 (hot pink)
+//   --ms-glow: rgba(255, 105, 180, 0.3)
+
+// .myspace-page.theme-starry
+//   --ms-bg: gradient from #050515 to #000008
+//   --ms-accent: #9370db (purple)
+//   --ms-glow: rgba(147, 112, 219, 0.3)
+
+// .myspace-page.theme-glitter
+//   --ms-bg: gradient from #0f0a00 to #080500
+//   --ms-accent: #ffd700 (gold)
+//   --ms-glow: rgba(255, 215, 0, 0.2)
+
+// ============================================
+// 3. BASE PAGE STYLES
+// ============================================
+// .myspace-page
+//   min-height: 100vh
+//   background: var(--ms-bg)
+//   color: var(--ms-text)
+//   font-family: 'Doto', monospace
+//   font-size: 18px, font-weight: 500
+//   text-transform: lowercase
+//   letter-spacing: 1px
+//   overflow-x: hidden
+//   position: relative
+//
+//   &.theme-starry::before - animated star background
+//     content: '', position: fixed, full screen
+//     background-image: multiple radial-gradients (tiny dots)
+//     background-size: 200px 200px
+//     animation: twinkle 4s ease-in-out infinite alternate
+//     pointer-events: none, z-index: 0
+
+// @keyframes twinkle
+//   0%: opacity 0.3
+//   100%: opacity 0.8
+
+// ============================================
+// 4. HEADER
+// ============================================
+// .myspace-header
+//   display: flex, align-items: center, justify-content: space-between
+//   padding: 16px 24px
+//   @include holographic-black
+//   border-bottom: 1px solid rgba(255,255,255,0.1)
+//   position: sticky, top: 0, z-index: 100
+//   backdrop-filter: blur(10px)
+
+// .back-btn
+//   display: flex, align-items: center, gap: 10px
+//   padding: 12px 22px
+//   background: transparent
+//   border: 1px solid rgba(255,255,255,0.3)
+//   border-radius: 0 (NO RADIUS!)
+//   font-family: 'Doto', monospace
+//   &:hover → background: var(--ms-accent), box-shadow glow
+
+// .myspace-title
+//   font-size: 34px, font-weight: 800
+//   letter-spacing: 5px
+//   text-shadow: double glow using var(--ms-glow)
+
+// .header-actions
+//   display: flex, gap: 12px
+
+// .my-space-btn, .edit-toggle-btn
+//   @include holographic-black
+//   border: 1px solid var(--ms-accent) or #ff69b4
+//   border-radius: 0
+//   &:hover → background accent, color #000
+
+// ============================================
+// 5. MAIN CONTENT GRID
+// ============================================
+// .myspace-content
+//   display: grid
+//   grid-template-columns: 280px 1fr
+//   gap: 24px
+//   padding: 24px
+//   max-width: 1200px
+//   margin: 0 auto
+//   z-index: 1
+//   
+//   @media (max-width: 768px)
+//     grid-template-columns: 1fr
+
+// .content-section
+//   display: flex, flex-direction: column, gap: 20px
+
+// .section-title (shared)
+//   font-size: 22px, font-weight: 800
+//   letter-spacing: 4px
+//   border-bottom: 1px solid rgba(255,255,255,0.15)
+//   padding-bottom: 10px
+
+// ============================================
+// 6. FOOTER
+// ============================================
+// .myspace-footer
+//   @include holographic-black
+//   border-top: 1px solid rgba(255,255,255,0.1)
+//   padding: 16px 24px
+//   text-align: center
+//   
+//   marquee → color: var(--ms-accent), letter-spacing: 2px

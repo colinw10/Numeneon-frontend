@@ -1,0 +1,265 @@
+// ============================================
+// MusicPlayer.scss - Slider & Player Styles
+// ============================================
+// 
+// LARGEST FILE: ~570 lines
+// Contains CodePen-style slider with 10 thumb shapes!
+//
+// IMPORT: @use '../../_shared' as *;
+//
+// ============================================
+// CONTAINER
+// ============================================
+// .music-player-section
+//   @include holographic-black
+//   padding: 20px
+//   border: 1px solid rgba(255, 255, 255, 0.1)
+
+// .music-player
+//   display: flex, flex-direction: column, gap: 12px
+
+// ============================================
+// PLAYER DISPLAY (LCD style)
+// ============================================
+// .player-display
+//   background: linear-gradient(180deg, #20b4c837 0%, #0a0a15 100%)
+//   border: 2px inset #333
+//   padding: 12px, border-radius: 0
+
+// .now-playing
+//   display: flex, gap: 8px, margin-bottom: 8px
+//   .np-label → font-size: 11px, uppercase, color: #666
+//   .np-track → color: var(--ms-accent), text-shadow glow
+
+// .player-time
+//   display: flex, align-items: center, gap: 8px
+//   font-size: 11px, color: #f9f9f6
+
+// .progress-bar
+//   flex: 1, height: 8px
+//   background: dark, border: 2px inset #444
+
+// .progress-fill
+//   height: 100%
+//   background: linear-gradient(90deg, var(--ms-accent), #fff, var(--ms-accent))
+//   background-size: 200% 100%
+//   animation: progress-shimmer 2s linear infinite
+
+// @keyframes progress-shimmer
+//   0% { background-position: 200% 0; }
+//   100% { background-position: -200% 0; }
+
+// ============================================
+// PLAYER CONTROLS (Windows 98 buttons)
+// ============================================
+// .player-controls
+//   display: flex, justify-content: center, gap: 8px
+//   background: linear-gradient(180deg, #25253b 0%, #1a1a25 100%)
+//   border: 2px outset #444
+
+// .control-btn
+//   width: 36px, height: 36px
+//   background: linear-gradient(180deg, #1b172f 0%, #222 100%)
+//   border: 2px outset #555
+//   border-radius: 0
+//   color: #ccc
+//   &:hover → lighter gradient, color: var(--ms-accent)
+//   &:active → border-style: inset (pressed effect)
+//   
+//   &.play-btn
+//     width: 44px, height: 44px, font-size: 18px
+//     background: linear-gradient(180deg, var(--ms-accent), #006)
+//     color: #fff
+
+// ============================================
+// VOLUME SECTION
+// ============================================
+// .volume-section
+//   padding: 12px
+//   background: linear-gradient(180deg, #17172a 0%, #0f0f15 100%)
+//   border: 2px inset #333
+
+// .volume-row
+//   display: flex, align-items: center, gap: 12px
+
+// .volume-label
+//   font-size: 11px, uppercase, letter-spacing: 2px, color: #666
+//   min-width: 50px
+
+// ============================================
+// 🔥 CODEPEN SLIDER - THE COMPLEX PART!
+// ============================================
+// .codepen-slider
+//   // Reset appearance
+//   &, &::-webkit-slider-runnable-track, &::-webkit-slider-thumb
+//     -webkit-appearance: none
+//
+//   // CSS Variables for calculation
+//   --min: 0, --max: 100
+//   --rng: calc(var(--max) - var(--min))
+//   --pos: calc((var(--val) - var(--min)) / var(--rng) * 100%)
+//
+//   // Sizing
+//   --input-p: .5em
+//   --input-w: 180px
+//   --input-h: calc(var(--track-h) + 2 * var(--input-p))
+//   --track-h: .875em
+//   --track-r: calc(.5 * var(--track-h))
+//
+//   // Track styling
+//   --track-c0: #dcb004 (default - will be overridden by style-N)
+//   --track-c1: #e34f1e
+//   --track-g: linear-gradient(90deg, var(--track-c0), var(--track-c1))
+//   --track-texture: none
+//
+//   // Thumb styling
+//   --thumb-h: 1.75em
+//   --thumb-w: var(--thumb-h)
+//   --thumb-r: 50%
+//   --thumb-p: inset(0) ← clip-path for shapes!
+//   --thumb-bg: conic-gradient(...) ← metallic effect
+//   --thumb-shadow: ...
+//
+//   // Base input styles
+//   width: var(--input-w), height: var(--input-h)
+//   border-radius: var(--input-h)
+//   box-shadow: inset shadows
+//   background: dark linear-gradient
+//   cursor: pointer
+//
+//   // WebKit track
+//   &::-webkit-slider-container → styled track
+//   &::-webkit-slider-runnable-track → drop-shadow filter
+//   &::-webkit-slider-thumb → clip-path shape, metallic background
+//
+//   // Firefox track
+//   &::-moz-range-track → styled track
+//   &::-moz-range-progress → fill gradient
+//   &::-moz-range-thumb → clip-path shape
+//
+//   &:hover, &:focus → outline: 2px solid var(--track-c1)
+
+// ============================================
+// 10 SLIDER STYLES - CLIP-PATH SHAPES!
+// ============================================
+// &.style-1 (Star)
+//   --track-c0: #dcb004, --track-c1: #e34f1e
+//   --thumb-p: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)
+
+// &.style-2 (Cyan with stripes)
+//   --track-c0: #0010d5, --track-c1: #00d1de
+//   --track-texture: repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(255,255,255,0.15) 2px, rgba(255,255,255,0.15) 4px)
+
+// &.style-3 (Pink with dark thumb)
+//   --track-c0: #cc040d, --track-c1: #d44dbf
+//   --thumb-r: 5px
+//   --thumb-bg: dark conic-gradient with pink tint
+//   --thumb-shadow: pink glow
+
+// &.style-4 (Green pill)
+//   --track-c0: #08c300, --track-c1: #aaca00
+//   --thumb-w: 2em, --thumb-h: 1.125em
+//   --thumb-r: var(--thumb-h)
+
+// &.style-5 (Gray tall)
+//   --track-c0: #0f0f0f, --track-c1: #737373
+//   --thumb-w: 1.25em, --thumb-h: 2em
+
+// &.style-6 (Octagon purple)
+//   --track-c0: #8b5cf6, --track-c1: #a855f7
+//   --track-texture: radial-gradient dots
+//   --thumb-p: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)
+//   --thumb-shadow: purple glow
+
+// &.style-7 (Diamond)
+//   --track-c0: #06b6d4, --track-c1: #14b8a6
+//   --thumb-p: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)
+
+// &.style-8 (Heart with lines)
+//   --track-c0: #f43f5e, --track-c1: #ec4899
+//   --track-texture: horizontal lines
+//   --thumb-p: polygon(50% 15%, 60% 0%, 80% 0%, 100% 15%, 100% 35%, 50% 100%, 0% 35%, 0% 15%, 20% 0%, 40% 0%)
+
+// &.style-9 (Hexagon orange)
+//   --track-c0: #f97316, --track-c1: #fb923c
+//   --thumb-p: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)
+//   --thumb-shadow: orange glow
+
+// &.style-10 (Cross green)
+//   --track-c0: #22c55e, --track-c1: #4ade80
+//   --thumb-p: polygon(35% 0%, 65% 0%, 65% 35%, 100% 35%, 100% 65%, 65% 65%, 65% 100%, 35% 100%, 35% 65%, 0% 65%, 0% 35%, 35% 35%)
+//   --thumb-w: 1.25em, --thumb-h: 2em
+
+// ============================================
+// SLIDER STYLE PICKER (Edit Mode)
+// ============================================
+// .slider-picker
+//   display: flex, align-items: center, gap: 10px
+
+// .picker-label
+//   font-size: 10px, uppercase, letter-spacing: 1px, color: #555
+
+// .slider-options
+//   display: flex, gap: 6px
+
+// .slider-option
+//   width: 24px, height: 12px
+//   border: 1px solid #333, border-radius: 6px
+//   background: linear-gradient(90deg, var(--c0), var(--c1))  ← from inline style!
+//   cursor: pointer
+//   &:hover → transform: scale(1.1)
+//   &.selected → border: white, box-shadow, scale: 1.15
+
+// ============================================
+// PLAYLIST
+// ============================================
+// .playlist
+//   background: #0a0a12
+//   border: 2px inset #333
+//   max-height: 200px
+//   overflow-y: auto
+
+// .playlist-header
+//   font-size: 11px, uppercase, letter-spacing: 2px, color: #666
+//   padding: 8px 12px
+//   background: #151520
+//   border-bottom: 1px solid #333
+//   position: sticky, top: 0
+
+// .playlist-item
+//   display: flex, align-items: center, gap: 8px
+//   padding: 10px 12px
+//   border-bottom: 1px solid #1a1a25
+//   cursor: pointer
+//   &:hover → background: rgba(255,255,255,0.05)
+//   &.active → border-left: 3px solid var(--ms-accent)
+//              .track-title → color: var(--ms-accent), text-shadow glow
+
+// .track-num → font-size: 12px, color: #555, width: 20px
+// .track-info → flex: 1, display: flex, flex-direction: column, gap: 2px
+// .track-title → font-size: 14px, font-weight: 600, color: #ddd, ellipsis
+// .track-artist → font-size: 11px, color: #777
+// .track-duration → font-size: 11px, color: #555
+
+// ============================================
+// ADD SONG (Edit Mode)
+// ============================================
+// .add-song
+//   display: flex, gap: 8px
+//   padding-top: 12px
+//   border-top: 1px solid rgba(255,255,255,0.1)
+//
+//   .song-input → flex: 1, padding: 8px 10px
+//     background: #111, border: 1px inset #333
+//     border-radius: 0, color: #fff
+//     font-family: 'Doto', monospace, font-size: 12px
+
+// .add-song-btn
+//   padding: 8px 16px
+//   background: linear-gradient(180deg, #333, #111)
+//   border: 2px outset #444
+//   border-radius: 0
+//   color: var(--ms-accent)
+//   font-family: 'Doto', monospace
+//   &:hover → background: var(--ms-accent), color: #000
+//   &:active → border-style: inset
