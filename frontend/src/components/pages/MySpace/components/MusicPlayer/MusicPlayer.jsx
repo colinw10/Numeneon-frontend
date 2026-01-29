@@ -138,7 +138,6 @@ function MusicPlayer({
     if (audioRef.current && track.preview_url) {
       audioRef.current.src = track.preview_url;
       audioRef.current.load();
-      // Reset time via ref callback instead of setState
       audioRef.current.currentTime = 0;
     }
   }, [currentTrack, track.preview_url]);
