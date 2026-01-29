@@ -1,22 +1,22 @@
 // Utilities for grouping and sorting posts for Timeline River layout
 // 🛠️ Import shared helpers instead of duplicating them here!
-import { getDisplayName, getInitials, getPostTime } from '@utils/helpers';
+import { getDisplayName, getInitials, getPostTime } from "@utils/helpers";
 
 // Group posts by user
 export const groupPostsByUser = (posts) => {
-  const grouped = {};//"Create the function. Start with an empty object called grouped — this will hold all the user buckets."
+  const grouped = {}; //"Create the function. Start with an empty object called grouped — this will hold all the user buckets."
 
   //Loop through every post in the array. For each post, do the stuff inside.
   posts.forEach((post) => {
     //For each post, grab 4 things:
     const authorObj = typeof post.author === "object" ? post.author : null;
-     //the author object (or null if it's just a string)
+    //the author object (or null if it's just a string)
     const orderId = post.userId || authorObj?.id || post.author;
-     //the user's ID (used as the bucket key)
+    //the user's ID (used as the bucket key)
     const postTime = getPostTime(post);
-     //when it was posted (in milliseconds)
+    //when it was posted (in milliseconds)
     const type = post.type || "thoughts";
-     //thoughts, media, or milestones (defaults to thoughts)"
+    //thoughts, media, or milestones (defaults to thoughts)"
 
     // Create user bucket if it doesn't exist
     if (!grouped[orderId]) {
@@ -26,13 +26,13 @@ export const groupPostsByUser = (posts) => {
           id: orderId,
           name: getDisplayName(authorObj || post.author),
           username:
-          // is the author an object with a username? don't crash if not
+            // is the author an object with a username? don't crash if not
             authorObj?.username ||
             // else, if author is just a string, use that
             (typeof post.author === "string" ? post.author : null),
-            // if neither, null
+          // if neither, null
           first_name: authorObj?.first_name || "",
-            // if authorObj exists, use first_name, else empty string
+          // if authorObj exists, use first_name, else empty string
           last_name: authorObj?.last_name || "",
 
           avatar: post.avatar || getInitials(authorObj || post.author),

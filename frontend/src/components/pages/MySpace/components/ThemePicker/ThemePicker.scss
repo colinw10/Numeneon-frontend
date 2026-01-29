@@ -1,52 +1,105 @@
-// ============================================
-// ThemePicker.scss - Theme Selection Styles
-// ============================================
-// 
-// IMPORT: @use '../../_shared' as *;
-//
-// ============================================
-// CONTAINER
-// ============================================
-// .theme-section
-//   @include holographic-black
-//   padding: 20px
-//   border: 1px solid rgba(255, 255, 255, 0.1)
-//   border-radius: 0
+// 🔵 ThemePicker Component Styles
+@use '../../shared' as *;
 
 // ============================================
-// GRID
+// THEME PICKER
 // ============================================
-// .theme-picker
-//   display: flex, gap: 12px, flex-wrap: wrap
+
+.theme-section {
+  @include holographic-black;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+}
+
+.theme-picker {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.theme-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  &.selected {
+    border-color: var(--ms-accent);
+    box-shadow: 0 0 15px var(--ms-glow);
+  }
+}
+
+.theme-preview {
+  width: 32px;
+  height: 32px;
+  background: var(--preview-color);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0;
+}
+
+.theme-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #bbbbbb;
+  text-transform: lowercase;
+}
 
 // ============================================
-// THEME BUTTON
+// WALLPAPER PICKER
 // ============================================
-// .theme-option
-//   display: flex, flex-direction: column, align-items: center, gap: 6px
-//   padding: 12px
-//   background: transparent
-//   border: 1px solid rgba(255, 255, 255, 0.1)
-//   border-radius: 0
-//   cursor: pointer
-//   transition: all 0.2s ease
-//   
-//   &:hover → border-color: rgba(255, 255, 255, 0.3)
-//   &.selected → border-color: var(--ms-accent), box-shadow: 0 0 15px var(--ms-glow)
 
-// ============================================
-// COLOR SWATCH
-// ============================================
-// .theme-preview
-//   width: 32px, height: 32px
-//   background: var(--preview-color)  ← from inline style!
-//   border: 1px solid rgba(255, 255, 255, 0.2)
-//   border-radius: 0
+.wallpaper-picker {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 
-// ============================================
-// LABEL
-// ============================================
-// .theme-name
-//   font-size: 14px, font-weight: 500
-//   color: #bbbbbb
-//   text-transform: lowercase
+.wallpaper-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  &.selected {
+    border-color: var(--ms-accent);
+    box-shadow: 0 0 15px var(--ms-glow);
+  }
+}
+
+.wallpaper-preview {
+  width: 60px;
+  height: 40px;
+  background: linear-gradient(180deg, #0d7dec, #03000e);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0;
+}
+
+.wallpaper-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #bbbbbb;
+  text-transform: lowercase;
+}

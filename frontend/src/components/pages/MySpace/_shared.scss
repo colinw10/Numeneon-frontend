@@ -1,43 +1,37 @@
-// ============================================
-// _shared.scss - Holographic Black Mixin
-// ============================================
-// 
-// PURPOSE: Contains the signature holographic-black mixin
-// that gives all containers their dark metallic shimmer.
-// All component SCSS files import this.
-//
-// ============================================
-// 1. GOOGLE FONT IMPORT
-// ============================================
-// Import Doto font from Google Fonts
-// Weight range: 100 to 900
-// Display: swap
+// 🔵 PABLO - MySpace Shared Styles
+// REBEL VIBES: Doto font, no border-radius, holographic black
 
 // ============================================
-// 2. HOLOGRAPHIC BLACK MIXIN
+// GOOGLE FONT: DOTO (Throwback/Tech feel)
 // ============================================
-// @mixin holographic-black
-//   background: 4 layered gradients:
-//     Layer 1: linear-gradient 145deg - dark base (rgba 10,10,10,0.95 to rgba 0,0,0,0.85)
-//     Layer 2: radial-gradient circle at 30% 30% - subtle white highlight (rgba 255,255,255,0.05)
-//     Layer 3: radial-gradient circle at 70% 70% - dark shadow (rgba 0,0,0,0.8)
-//     Layer 4: linear-gradient 45deg - color tint (blue to pink to blue)
-//   
-//   background-size: 100%, 150%, 150%, 200%
-//   animation: holographic-shimmer 8s ease infinite
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap');
 
 // ============================================
-// 3. KEYFRAMES
+// HOLOGRAPHIC BLACK MIXIN (Pablo's trademark)
 // ============================================
-// @keyframes holographic-shimmer
-//   0%, 100%: background-position at start (0% 50%, 75% 75%, 75% 75%, 0% 50%)
-//   50%: background-position shifted (100% 50%, 25% 25%, 25% 25%, 100% 50%)
+@mixin holographic-black {
+  background:
+    linear-gradient(145deg, rgba(10, 10, 10, 0.95), rgba(0, 0, 0, 0.85)),
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.05), transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.8), transparent 50%),
+    linear-gradient(45deg, rgba(26, 115, 231, 0.08), rgba(220, 8, 188, 0.06), rgba(26, 115, 231, 0.08));
+  background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
+  background-blend-mode: overlay, multiply, overlay;
+  background-position: 0% 50%, 75% 75%, 75% 75%, 50% 50%;
+  animation: holographic-shimmer 8s ease infinite;
+}
+
+@keyframes holographic-shimmer {
+  0%, 100% { background-position: 0% 50%, 75% 75%, 75% 75%, 0% 50%; }
+  50% { background-position: 100% 50%, 25% 25%, 25% 25%, 100% 50%; }
+}
 
 // ============================================
-// 4. SLIDER TEXTURE VARIABLE
+// CODEPEN SLIDER THEME VARIABLES
 // ============================================
-// $theme-u: 0.375em
-// $theme-g: repeating-conic-gradient for slider track texture
-//   hsla(0, 0%, 0%, 0.235) for dark squares
-//   transparent for light squares
-//   Size: $theme-u by $theme-u
+$theme-u: .375em;
+$theme-g: 
+  repeating-conic-gradient(
+    hsla(0, 0%, 0%, .235) 0% 25%, 
+    transparent 0% 50%)
+  0 0 / #{$theme-u $theme-u};
