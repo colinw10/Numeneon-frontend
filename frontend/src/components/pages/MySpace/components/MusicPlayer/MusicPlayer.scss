@@ -118,15 +118,29 @@
     font-size: 18px;
     background: linear-gradient(180deg, var(--ms-accent), #006);
     color: #fff;
+    transition: all 0.15s ease;
     
     &:hover {
-      background: linear-gradient(180deg, #aca8a8, var(--ms-accent));
-      color: #000;
+      background: linear-gradient(180deg, #444, #222);
+      color: #00ffcc;
+      
+      svg {
+        filter: drop-shadow(0 0 8px #00ffcc);
+      }
     }
     
     &.disabled {
       opacity: 0.4;
       cursor: not-allowed;
+      
+      &:hover {
+        background: linear-gradient(180deg, var(--ms-accent), #006);
+        color: #fff;
+        
+        svg {
+          filter: none;
+        }
+      }
     }
   }
   

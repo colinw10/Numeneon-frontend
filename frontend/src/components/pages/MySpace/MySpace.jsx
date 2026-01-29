@@ -135,15 +135,14 @@ function MySpace() {
         }
       } catch {
         // API not available, using localStorage fallback
+        // But ONLY for non-playlist data - playlist needs API for preview_url
         if (!cancelled) {
           const saved = localStorage.getItem(`myspace_${targetUsername}`);
           if (saved) {
             const parsed = JSON.parse(saved);
             const mergedData = { ...DEFAULT_MYSPACE_DATA, ...parsed };
-            // Keep default playlist if saved has none
-            if (!parsed.playlist || parsed.playlist.length === 0) {
-              mergedData.playlist = DEFAULT_MYSPACE_DATA.playlist;
-            }
+            // Always use default playlist (with preview_url) if localStorage has stale data
+            mergedData.playlist = DEFAULT_MYSPACE_DATA.playlist;
             setMySpaceData(mergedData);
           }
           setIsEditing(false);
@@ -161,16 +160,20 @@ function MySpace() {
     try {
       await updateMySpaceProfile(mySpaceData);
     } catch {
-      // API save failed, using localStorage fallback
-      localStorage.setItem(`myspace_${displayUsername}`, JSON.stringify(mySpaceData));
+      // API save failed, using localStorage fallback (but don't save playlist - needs API)
+      const dataToSave = { ...mySpaceData };
+      delete dataToSave.playlist; // Don't cache playlist - always fetch fresh from API
+      localStorage.setItem(`myspace_${displayUsername}`, JSON.stringify(dataToSave));
     }
     setIsEditing(false);
   };
   
-  // Also save to localStorage as backup
+  // Save non-playlist data to localStorage as backup
   useEffect(() => {
     if (isOwnSpace && mySpaceData !== DEFAULT_MYSPACE_DATA) {
-      localStorage.setItem(`myspace_${displayUsername}`, JSON.stringify(mySpaceData));
+      const dataToSave = { ...mySpaceData };
+      delete dataToSave.playlist; // Don't cache playlist - needs preview_url from API
+      localStorage.setItem(`myspace_${displayUsername}`, JSON.stringify(dataToSave));
     }
   }, [mySpaceData, displayUsername, isOwnSpace]);
   
