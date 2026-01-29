@@ -2,6 +2,54 @@
 import { useState, useEffect, useRef } from 'react';
 import './MusicPlayer.scss';
 
+// Custom SVG Icons for player controls
+const ShuffleIcon = ({ size = 16, active }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={active ? 'currentColor' : 'currentColor'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 3h5v5" />
+    <path d="M4 20L21 3" />
+    <path d="M21 16v5h-5" />
+    <path d="M15 15l6 6" />
+    <path d="M4 4l5 5" />
+  </svg>
+);
+
+const RepeatIcon = ({ size = 16, active }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 2l4 4-4 4" />
+    <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
+    <path d="M7 22l-4-4 4-4" />
+    <path d="M21 13v1a4 4 0 0 1-4 4H3" />
+    {active && <circle cx="12" cy="12" r="2" fill="currentColor" />}
+  </svg>
+);
+
+const PrevIcon = ({ size = 18 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <rect x="3" y="5" width="3" height="14" rx="1" />
+    <polygon points="21,5 21,19 8,12" />
+  </svg>
+);
+
+const NextIcon = ({ size = 18 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <rect x="18" y="5" width="3" height="14" rx="1" />
+    <polygon points="3,5 3,19 16,12" />
+  </svg>
+);
+
+const PlayIcon = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <polygon points="5,3 19,12 5,21" />
+  </svg>
+);
+
+const PauseIcon = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <rect x="5" y="3" width="5" height="18" rx="1" />
+    <rect x="14" y="3" width="5" height="18" rx="1" />
+  </svg>
+);
+
 const SLIDER_STYLES = [
   { id: 1, name: 'star', colors: ['#dcb004', '#e34f1e'] },
   { id: 2, name: 'cyan', colors: ['#0010d5', '#00d1de'] },
@@ -150,33 +198,37 @@ function MusicPlayer({
           <button 
             className="control-btn"
             onClick={() => onUpdateField('currentTrack', Math.max(0, currentTrack - 1))}
+            title="Previous"
           >
-            ⏮
+            <PrevIcon />
           </button>
           <button 
             className={`control-btn play-btn ${!track.preview_url ? 'disabled' : ''}`}
             onClick={() => track.preview_url && onUpdateField('isPlaying', !isPlaying)}
-            title={!track.preview_url ? 'No preview available' : ''}
+            title={!track.preview_url ? 'No preview available' : isPlaying ? 'Pause' : 'Play'}
           >
-            {isPlaying ? '⏸' : '▶'}
+            {isPlaying ? <PauseIcon /> : <PlayIcon />}
           </button>
           <button 
             className="control-btn"
             onClick={() => onUpdateField('currentTrack', Math.min(playlist.length - 1, currentTrack + 1))}
+            title="Next"
           >
-            ⏭
+            <NextIcon />
           </button>
           <button 
-            className={`control-btn ${shuffle ? 'active' : ''}`}
+            className={`control-btn icon-btn ${shuffle ? 'active' : ''}`}
             onClick={() => setShuffle(!shuffle)}
+            title={shuffle ? 'Shuffle On' : 'Shuffle Off'}
           >
-            🔀
+            <ShuffleIcon active={shuffle} />
           </button>
           <button 
-            className={`control-btn ${repeat ? 'active' : ''}`}
+            className={`control-btn icon-btn ${repeat ? 'active' : ''}`}
             onClick={() => setRepeat(!repeat)}
+            title={repeat ? 'Repeat On' : 'Repeat Off'}
           >
-            🔁
+            <RepeatIcon active={repeat} />
           </button>
         </div>
 

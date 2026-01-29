@@ -69,6 +69,7 @@ const MY_AVATAR = myAvatar;
 const REBEL_AVATARS = [av2, av3, av4, av5, av6, av7, av8, av9, av10, av11, av12, av13, av14, av15, av16, av17];
 
 // Mock data until backend is ready (fallback)
+// Backend will provide preview_url from Spotify/Deezer API
 const DEFAULT_MYSPACE_DATA = {
   songTitle: '',
   songArtist: '',
@@ -77,7 +78,7 @@ const DEFAULT_MYSPACE_DATA = {
   theme: 'classic',
   wallpaper: 'none',
   topFriends: [],
-  // Music player playlist - with preview_url for audio playback
+  // Music player playlist - backend will add preview_url for audio playback
   playlist: [
     { id: 1, title: 'Pneuma', artist: 'Tool', duration: '11:53', preview_url: null },
     { id: 2, title: 'The Speaker is Systematically Blown', artist: 'Author Punisher', duration: '4:14', preview_url: null },
@@ -124,7 +125,12 @@ function MySpace() {
       try {
         const data = await getMySpaceProfile(targetUsername);
         if (!cancelled) {
-          setMySpaceData({ ...DEFAULT_MYSPACE_DATA, ...data });
+          // Merge data, but keep default playlist if API returns empty
+          const mergedData = { ...DEFAULT_MYSPACE_DATA, ...data };
+          if (!data.playlist || data.playlist.length === 0) {
+            mergedData.playlist = DEFAULT_MYSPACE_DATA.playlist;
+          }
+          setMySpaceData(mergedData);
           setIsEditing(false);
         }
       } catch {
@@ -132,7 +138,13 @@ function MySpace() {
         if (!cancelled) {
           const saved = localStorage.getItem(`myspace_${targetUsername}`);
           if (saved) {
-            setMySpaceData({ ...DEFAULT_MYSPACE_DATA, ...JSON.parse(saved) });
+            const parsed = JSON.parse(saved);
+            const mergedData = { ...DEFAULT_MYSPACE_DATA, ...parsed };
+            // Keep default playlist if saved has none
+            if (!parsed.playlist || parsed.playlist.length === 0) {
+              mergedData.playlist = DEFAULT_MYSPACE_DATA.playlist;
+            }
+            setMySpaceData(mergedData);
           }
           setIsEditing(false);
         }

@@ -123,6 +123,28 @@
       background: linear-gradient(180deg, #aca8a8, var(--ms-accent));
       color: #000;
     }
+    
+    &.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+  
+  // SVG icon buttons (shuffle, repeat)
+  &.icon-btn {
+    svg {
+      transition: all 0.2s ease;
+    }
+    
+    &.active {
+      background: linear-gradient(180deg, var(--ms-accent), #003);
+      color: #fff;
+      border-color: var(--ms-accent);
+      
+      svg {
+        filter: drop-shadow(0 0 4px var(--ms-glow));
+      }
+    }
   }
 }
 
