@@ -63,6 +63,15 @@ const SLIDER_STYLES = [
   { id: 10, name: 'cross', colors: ['#22c55e', '#4ade80'] },
 ];
 
+// Fallback experimental/ambient audio (royalty-free from archive.org)
+const FALLBACK_AUDIO = [
+  'https://ia800500.us.archive.org/5/items/ExperimentalSection/Experimental_Section_01_Drone.mp3',
+  'https://ia803402.us.archive.org/24/items/experiments_201908/noise_experiment_1.mp3',
+  'https://ia800208.us.archive.org/4/items/Ambient_Music_Library/Ambient_Track_07.mp3',
+  'https://ia600500.us.archive.org/5/items/ExperimentalSection/Experimental_Section_03_Glitch.mp3',
+  'https://ia800208.us.archive.org/4/items/Ambient_Music_Library/Ambient_Track_12.mp3',
+];
+
 // Format seconds to M:SS
 const formatTime = (seconds) => {
   if (!seconds || isNaN(seconds)) return '0:00';
@@ -85,6 +94,7 @@ function MusicPlayer({
   const [duration, setDuration] = useState(0);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
+  const [audioError, setAudioError] = useState(null);
 
   const track = playlist?.[currentTrack] || playlist?.[0] || { 
     title: 'no music', 
@@ -103,7 +113,28 @@ function MusicPlayer({
     
     // Event listeners
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleLoadedMetadata = () => setDuration(audio.duration);
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+      setAudioError(null); // Clear error on successful load
+    };
+    const handleError = () => {
+      // Try fallback audio on error
+      const fallbackUrl = FALLBACK_AUDIO[currentTrack % FALLBACK_AUDIO.length];
+      if (audioRef.current.src !== fallbackUrl) {
+        console.log('Primary URL failed, trying fallback...');
+        audioRef.current.src = fallbackUrl;
+        audioRef.current.load();
+        if (isPlaying) {
+          audioRef.current.play().catch(() => {
+            setAudioError('Preview unavailable');
+            onUpdateField('isPlaying', false);
+          });
+        }
+      } else {
+        setAudioError('Preview unavailable');
+        onUpdateField('isPlaying', false);
+      }
+    };
     const handleEnded = () => {
       if (repeat) {
         audio.currentTime = 0;
@@ -125,17 +156,20 @@ function MusicPlayer({
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('error', handleError);
 
     return () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('error', handleError);
     };
-  }, [currentTrack, playlist.length, repeat, shuffle, onUpdateField]);
+  }, [currentTrack, playlist.length, repeat, shuffle, isPlaying, onUpdateField]);
 
   // Handle track change
   useEffect(() => {
     if (audioRef.current && track.preview_url) {
+      setAudioError(null); // Reset error when changing tracks
       audioRef.current.src = track.preview_url;
       audioRef.current.load();
       audioRef.current.currentTime = 0;
@@ -179,9 +213,13 @@ function MusicPlayer({
         <div className="player-display">
           <div className="now-playing">
             <span className="np-label">now playing:</span>
-            <marquee className="np-track" scrollamount="2">
-              {track.title} - {track.artist}
-            </marquee>
+            {audioError ? (
+              <span className="np-error">{audioError}</span>
+            ) : (
+              <marquee className="np-track" scrollamount="2">
+                {track.title} - {track.artist}
+              </marquee>
+            )}
           </div>
           <div className="player-time">
             <span>{formatTime(currentTime)}</span>
@@ -202,9 +240,9 @@ function MusicPlayer({
             <PrevIcon />
           </button>
           <button 
-            className={`control-btn play-btn ${!track.preview_url ? 'disabled' : ''}`}
-            onClick={() => track.preview_url && onUpdateField('isPlaying', !isPlaying)}
-            title={!track.preview_url ? 'No preview available' : isPlaying ? 'Pause' : 'Play'}
+            className={`control-btn play-btn ${(!track.preview_url || audioError) ? 'disabled' : ''}`}
+            onClick={() => track.preview_url && !audioError && onUpdateField('isPlaying', !isPlaying)}
+            title={audioError ? 'Preview expired' : !track.preview_url ? 'No preview available' : isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? <PauseIcon /> : <PlayIcon />}
           </button>

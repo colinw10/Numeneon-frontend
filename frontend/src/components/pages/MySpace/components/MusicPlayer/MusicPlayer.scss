@@ -46,6 +46,14 @@
     color: var(--ms-accent);
     text-shadow: 0 0 8px var(--ms-glow);
   }
+  
+  .np-error {
+    flex: 1;
+    font-size: 12px;
+    color: #ff6b6b;
+    text-shadow: 0 0 6px rgba(255, 107, 107, 0.5);
+    font-style: italic;
+  }
 }
 
 .player-time {
