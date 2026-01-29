@@ -10,6 +10,7 @@
   padding: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0;
+  min-width: 0; // Prevent flex overflow
 }
 
 .music-player {
@@ -23,6 +24,7 @@
   border: 2px inset #333;
   padding: 12px;
   border-radius: 0;
+  overflow: hidden; // Contain content
 }
 
 .now-playing {
@@ -30,6 +32,7 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
+  height: 24px; // Fixed height to prevent resize
   
   .np-label {
     font-size: 11px;
@@ -37,6 +40,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     white-space: nowrap;
+    flex-shrink: 0;
   }
   
   .np-track {
@@ -45,6 +49,8 @@
     font-weight: 600;
     color: var(--ms-accent);
     text-shadow: 0 0 8px var(--ms-glow);
+    min-width: 0; // Allow text truncation
+    overflow: hidden;
   }
   
   .np-error {
@@ -518,9 +524,12 @@
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
+  padding-left: 15px; // Reserve space for active border
   border-bottom: 1px solid #1a1a25;
+  border-left: 3px solid transparent; // Always have border, just transparent
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  box-sizing: border-box;
   
   &:hover {
     background: rgba(255, 255, 255, 0.05);
@@ -528,7 +537,7 @@
   
   &.active {
     background: rgba(var(--ms-accent), 0.1);
-    border-left: 3px solid var(--ms-accent);
+    border-left-color: var(--ms-accent);
     
     .track-title {
       color: var(--ms-accent);
