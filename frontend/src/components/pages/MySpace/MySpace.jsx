@@ -32,6 +32,18 @@ import av16 from '@assets/icons/avatars/av16.png';
 import av17 from '@assets/icons/avatars/av17.png'
 import myAvatar from '@assets/icons/avatars/my-avatar.png';
 
+// Import wallpapers for inline style
+import bipolarInvert from '@assets/wallpapers/Bipolar-invert.png';
+import bipolarPink from '@assets/wallpapers/Bipolar-pink.png';
+import bipolarTeal from '@assets/wallpapers/Bipolar-teal.png';
+
+const WALLPAPER_MAP = {
+  none: null,
+  invert: bipolarInvert,
+  pink: bipolarPink,
+  teal: bipolarTeal,
+};
+
 // ═══════════════════════════════════════════════════════════════
 // 🎯 PABLO: CHANGE AVATARS HERE! 
 // Just change the numbers to pick which avatar for each slot
@@ -62,6 +74,7 @@ const DEFAULT_MYSPACE_DATA = {
   mood: 'chillin',
   customBio: '',
   theme: 'classic',
+  wallpaper: 'none',
   topFriends: [],
   // Music player playlist
   playlist: [
@@ -150,9 +163,21 @@ function MySpace() {
   const avatarSrc = isOwnSpace 
     ? (currentUser?.profile_picture || MY_AVATAR)
     : (viewedUser?.profile_picture || TOP8_AVATARS[topFriends.findIndex(f => f?.username === username)] || REBEL_AVATARS[0]);
+
+  // Get wallpaper style
+  const wallpaperSrc = WALLPAPER_MAP[mySpaceData.wallpaper];
+  const wallpaperStyle = wallpaperSrc ? {
+    backgroundImage: `url(${wallpaperSrc})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed',
+  } : {};
   
   return (
-    <div className={`myspace-page theme-${mySpaceData.theme}`}>
+    <div 
+      className={`myspace-page theme-${mySpaceData.theme}`}
+      style={wallpaperStyle}
+    >
       <header className="myspace-header">
         <button className="back-btn" onClick={handleBack}>
           <ChevronLeftIcon size={20} />
@@ -218,6 +243,7 @@ function MySpace() {
           {/* Theme Picker */}
           <ThemePicker
             currentTheme={mySpaceData.theme}
+            currentWallpaper={mySpaceData.wallpaper}
             onUpdateField={updateField}
             isVisible={isOwnSpace}
           />
