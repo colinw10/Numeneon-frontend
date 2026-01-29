@@ -8,6 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './MySpace.scss';
 import { useAuth, useFriends } from '@contexts';
 import { ChevronLeftIcon } from '@assets/icons';
+import { getMySpaceProfile, updateMySpaceProfile } from '@services/mySpaceService';
 
 // Subcomponents
 import { MusicPlayer, Top8Friends, ThemePicker, ProfileSection } from './components';
@@ -67,7 +68,7 @@ const MY_AVATAR = myAvatar;
 // All avatars (for hash fallback)
 const REBEL_AVATARS = [av2, av3, av4, av5, av6, av7, av8, av9, av10, av11, av12, av13, av14, av15, av16, av17];
 
-// Mock data until backend is ready
+// Mock data until backend is ready (fallback)
 const DEFAULT_MYSPACE_DATA = {
   songTitle: '',
   songArtist: '',
@@ -76,11 +77,11 @@ const DEFAULT_MYSPACE_DATA = {
   theme: 'classic',
   wallpaper: 'none',
   topFriends: [],
-  // Music player playlist
+  // Music player playlist - with preview_url for audio playback
   playlist: [
-    { id: 1, title: 'Pneuma', artist: 'Tool', duration: '11:53' },
-    { id: 2, title: 'The Speaker is Systematically Blown', artist: 'Author Punisher', duration: '4:14' },
-    { id: 3, title: 'Sweet Dreams', artist: 'Eurythmics', duration: '3:36' },
+    { id: 1, title: 'Pneuma', artist: 'Tool', duration: '11:53', preview_url: null },
+    { id: 2, title: 'The Speaker is Systematically Blown', artist: 'Author Punisher', duration: '4:14', preview_url: null },
+    { id: 3, title: 'Sweet Dreams', artist: 'Eurythmics', duration: '3:36', preview_url: null },
   ],
   currentTrack: 0,
   isPlaying: false,
@@ -108,34 +109,53 @@ function MySpace() {
     ? currentUser 
     : friends.find(f => f.username === username);
   
-  // MySpace profile state (will connect to backend later)
-  const [mySpaceData, setMySpaceData] = useState(() => {
-    // Try to load from localStorage for now
-    const saved = localStorage.getItem(`myspace_${displayUsername}`);
-    // Merge with defaults to ensure all fields exist
-    return saved ? { ...DEFAULT_MYSPACE_DATA, ...JSON.parse(saved) } : DEFAULT_MYSPACE_DATA;
-  });
-  
+  // MySpace profile state
+  const [mySpaceData, setMySpaceData] = useState(DEFAULT_MYSPACE_DATA);
   const [isEditing, setIsEditing] = useState(false);
   
   // Re-load data when username changes (navigating to different user's space)
   useEffect(() => {
-    // Only re-fetch if we have a username to load
     const targetUsername = username || currentUser?.username;
     if (!targetUsername) return;
     
-    const saved = localStorage.getItem(`myspace_${targetUsername}`);
-    const newData = saved ? { ...DEFAULT_MYSPACE_DATA, ...JSON.parse(saved) } : DEFAULT_MYSPACE_DATA;
+    let cancelled = false;
     
-    // Only update if data actually changed
-    setMySpaceData(prev => {
-      if (JSON.stringify(prev) === JSON.stringify(newData)) return prev;
-      return newData;
-    });
-    setIsEditing(false); // Reset editing mode
+    (async () => {
+      try {
+        const data = await getMySpaceProfile(targetUsername);
+        if (!cancelled) {
+          setMySpaceData({ ...DEFAULT_MYSPACE_DATA, ...data });
+          setIsEditing(false);
+        }
+      } catch {
+        // API not available, using localStorage fallback
+        if (!cancelled) {
+          const saved = localStorage.getItem(`myspace_${targetUsername}`);
+          if (saved) {
+            setMySpaceData({ ...DEFAULT_MYSPACE_DATA, ...JSON.parse(saved) });
+          }
+          setIsEditing(false);
+        }
+      }
+    })();
+    
+    return () => { cancelled = true; };
   }, [username, currentUser?.username]);
 
-  // Save to localStorage when data changes (temporary until backend)
+  // Save to backend when editing is done
+  const handleSaveChanges = async () => {
+    if (!isOwnSpace) return;
+    
+    try {
+      await updateMySpaceProfile(mySpaceData);
+    } catch {
+      // API save failed, using localStorage fallback
+      localStorage.setItem(`myspace_${displayUsername}`, JSON.stringify(mySpaceData));
+    }
+    setIsEditing(false);
+  };
+  
+  // Also save to localStorage as backup
   useEffect(() => {
     if (isOwnSpace && mySpaceData !== DEFAULT_MYSPACE_DATA) {
       localStorage.setItem(`myspace_${displayUsername}`, JSON.stringify(mySpaceData));
@@ -199,7 +219,7 @@ function MySpace() {
           {isOwnSpace && (
             <button 
               className="edit-toggle-btn"
-              onClick={() => setIsEditing(!isEditing)}
+              onClick={() => isEditing ? handleSaveChanges() : setIsEditing(true)}
             >
               {isEditing ? 'done' : 'edit'}
             </button>

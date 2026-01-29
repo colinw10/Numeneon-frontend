@@ -1,4 +1,5 @@
-// MusicPlayer.jsx - Retro MySpace-style music player
+// MusicPlayer.jsx - Retro MySpace-style music player with actual audio playback
+import { useState, useEffect, useRef } from 'react';
 import './MusicPlayer.scss';
 
 const SLIDER_STYLES = [
@@ -14,6 +15,14 @@ const SLIDER_STYLES = [
   { id: 10, name: 'cross', colors: ['#22c55e', '#4ade80'] },
 ];
 
+// Format seconds to M:SS
+const formatTime = (seconds) => {
+  if (!seconds || isNaN(seconds)) return '0:00';
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+};
+
 function MusicPlayer({ 
   playlist, 
   currentTrack, 
@@ -23,11 +32,97 @@ function MusicPlayer({
   isEditing,
   onUpdateField 
 }) {
+  const audioRef = useRef(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [shuffle, setShuffle] = useState(false);
+  const [repeat, setRepeat] = useState(false);
+
   const track = playlist?.[currentTrack] || playlist?.[0] || { 
     title: 'no music', 
     artist: '...', 
-    duration: '0:00' 
+    duration: '0:00',
+    preview_url: null
   };
+
+  // Initialize audio element
+  useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+    }
+    
+    const audio = audioRef.current;
+    
+    // Event listeners
+    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const handleLoadedMetadata = () => setDuration(audio.duration);
+    const handleEnded = () => {
+      if (repeat) {
+        audio.currentTime = 0;
+        audio.play();
+      } else if (shuffle) {
+        const randomIndex = Math.floor(Math.random() * playlist.length);
+        onUpdateField('currentTrack', randomIndex);
+      } else {
+        // Auto-advance to next track
+        const nextTrack = currentTrack + 1;
+        if (nextTrack < playlist.length) {
+          onUpdateField('currentTrack', nextTrack);
+        } else {
+          onUpdateField('isPlaying', false);
+        }
+      }
+    };
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, [currentTrack, playlist.length, repeat, shuffle, onUpdateField]);
+
+  // Handle track change
+  useEffect(() => {
+    if (audioRef.current && track.preview_url) {
+      audioRef.current.src = track.preview_url;
+      audioRef.current.load();
+      // Reset time via ref callback instead of setState
+      audioRef.current.currentTime = 0;
+    }
+  }, [currentTrack, track.preview_url]);
+
+  // Handle play/pause
+  useEffect(() => {
+    if (audioRef.current && track.preview_url) {
+      if (isPlaying) {
+        audioRef.current.play().catch(err => console.log('Playback error:', err));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying, track.preview_url]);
+
+  // Handle volume change
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = (volume || 75) / 100;
+    }
+  }, [volume]);
+
+  // Progress bar click handler
+  const handleProgressClick = (e) => {
+    if (!audioRef.current || !duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    audioRef.current.currentTime = percent * duration;
+  };
+
+  // Calculate progress percentage
+  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
     <div className="music-player-section">
@@ -42,11 +137,11 @@ function MusicPlayer({
             </marquee>
           </div>
           <div className="player-time">
-            <span>0:00</span>
-            <div className="progress-bar">
-              <div className="progress-fill" style={{ width: '35%' }} />
+            <span>{formatTime(currentTime)}</span>
+            <div className="progress-bar" onClick={handleProgressClick}>
+              <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
             </div>
-            <span>{track.duration}</span>
+            <span>{formatTime(duration) || track.duration}</span>
           </div>
         </div>
         
@@ -59,8 +154,9 @@ function MusicPlayer({
             ⏮
           </button>
           <button 
-            className="control-btn play-btn"
-            onClick={() => onUpdateField('isPlaying', !isPlaying)}
+            className={`control-btn play-btn ${!track.preview_url ? 'disabled' : ''}`}
+            onClick={() => track.preview_url && onUpdateField('isPlaying', !isPlaying)}
+            title={!track.preview_url ? 'No preview available' : ''}
           >
             {isPlaying ? '⏸' : '▶'}
           </button>
@@ -70,8 +166,18 @@ function MusicPlayer({
           >
             ⏭
           </button>
-          <button className="control-btn">🔀</button>
-          <button className="control-btn">🔁</button>
+          <button 
+            className={`control-btn ${shuffle ? 'active' : ''}`}
+            onClick={() => setShuffle(!shuffle)}
+          >
+            🔀
+          </button>
+          <button 
+            className={`control-btn ${repeat ? 'active' : ''}`}
+            onClick={() => setRepeat(!repeat)}
+          >
+            🔁
+          </button>
         </div>
 
         {/* Volume Slider - CodePen Style */}
