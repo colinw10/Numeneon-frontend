@@ -78,9 +78,9 @@ const DEFAULT_MYSPACE_DATA = {
   topFriends: [],
   // Music player playlist
   playlist: [
-    { id: 1, title: 'Welcome to the Black Parade', artist: 'My Chemical Romance', duration: '5:11' },
-    { id: 2, title: 'Mr. Brightside', artist: 'The Killers', duration: '3:42' },
-    { id: 3, title: 'Sugar, We\'re Goin Down', artist: 'Fall Out Boy', duration: '3:49' },
+    { id: 1, title: 'Pneuma', artist: 'Tool', duration: '11:53' },
+    { id: 2, title: 'The Speaker is Systematically Blown', artist: 'Author Punisher', duration: '4:14' },
+    { id: 3, title: 'Sweet Dreams', artist: 'Eurythmics', duration: '3:36' },
   ],
   currentTrack: 0,
   isPlaying: false,
