@@ -8,7 +8,7 @@ import MessageModal from './MessageModal/MessageModal';
 import SearchModal from './SearchModal/SearchModal';
 import NotificationModal from './NotificationModal/NotificationModal';
 import { ThemeToggle } from '@components/ui/ThemeToggle';
-import { useMessages, useAuth, useFriends, useSearch, useSideNav } from '@contexts';
+import { useMessages, useAuth, useFriends, useSearch, useSideNav, useNotifications } from '@contexts';
 import { 
   TargetReticleIcon, 
   MessageBubbleIcon, 
@@ -24,6 +24,7 @@ function TopBar() {
   const { isMessageModalOpen, openMessages, closeMessages, newMessageNotification } = useMessages();
   const { logout, user } = useAuth();
   const { pendingRequests } = useFriends();
+  const { unreadCount } = useNotifications();
   const { isSearchModalOpen, openSearch, closeSearch } = useSearch();
   const { isOpen: isSideNavOpen, toggleNav, isMobile } = useSideNav();
   const navigate = useNavigate();
@@ -98,8 +99,8 @@ function TopBar() {
               >
                 <BroadcastIcon size={20} />
                 {/* Notification badge */}
-                {pendingRequests.length > 0 && (
-                  <span className="notification-badge">{pendingRequests.length}</span>
+                {(pendingRequests.length > 0 || unreadCount > 0) && (
+                  <span className="notification-badge">{pendingRequests.length + unreadCount}</span>
                 )}
               </div>
               <div 
