@@ -117,6 +117,29 @@ function Home() {
           <UserIcon size={24} />
         </div>
         <div className="composer-input-wrapper">
+          {/* Action buttons on left */}
+          <div className="composer-actions">
+            <button 
+              className="composer-action-btn media-btn"
+              onClick={() => {
+                setComposerType('media');
+                setShowComposer(true);
+              }}
+              title="Add photo"
+            >
+              <ImageIcon size={22} />
+            </button>
+            <button 
+              className="composer-action-btn milestone-btn"
+              onClick={() => {
+                setComposerType('milestone');
+                setShowComposer(true);
+              }}
+              title="Add milestone"
+            >
+              <FlagIcon size={22} />
+            </button>
+          </div>
           <textarea
             className="composer-input"
             placeholder="Share something…"
@@ -136,28 +159,6 @@ function Home() {
               <PostTriangleIcon size={16} />
             </span>
           )}
-        </div>
-        <div className="composer-actions">
-          <button 
-            className="composer-action-btn media-btn"
-            onClick={() => {
-              setComposerType('media');
-              setShowComposer(true);
-            }}
-            title="Add photo"
-          >
-            <ImageIcon size={18} />
-          </button>
-          <button 
-            className="composer-action-btn milestone-btn"
-            onClick={() => {
-              setComposerType('milestone');
-              setShowComposer(true);
-            }}
-            title="Add milestone"
-          >
-            <FlagIcon size={18} />
-          </button>
         </div>
       </div>
 

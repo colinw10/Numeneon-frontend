@@ -238,6 +238,29 @@ function Profile() {
               <UserIcon size={24} />
             </div>
             <div className="quick-composer-input-wrapper">
+              {/* Action buttons on left */}
+              <div className="quick-composer-actions">
+                <button 
+                  className="quick-composer-action-btn media-btn"
+                  onClick={() => {
+                    setComposerType('media');
+                    setShowComposer(true);
+                  }}
+                  title="Add photo"
+                >
+                  <ImageIcon size={18} />
+                </button>
+                <button 
+                  className="quick-composer-action-btn milestone-btn"
+                  onClick={() => {
+                    setComposerType('milestone');
+                    setShowComposer(true);
+                  }}
+                  title="Add milestone"
+                >
+                  <FlagIcon size={18} />
+                </button>
+              </div>
               <textarea
                 id="quick-composer-input"
                 name="quick-composer"
@@ -259,28 +282,6 @@ function Profile() {
                   <PostTriangleIcon size={16} />
                 </span>
               )}
-            </div>
-            <div className="quick-composer-actions">
-              <button 
-                className="quick-composer-action-btn media-btn"
-                onClick={() => {
-                  setComposerType('media');
-                  setShowComposer(true);
-                }}
-                title="Add photo"
-              >
-                <ImageIcon size={18} />
-              </button>
-              <button 
-                className="quick-composer-action-btn milestone-btn"
-                onClick={() => {
-                  setComposerType('milestone');
-                  setShowComposer(true);
-                }}
-                title="Add milestone"
-              >
-                <FlagIcon size={18} />
-              </button>
             </div>
           </div>
         </div>
