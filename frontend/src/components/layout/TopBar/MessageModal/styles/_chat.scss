@@ -51,6 +51,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0; /* Prevent header from shrinking */
+  flex-grow: 0; /* Don't grow either */
+  min-height: 56px; /* Ensure minimum height */
 }
 
 /* Mobile close button - hidden on desktop */
@@ -153,7 +155,7 @@
 
 /* Chat Messages Container */
 .chat-messages {
-  flex: 1;
+  flex: 1 1 0; /* Grow, shrink, with 0 basis */
   overflow-y: auto;
   padding: 1.5rem;
   display: flex;
@@ -162,6 +164,7 @@
   position: relative;
   z-index: 1;
   min-height: 0; /* Critical for flex overflow to work */
+  max-height: calc(100% - 120px); /* Leave room for header and composer */
 }
 
 /* Message row - clean layout, time shows on hover */
