@@ -40,7 +40,23 @@ export const getUserByUsername = async (username) => {
   }
 };
 
+/**
+ * Update current user's profile
+ * @param {Object} profileData - { bio, location, website } - all optional
+ * @returns {Promise<Object>} - Updated user data
+ */
+export const updateProfile = async (profileData) => {
+  try {
+    const response = await apiClient.patch("/auth/profile/", profileData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    throw error;
+  }
+};
+
 export default {
   searchUsers,
   getUserByUsername,
+  updateProfile,
 };

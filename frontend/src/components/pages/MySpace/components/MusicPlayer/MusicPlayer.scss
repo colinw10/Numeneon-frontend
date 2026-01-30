@@ -10,13 +10,23 @@
   padding: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0;
-  min-width: 0; // Prevent flex overflow
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 }
 
 .music-player {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
+  min-width: 0;
 }
 
 .player-display {
@@ -24,7 +34,9 @@
   border: 2px inset #333;
   padding: 12px;
   border-radius: 0;
-  overflow: hidden; // Contain content
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .now-playing {
@@ -49,8 +61,10 @@
     font-weight: 600;
     color: var(--ms-accent);
     text-shadow: 0 0 8px var(--ms-glow);
-    min-width: 0; // Allow text truncation
+    min-width: 0;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   
   .np-error {
@@ -100,6 +114,12 @@
   background: linear-gradient(180deg, #25253b 0%, #1a1a25 100%);
   border: 2px outset #444;
   border-radius: 0;
+  flex-wrap: wrap;
+  
+  @media (max-width: 480px) {
+    gap: 6px;
+    padding: 6px;
+  }
 }
 
 .control-btn {
@@ -115,6 +135,12 @@
   align-items: center;
   justify-content: center;
   transition: all 0.1s ease;
+  flex-shrink: 0;
+  
+  @media (max-width: 480px) {
+    width: 32px;
+    height: 32px;
+  }
   
   &:hover {
     background: linear-gradient(180deg, #555 0%, #333 100%);
@@ -505,6 +531,9 @@
   border: 2px inset #333;
   max-height: 200px;
   overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .playlist-header {
@@ -524,12 +553,15 @@
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
-  padding-left: 15px; // Reserve space for active border
+  padding-left: 15px;
   border-bottom: 1px solid #1a1a25;
-  border-left: 3px solid transparent; // Always have border, just transparent
+  border-left: 3px solid transparent;
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease;
   box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
   
   &:hover {
     background: rgba(255, 255, 255, 0.05);
@@ -544,12 +576,19 @@
       text-shadow: 0 0 8px var(--ms-glow);
     }
   }
+  
+  @media (max-width: 480px) {
+    padding: 8px 10px;
+    padding-left: 12px;
+    gap: 6px;
+  }
 }
 
 .track-num {
   font-size: 12px;
   color: #555;
   width: 20px;
+  flex-shrink: 0;
   font-family: 'Doto', monospace;
 }
 
@@ -559,6 +598,7 @@
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+  overflow: hidden;
 }
 
 .track-title {
@@ -568,17 +608,28 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
+  
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 }
 
 .track-artist {
   font-size: 11px;
   color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .track-duration {
   font-size: 11px;
   color: #555;
   font-family: 'Doto', monospace;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .add-song {

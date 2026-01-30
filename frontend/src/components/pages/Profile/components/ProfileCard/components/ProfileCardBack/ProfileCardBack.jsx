@@ -1,6 +1,7 @@
 // ProfileCardBack.jsx - Private analytics dashboard (back of flip card)
 // 🔵 PABLO - UI/Styling
 
+import { useState } from 'react';
 import './ProfileCardBack.scss';
 import ActivityVisualization from '../ActivityVisualization';
 import PostTypeBreakdown from '../PostTypeBreakdown';
@@ -22,6 +23,8 @@ function ProfileCardBack({
   getActivityColor,
   isOwnProfile = true
 }) {
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  
   return (
     <div className="profile-card-back">
       <div className="analytics-header">
@@ -73,25 +76,27 @@ function ProfileCardBack({
         </div>
       </div>
 
-      {/* Activity Visualization */}
-      <ActivityVisualization
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-        posts={posts}
-        waveData={waveData}
-        mediumWaveData={mediumWaveData}
-        lowWaveData={lowWaveData}
-        heatmapData={heatmapData}
-        bestPostingTime={bestPostingTime}
-        createWavePath={createWavePath}
-        getActivityColor={getActivityColor}
-      />
+      {/* Activity Visualization - Hidden when editing */}
+      {!editModalOpen && (
+        <ActivityVisualization
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          posts={posts}
+          waveData={waveData}
+          mediumWaveData={mediumWaveData}
+          lowWaveData={lowWaveData}
+          heatmapData={heatmapData}
+          bestPostingTime={bestPostingTime}
+          createWavePath={createWavePath}
+          getActivityColor={getActivityColor}
+        />
+      )}
 
-      {/* Post Type Breakdown */}
-      <PostTypeBreakdown postTypeData={postTypeData} />
+      {/* Post Type Breakdown - Hidden when editing */}
+      {!editModalOpen && <PostTypeBreakdown postTypeData={postTypeData} />}
 
       {/* Quick Settings - Only on own profile */}
-      {isOwnProfile && <QuickSettings />}
+      {isOwnProfile && <QuickSettings editModalOpen={editModalOpen} setEditModalOpen={setEditModalOpen} />}
     </div>
   );
 }

@@ -10,12 +10,20 @@
   padding: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0;
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 }
 
 .theme-picker {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  
+  @media (max-width: 480px) {
+    gap: 8px;
+  }
 }
 
 .theme-option {
@@ -29,6 +37,11 @@
   border-radius: 0;
   cursor: pointer;
   transition: all 0.2s ease;
+  
+  @media (max-width: 480px) {
+    padding: 8px;
+    gap: 4px;
+  }
   
   &:hover {
     border-color: rgba(255, 255, 255, 0.3);

@@ -135,6 +135,18 @@ export const AuthProvider = ({ children }) => {
     window.location.href = "/login"; // force redirect to login page - clean state
   };
 
+  // Refresh user data from the server
+  const refreshUser = async () => {
+    try {
+      const userData = await authService.getCurrentUser();
+      setUser(userData);
+      return userData;
+    } catch (error) {
+      console.error("Error refreshing user:", error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -144,6 +156,7 @@ export const AuthProvider = ({ children }) => {
         login,
         signup,
         logout,
+        refreshUser,
       }}
     >
       {children}

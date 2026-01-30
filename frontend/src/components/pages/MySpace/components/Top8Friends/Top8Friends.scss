@@ -10,6 +10,10 @@
   padding: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0;
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 }
 
 .top-friends-grid {
@@ -17,8 +21,19 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  
   @media (max-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  @media (max-width: 400px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 }
 
