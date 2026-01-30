@@ -68,7 +68,7 @@ const messagesService = {
     return response.data;
   },
   // ─────────────────────────────────────────────────────────────────────────
-  // PATCH /api/messages/read_all/?user_id=X
+  // POST /api/messages/read_all/?user_id=X
   // ─────────────────────────────────────────────────────────────────────────
   // Marks ALL unread messages FROM user X as read
   // Use this when opening a conversation (bulk operation)
@@ -77,7 +77,7 @@ const messagesService = {
   // Backend: MessageViewSet.read_all() in views.py
   // ─────────────────────────────────────────────────────────────────────────
   markAllAsRead: async (userId) => {
-    const response = await apiClient.patch(
+    const response = await apiClient.post(
       `/messages/read_all/?user_id=${userId}`,
     );
     return response.data;

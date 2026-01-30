@@ -83,6 +83,13 @@ function MessageModal({ onClose }) {
   // 🔵 Ref for scrolling to bottom of messages
   const messagesEndRef = useRef(null);
   
+  // 🔵 Switch to chat view when a conversation is selected (from profile/nav)
+  useEffect(() => {
+    if (selectedConversation && selectedUserId) {
+      setMobileView('chat');
+    }
+  }, [selectedConversation, selectedUserId]);
+  
   // 🔵 Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

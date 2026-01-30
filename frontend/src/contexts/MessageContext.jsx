@@ -117,7 +117,21 @@ export function MessageProvider({ children }) {
 
     if (targetUser) {
       // Store user info so we can show header even without existing conversation
-      setSelectedUserInfo(targetUser);
+      // Make sure we have all possible name fields for display
+      const userInfo = {
+        id: targetUser.id,
+        username: targetUser.username,
+        first_name: targetUser.first_name,
+        last_name: targetUser.last_name,
+        displayName: targetUser.displayName || targetUser.display_name || 
+          (targetUser.first_name && targetUser.last_name 
+            ? `${targetUser.first_name} ${targetUser.last_name}` 
+            : targetUser.username),
+      };
+      
+      console.log('📬 Opening messages with user:', userInfo);
+      
+      setSelectedUserInfo(userInfo);
       setSelectedUserId(targetUser.id);
       setSelectedMessages([]);
       
