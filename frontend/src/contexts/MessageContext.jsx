@@ -160,7 +160,36 @@ export function MessageProvider({ children }) {
   };
 
   // Select a conversation and mark as read
-  const selectConversation = async (userId) => {
+  const selectConversation = async (userId, userObj = null) => {
+    // If userObj provided, set it immediately for header display
+    if (userObj) {
+      setSelectedUserInfo({
+        id: userObj.id,
+        username: userObj.username,
+        first_name: userObj.first_name,
+        last_name: userObj.last_name,
+        displayName: userObj.displayName || userObj.display_name ||
+          (userObj.first_name && userObj.last_name 
+            ? `${userObj.first_name} ${userObj.last_name}` 
+            : userObj.username),
+      });
+    } else {
+      // Try to find user info from conversations list
+      const conv = conversations.find(c => c.user?.id === userId);
+      if (conv?.user) {
+        setSelectedUserInfo({
+          id: conv.user.id,
+          username: conv.user.username,
+          first_name: conv.user.first_name,
+          last_name: conv.user.last_name,
+          displayName: conv.user.displayName || 
+            (conv.user.first_name && conv.user.last_name 
+              ? `${conv.user.first_name} ${conv.user.last_name}` 
+              : conv.user.username),
+        });
+      }
+    }
+    
     await fetchConversation(userId);
     try {
       await messagesService.markAllAsRead(userId);

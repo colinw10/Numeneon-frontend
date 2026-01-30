@@ -342,7 +342,7 @@ function MessageModal({ onClose }) {
                         key={conv.id || conv.user?.id}
                         className={`conversation-item ${isActive ? 'active' : ''}`}
                         onClick={() => {
-                          selectConversation(conv.user?.id);
+                          selectConversation(conv.user?.id, conv.user);
                           setMobileView('chat'); // Switch to chat view on mobile
                         }}
                       >

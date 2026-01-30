@@ -119,7 +119,11 @@ function Profile() {
     
     // Build post data - include target_profile_id for wall posts
     const postData = { 
-      content: composerText.trim(), 
+            {
+        "author": { "id": 1, "username": "pablo" },  // YOU - from JWT
+        "content": "Yo",
+        "target_profile": { "id": 5, "username": "quesoblanci" }  // Wall owner
+      }content: composerText.trim(), 
       type: 'thoughts'
     };
     
