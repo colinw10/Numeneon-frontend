@@ -1,1 +1,1 @@
-export { default } from './NewMessagesModal';
+export { default } from "./NewMessagesModal";
