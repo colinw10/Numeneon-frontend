@@ -1,9 +1,9 @@
 // 🔵 PABLO - UI Architect
-// NewMessagesModal.jsx - Dropdown showing unread messages (like friend requests modal)
+// NewMessagesModal.jsx - Dropdown showing unread messages (uses NotificationModal styling)
 
 import { useEffect } from 'react';
 import { useMessages } from '@contexts/MessageContext';
-import './NewMessagesModal.scss';
+import '../NotificationModal/NotificationModal.scss';
 
 // Helper: Format relative time
 const formatRelativeTime = (date) => {
@@ -18,14 +18,6 @@ const formatRelativeTime = (date) => {
   if (diffMinutes < 60) return `${diffMinutes}m`;
   if (diffHours < 24) return `${diffHours}h`;
   return `${diffDays}d`;
-};
-
-// Helper: Get initials
-const getInitials = (name) => {
-  if (!name) return '?';
-  const parts = name.split(' ');
-  if (parts.length >= 2) return parts[0][0] + parts[1][0];
-  return name.slice(0, 2).toUpperCase();
 };
 
 function NewMessagesModal({ isOpen, onClose }) {
@@ -54,49 +46,34 @@ function NewMessagesModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="new-messages-overlay" onClick={onClose}>
-      <div className="new-messages-dropdown" onClick={(e) => e.stopPropagation()}>
+    <div className="notif-overlay" onClick={onClose}>
+      <div className="notif-dropdown" onClick={(e) => e.stopPropagation()}>
         
-        <div className="new-messages-header">
+        <div className="notif-header">
           <span>New Messages</span>
-          <button className="new-messages-close" onClick={onClose}>✕</button>
+          <button className="notif-close" onClick={onClose}>✕</button>
         </div>
 
-        <div className="new-messages-list">
+        <div className="notif-list">
           {unreadConversations.length === 0 ? (
-            <p className="new-messages-empty">No new messages</p>
+            <p className="notif-empty">No new messages</p>
           ) : (
             unreadConversations.map((conv) => {
-              const displayName = conv.user?.displayName || 
-                `${conv.user?.first_name || ''} ${conv.user?.last_name || ''}`.trim() || 
-                conv.user?.username || 'Unknown';
+              const displayName = conv.user?.username || 'Unknown';
               const lastMessage = conv.last_message;
               const messagePreview = lastMessage?.content || 'New message';
 
               return (
                 <div 
                   key={conv.id || conv.user?.id}
-                  className="new-message-item"
+                  className="notif-item notif-clickable"
                   onClick={() => handleConversationClick(conv)}
                 >
-                  <div className="new-message-avatar">
-                    <span className="initial-1">{getInitials(displayName)[0]}</span>
-                    {getInitials(displayName).length > 1 && (
-                      <span className="initial-2">{getInitials(displayName)[1]}</span>
-                    )}
-                  </div>
-                  <div className="new-message-content">
-                    <div className="new-message-header-row">
-                      <span className="new-message-name">{displayName}</span>
-                      <span className="new-message-time">
-                        {formatRelativeTime(lastMessage?.created_at)}
-                      </span>
-                    </div>
-                    <p className="new-message-preview">
-                      {messagePreview.substring(0, 40) + (messagePreview.length > 40 ? '...' : '')}
-                    </p>
-                  </div>
-                  <span className="new-message-badge">{conv.unread_count}</span>
+                  <p className="notif-text">
+                    <span className="notif-name">{displayName}</span>
+                    {' '}{messagePreview.substring(0, 35) + (messagePreview.length > 35 ? '...' : '')}
+                  </p>
+                  <span className="notif-badge">{conv.unread_count}</span>
                 </div>
               );
             })
@@ -104,8 +81,8 @@ function NewMessagesModal({ isOpen, onClose }) {
         </div>
 
         {unreadConversations.length > 0 && (
-          <button className="new-messages-viewall" onClick={handleViewAll}>
-            View All Messages
+          <button className="notif-viewall" onClick={handleViewAll}>
+            View All
           </button>
         )}
       </div>

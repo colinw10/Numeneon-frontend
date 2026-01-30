@@ -34,7 +34,7 @@ export const NotificationProvider = ({ children }) => {
     const handleNewPost = (data) => {
       console.log('🔔 New post notification:', data);
       addNotification({
-        id: Date.now(), // Generate ID if one isn't provided
+        id: Date.now(),
         type: 'post',
         read: false,
         created_at: new Date().toISOString(),
@@ -42,12 +42,29 @@ export const NotificationProvider = ({ children }) => {
       });
     };
 
+    // Listen for wall posts (when someone posts on your wall)
+    const handleWallPost = (data) => {
+      console.log('🔔 Wall post notification:', data);
+      addNotification({
+        id: Date.now(),
+        type: 'wall_post',
+        read: false,
+        created_at: new Date().toISOString(),
+        message: data.message || `${data.author?.username || 'Someone'} posted on your wall`,
+        post: data.post,
+        author: data.author,
+        ...data
+      });
+    };
+
     const unsubscribePost = subscribe('new_post_notification', handleNewPost);
     const unsubscribeNewPost = subscribe('new_post', handleNewPost);
+    const unsubscribeWallPost = subscribe('wall_post', handleWallPost);
 
     return () => {
       unsubscribePost();
       unsubscribeNewPost();
+      unsubscribeWallPost();
     };
   }, [user, subscribe]);
 

@@ -68,22 +68,25 @@ function NotificationModal({ isOpen, onClose }) {
             {notifications.map((notif) => (
               <div 
                 key={notif.id} 
-                className={`notif-item ${!notif.read ? 'unread' : ''}`}
+                className={`notif-item notif-clickable ${!notif.read ? 'notif-unread' : ''}`}
                 onClick={() => {
                   markAsRead(notif.id);
-                  if (notif.author?.username) {
+                  // Navigate based on notification type
+                  if (notif.type === 'wall_post') {
+                    // Wall posts - go to the user's own profile to see the post
+                    navigate(`/profile`);
+                  } else if (notif.author?.username) {
                     navigate(`/profile/${notif.author.username}`);
                   }
                   onClose();
                 }}
-                style={{ cursor: 'pointer', borderLeft: !notif.read ? '3px solid var(--accent-color)' : 'none' }}
               >
-                 <div className="notif-content" style={{ display: 'flex', flexDirection: 'column' }}>
+                 <div className="notif-content">
                     <p className="notif-text">
                       <span className="notif-name">{notif.author?.username || 'Someone'}</span>
-                      {' '}{notif.message || 'posted something'}
+                      {' '}{notif.type === 'wall_post' ? 'posted on your wall' : (notif.message || 'posted something')}
                     </p>
-                    <span className="notif-time" style={{ fontSize: '10px', color: '#888' }}>
+                    <span className="notif-time">
                       {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                  </div>
