@@ -105,7 +105,16 @@ export const PostsProvider = ({ children }) => {
    // CREATE POST
    const createPost = async (postData) => {
     try {
+      console.log('📝 Creating post with data:', postData);
       const newPost = await postsService.create(postData);// Returns new post with id
+      console.log('📝 Post created, response:', newPost);
+      
+      // If this was a wall post, manually attach the target_profile_id
+      // (in case backend doesn't return it yet)
+      if (postData.target_profile_id && !newPost.target_profile_id) {
+        newPost.target_profile_id = postData.target_profile_id;
+      }
+      
       setPosts(prev => [newPost, ...prev]);// Add to top of list (spread previous posts after)
       
       // Auto-expand the category that was just posted to
@@ -114,8 +123,9 @@ export const PostsProvider = ({ children }) => {
         expandDeck(postType);
       }
       
-      return {success: true };
+      return {success: true, post: newPost };
     } catch (err) {
+      console.error('📝 Post creation failed:', err);
       return {
         success: false,
         error: err.response?.data?.detail || 'Failed to create post'
