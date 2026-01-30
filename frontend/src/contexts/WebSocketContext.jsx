@@ -25,9 +25,11 @@ export function WebSocketProvider({ children }) {
     const connect = () => {
       // Determine protocol and host
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const host = import.meta.env.VITE_API_URL 
-        ? new URL(import.meta.env.VITE_API_URL).host 
-        : 'localhost:8000';
+      
+      // Production: Use Render backend | Local: localhost
+      const host = window.location.hostname === 'localhost'
+        ? 'localhost:8000'
+        : 'numeneon-backend.onrender.com';
       
       const wsUrl = `${protocol}//${host}/ws/notifications/?token=${token}`;
       
