@@ -147,8 +147,15 @@ function Profile() {
     }
   };
   
-  // Filter posts by the profile user for "My Timeline" / "Their Timeline"
-  const profilePosts = posts.filter(p => p.author?.username === profileUser?.username);
+  // Filter posts for this profile's timeline:
+  // 1. Posts authored BY the profile user
+  // 2. Wall posts made TO this profile (target_profile_id matches)
+  const profilePosts = posts.filter(p => 
+    p.author?.username === profileUser?.username || 
+    p.target_profile_id === profileUser?.id ||
+    p.target_profile?.id === profileUser?.id ||
+    p.target_profile?.username === profileUser?.username
+  );
   
   // Friends' posts for "Friends Feed" - ONLY show on own profile
   const friendsPosts = isOwnProfile 
