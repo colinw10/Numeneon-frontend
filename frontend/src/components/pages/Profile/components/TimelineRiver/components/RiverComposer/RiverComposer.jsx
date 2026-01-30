@@ -12,6 +12,7 @@ import './RiverComposer.scss';
 import {
   ChevronRightIcon,
   MaximizeIcon,
+  PlusIcon,
   CloseIcon,
   ImageIcon,
   CheckIcon,
@@ -93,9 +94,9 @@ const RiverComposer = ({
           <button
             className="expand-composer-btn"
             onClick={onExpand}
-            title="Expand to full page"
+            title="Add more options"
           >
-            <MaximizeIcon size={12} strokeWidth="2.5" />
+            <PlusIcon size={14} />
           </button>
         </div>
         <button

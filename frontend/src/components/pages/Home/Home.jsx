@@ -6,7 +6,7 @@ import './Home.scss';
 import TimelineRiverFeed from './components/TimelineRiverFeed';
 import ComposerModal from '@Profile/components/ComposerModal/ComposerModal';
 import { usePosts, useFriends } from '@contexts';
-import { UserIcon, PostTriangleIcon, MaximizeIcon } from '@assets/icons';
+import { UserIcon, PostTriangleIcon, MaximizeIcon, PlusIcon } from '@assets/icons';
 // 🛠️ Import shared helpers instead of duplicating them!
 import { getInitials } from '@utils/helpers';
 
@@ -140,9 +140,9 @@ function Home() {
         <button 
           className="composer-expand-btn"
           onClick={() => setShowComposer(true)}
-          title="More options"
+          title="Add media or milestone"
         >
-          <MaximizeIcon size={14} strokeWidth="2.5" />
+          <PlusIcon size={16} />
         </button>
       </div>
 
