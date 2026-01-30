@@ -236,6 +236,8 @@ function Profile() {
             </div>
             <div className="quick-composer-input-wrapper">
               <textarea
+                id="quick-composer-input"
+                name="quick-composer"
                 className="quick-composer-textarea"
                 placeholder={isOwnProfile ? "Share something…" : `Write on ${getDisplayName(profileUser)}'s wall…`}
                 value={composerText}

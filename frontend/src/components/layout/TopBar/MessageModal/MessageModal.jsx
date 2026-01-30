@@ -437,6 +437,8 @@ function MessageModal({ onClose }) {
                 {/* Composer */}
                 <div className="chat-composer">
                   <textarea 
+                    id="chat-message-input"
+                    name="chat-message"
                     placeholder="Type a message..." 
                     className="chat-textarea"
                     rows="1"
