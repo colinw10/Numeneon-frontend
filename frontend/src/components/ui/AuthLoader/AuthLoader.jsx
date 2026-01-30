@@ -5,22 +5,11 @@
 import { useState, useEffect } from 'react';
 import './AuthLoader.scss';
 
-// Fun "revving" messages
+
+// Only show 'revving' for all modes
 const LOADING_MESSAGES = {
-  login: [
-    "Revving up...",
-    "Warming the engines...",
-    "Syncing neurons...",
-    "Almost there...",
-    "Buckle up...",
-  ],
-  signup: [
-    "Crafting your profile...",
-    "Generating vibes...",
-    "Spinning up servers...",
-    "Initializing awesomeness...",
-    "Almost ready...",
-  ],
+  login: ["Revving..."],
+  signup: ["Revving..."],
 };
 
 function AuthLoader({ isVisible, mode = 'login' }) {

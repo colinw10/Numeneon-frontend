@@ -67,7 +67,8 @@
 .center-icon {
   font-size: 32px;
   animation: pulse 0.8s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 10px rgba(255, 220, 100, 0.8));
+  /* Cyan/blue glow instead of gold */
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
 }
 
 @keyframes pulse {
