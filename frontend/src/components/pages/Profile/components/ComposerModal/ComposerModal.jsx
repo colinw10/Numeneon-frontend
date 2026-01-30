@@ -17,12 +17,15 @@ import {
   MapPinIcon
 } from '@assets/icons';
 
-function ComposerModal({ showComposer, setShowComposer, composerType, setComposerType }) {
+function ComposerModal({ showComposer, setShowComposer, composerType, setComposerType, targetProfileId = null, targetDisplayName = null }) {
   const { user } = useAuth();
   const { createPost } = usePosts();
   const [content, setContent] = useState('');
   const [isPosting, setIsPosting] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  
+  // Check if this is a wall post (posting on someone else's profile)
+  const isWallPost = !!targetProfileId;
   
   if (!showComposer) return null;
 
@@ -35,7 +38,13 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
     const postType = composerType === 'thought' ? 'thoughts' : 
                      composerType === 'media' ? 'media' : 'milestones';
     
-    const result = await createPost({ content: content.trim(), type: postType });
+    // Build post data - include target_profile_id for wall posts
+    const postData = { content: content.trim(), type: postType };
+    if (isWallPost) {
+      postData.target_profile_id = targetProfileId;
+    }
+    
+    const result = await createPost(postData);
     
     setIsPosting(false);
     
@@ -56,9 +65,26 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
 
   const getButtonText = () => {
     if (isPosting) return 'Posting...';
+    if (isWallPost) return `Post to ${targetDisplayName}'s Wall`;
     if (composerType === 'thought') return 'Post Thought';
     if (composerType === 'media') return 'Post Media';
     return 'Post Milestone';
+  };
+  
+  const getPlaceholderText = () => {
+    if (isWallPost) {
+      return `Write something on ${targetDisplayName}'s wall...`;
+    }
+    if (composerType === 'thought') return "What's on your mind?";
+    if (composerType === 'media') return "Add a caption to your media...";
+    return "Describe your milestone...";
+  };
+  
+  const getTitleText = () => {
+    if (isWallPost) return `Post to ${targetDisplayName}'s Wall`;
+    if (composerType === 'thought') return 'Share Your Thoughts';
+    if (composerType === 'media') return 'Post Media';
+    return 'Add Milestone';
   };
 
   return (
@@ -66,7 +92,7 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
       <div className={`composer-modal-content ${isFullscreen ? 'fullscreen' : ''}`} onClick={(e) => e.stopPropagation()}>
         <div className="composer-modal-header">
           <h3 className="composer-modal-title">
-            {composerType === 'thought' ? 'Share Your Thoughts' : composerType === 'media' ? 'Post Media' : 'Add Milestone'}
+            {getTitleText()}
           </h3>
           <div className="modal-header-actions">
             <button 
@@ -102,7 +128,7 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
 
           <textarea 
             className={`composer-textarea ${composerType === 'media' ? 'media-mode' : ''}`}
-            placeholder={composerType === 'thought' ? "What's on your mind?" : composerType === 'media' ? "Add a caption to your media..." : "Describe your milestone..."}
+            placeholder={getPlaceholderText()}
             rows={composerType === 'media' ? 2 : 6}
             value={content}
             onChange={(e) => setContent(e.target.value)}

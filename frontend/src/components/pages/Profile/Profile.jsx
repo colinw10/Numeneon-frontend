@@ -66,6 +66,15 @@ function Profile() {
   // Determine if viewing own profile or someone else's
   const isOwnProfile = !profileUsername || profileUsername === currentUser?.username;
   
+  // Check if profile user is a friend (for wall posting)
+  const isFriend = useMemo(() => {
+    if (isOwnProfile) return false;
+    return friends?.some(f => f.username === profileUsername);
+  }, [isOwnProfile, friends, profileUsername]);
+  
+  // Can post = own profile OR friend's profile
+  const canPost = isOwnProfile || isFriend;
+  
   // Get the profile user data
   const profileUser = useMemo(() => {
     if (isOwnProfile) {
@@ -116,7 +125,19 @@ function Profile() {
     if (!composerText.trim() || isPosting) return;
     
     setIsPosting(true);
-    const result = await createPost({ content: composerText.trim(), type: 'thoughts' });
+    
+    // Build post data - include target_profile_id for wall posts
+    const postData = { 
+      content: composerText.trim(), 
+      type: 'thoughts'
+    };
+    
+    // If posting on a friend's wall, include their user ID
+    if (!isOwnProfile && isFriend && profileUser?.id) {
+      postData.target_profile_id = profileUser.id;
+    }
+    
+    const result = await createPost(postData);
     setIsPosting(false);
     
     if (result.success) {
@@ -199,8 +220,8 @@ function Profile() {
         </div>
       )}
 
-      {/* Quick Composer - Only show on own profile */}
-      {isOwnProfile && (
+      {/* Quick Composer - Show on own profile OR friend's profile */}
+      {canPost && (
         <div className="quick-composer-buttons">
           <div className="quick-composer-section unified-composer">
             <div className="quick-composer-avatar">
@@ -209,7 +230,7 @@ function Profile() {
             <div className="quick-composer-input-wrapper">
               <textarea
                 className="quick-composer-textarea"
-                placeholder="Share something…"
+                placeholder={isOwnProfile ? "Share something…" : `Write on ${getDisplayName(profileUser)}'s wall…`}
                 value={composerText}
                 onChange={(e) => setComposerText(e.target.value)}
                 onKeyDown={handleInlineKeyDown}
@@ -238,13 +259,15 @@ function Profile() {
         </div>
       )}
 
-      {/* Composer Modal - Only on own profile */}
-      {isOwnProfile && (
+      {/* Composer Modal - Show on own profile OR friend's profile */}
+      {canPost && (
         <ComposerModal 
           showComposer={showComposer}
           setShowComposer={setShowComposer}
           composerType={composerType}
           setComposerType={setComposerType}
+          targetProfileId={!isOwnProfile && isFriend ? profileUser?.id : null}
+          targetDisplayName={!isOwnProfile ? getDisplayName(profileUser) : null}
         />
       )}
 
