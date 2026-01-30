@@ -11,9 +11,15 @@ export function WebSocketProvider({ children }) {
   const reconnectTimeoutRef = useRef(null);
   const reconnectAttempts = useRef(0);
 
+  // Debug: Log on every render
+  console.log('🔧 WebSocketProvider render - token:', !!token, 'user:', user?.username);
+
   // Connect to WebSocket
   useEffect(() => {
+    console.log('🔧 WebSocket useEffect triggered - token:', !!token, 'user:', !!user);
+    
     if (!token || !user) {
+      console.log('⚠️ No token or user, skipping WebSocket connection');
       // Not logged in - disconnect if connected
       if (wsRef.current) {
         wsRef.current.close();
