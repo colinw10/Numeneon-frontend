@@ -113,11 +113,9 @@ export function MessageProvider({ children }) {
 
   // Open the messages modal
   const openMessages = async (targetUser = null) => {
-    setIsMessageModalOpen(true);
-
     if (targetUser) {
-      // Store user info so we can show header even without existing conversation
-      // Make sure we have all possible name fields for display
+      // SET USER INFO FIRST - before opening modal!
+      // This ensures the header shows immediately
       const userInfo = {
         id: targetUser.id,
         username: targetUser.username,
@@ -131,9 +129,13 @@ export function MessageProvider({ children }) {
       
       console.log('📬 Opening messages with user:', userInfo);
       
+      // Set ALL user state BEFORE opening modal
       setSelectedUserInfo(userInfo);
       setSelectedUserId(targetUser.id);
       setSelectedMessages([]);
+      
+      // NOW open the modal - user info is already set
+      setIsMessageModalOpen(true);
       
       // Try to fetch existing messages (may return empty for new conversations)
       try {
@@ -143,8 +145,13 @@ export function MessageProvider({ children }) {
         // No existing conversation - that's fine, we'll start fresh
         setSelectedMessages([]);
       }
-    } else if (conversations.length > 0 && !selectedUserId) {
-      await fetchConversation(conversations[0].user.id);
+    } else {
+      // No target user - just open modal
+      setIsMessageModalOpen(true);
+      
+      if (conversations.length > 0 && !selectedUserId) {
+        await fetchConversation(conversations[0].user.id);
+      }
     }
   };
 

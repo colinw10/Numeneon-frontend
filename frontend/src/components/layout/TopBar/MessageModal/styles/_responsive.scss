@@ -237,6 +237,30 @@
   .chat-close-btn {
     display: flex;
   }
+  
+  /* ═══════════════════════════════════════════════════════════════════════════
+     BULLETPROOF CHAT HEADER - MOBILE (768px and below)
+     ═══════════════════════════════════════════════════════════════════════════ */
+  .chat-header {
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    padding: 0 3.5rem !important; /* Room for back/close buttons */
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+  }
+  
+  .chat-username {
+    font-size: 16px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
 }
 
 /* iPhone 6/7/8 and similar (375px width) */
@@ -281,5 +305,29 @@
   .conversation-avatar {
     width: 40px;
     height: 40px;
+  }
+  
+  /* ═══════════════════════════════════════════════════════════════════════════
+     BULLETPROOF CHAT HEADER - SMALL MOBILE (414px and below)
+     ═══════════════════════════════════════════════════════════════════════════ */
+  .chat-header {
+    height: 50px !important;
+    min-height: 50px !important;
+    max-height: 50px !important;
+    padding: 0 3rem !important;
+  }
+  
+  .chat-username {
+    font-size: 14px !important;
+    max-width: 60vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .chat-back-btn,
+  .chat-close-btn {
+    width: 28px !important;
+    height: 28px !important;
   }
 }
