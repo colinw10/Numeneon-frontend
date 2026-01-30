@@ -1,0 +1,373 @@
+/* AuthLoader - Teleporting Portal Effect */
+
+.auth-loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.auth-loader-content {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Portal Rings */
+.portal-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.outer-ring {
+  width: 220px;
+  height: 220px;
+  border-color: rgba(26, 115, 231, 0.6);
+  border-top-color: rgba(0, 212, 255, 0.9);
+  border-right-color: rgba(138, 43, 226, 0.7);
+  animation: rotateRing 3s linear infinite;
+  box-shadow:
+    0 0 30px rgba(26, 115, 231, 0.3),
+    inset 0 0 30px rgba(26, 115, 231, 0.1);
+}
+
+.middle-ring {
+  width: 160px;
+  height: 160px;
+  border-color: rgba(220, 8, 188, 0.5);
+  border-top-color: rgba(138, 43, 226, 0.9);
+  border-left-color: rgba(0, 212, 255, 0.7);
+  animation: rotateRingReverse 2s linear infinite;
+  box-shadow:
+    0 0 25px rgba(220, 8, 188, 0.3),
+    inset 0 0 25px rgba(220, 8, 188, 0.1);
+}
+
+.inner-ring {
+  width: 100px;
+  height: 100px;
+  border-color: rgba(0, 212, 255, 0.6);
+  border-bottom-color: rgba(26, 115, 231, 0.9);
+  border-right-color: rgba(220, 8, 188, 0.7);
+  animation: rotateRing 1.5s linear infinite;
+  box-shadow:
+    0 0 20px rgba(0, 212, 255, 0.4),
+    inset 0 0 20px rgba(0, 212, 255, 0.15);
+}
+
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotateRingReverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/* Ring Glow Effect */
+.ring-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.outer-ring .ring-glow {
+  box-shadow: 0 0 60px rgba(26, 115, 231, 0.4);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.middle-ring .ring-glow {
+  box-shadow: 0 0 50px rgba(220, 8, 188, 0.4);
+  animation: pulseGlow 2s ease-in-out infinite 0.3s;
+}
+
+.inner-ring .ring-glow {
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+  animation: pulseGlow 2s ease-in-out infinite 0.6s;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* Portal Core */
+.portal-core {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.core-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(0, 212, 255, 0.8) 0%,
+    rgba(26, 115, 231, 0.4) 50%,
+    transparent 70%
+  );
+  animation: corePulse 1.5s ease-out infinite;
+}
+
+.core-pulse.delay-1 {
+  animation-delay: 0.5s;
+}
+
+.core-pulse.delay-2 {
+  animation-delay: 1s;
+}
+
+@keyframes corePulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* Particle Effects */
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.9);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+}
+
+/* Position particles around the circle */
+@for $i from 0 through 11 {
+  .particle-#{$i} {
+    $angle: $i * 30deg;
+    $delay: $i * 0.15s;
+    top: 50%;
+    left: 50%;
+    animation: particleFloat 2s ease-in-out infinite #{$delay};
+    transform-origin: center;
+    
+    @if $i % 3 == 0 {
+      background: rgba(26, 115, 231, 0.9);
+      box-shadow: 0 0 10px rgba(26, 115, 231, 0.8);
+    } @else if $i % 3 == 1 {
+      background: rgba(220, 8, 188, 0.9);
+      box-shadow: 0 0 10px rgba(220, 8, 188, 0.8);
+    }
+  }
+}
+
+.particle-0 { animation-name: particleFloat0; }
+.particle-1 { animation-name: particleFloat1; }
+.particle-2 { animation-name: particleFloat2; }
+.particle-3 { animation-name: particleFloat3; }
+.particle-4 { animation-name: particleFloat4; }
+.particle-5 { animation-name: particleFloat5; }
+.particle-6 { animation-name: particleFloat6; }
+.particle-7 { animation-name: particleFloat7; }
+.particle-8 { animation-name: particleFloat8; }
+.particle-9 { animation-name: particleFloat9; }
+.particle-10 { animation-name: particleFloat10; }
+.particle-11 { animation-name: particleFloat11; }
+
+/* Generate keyframes for each particle */
+@keyframes particleFloat0 {
+  0%, 100% { transform: translate(0, -100px) scale(1); opacity: 0; }
+  50% { transform: translate(0, -60px) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat1 {
+  0%, 100% { transform: translate(50px, -87px) scale(1); opacity: 0; }
+  50% { transform: translate(30px, -52px) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat2 {
+  0%, 100% { transform: translate(87px, -50px) scale(1); opacity: 0; }
+  50% { transform: translate(52px, -30px) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat3 {
+  0%, 100% { transform: translate(100px, 0) scale(1); opacity: 0; }
+  50% { transform: translate(60px, 0) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat4 {
+  0%, 100% { transform: translate(87px, 50px) scale(1); opacity: 0; }
+  50% { transform: translate(52px, 30px) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat5 {
+  0%, 100% { transform: translate(50px, 87px) scale(1); opacity: 0; }
+  50% { transform: translate(30px, 52px) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat6 {
+  0%, 100% { transform: translate(0, 100px) scale(1); opacity: 0; }
+  50% { transform: translate(0, 60px) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat7 {
+  0%, 100% { transform: translate(-50px, 87px) scale(1); opacity: 0; }
+  50% { transform: translate(-30px, 52px) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat8 {
+  0%, 100% { transform: translate(-87px, 50px) scale(1); opacity: 0; }
+  50% { transform: translate(-52px, 30px) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat9 {
+  0%, 100% { transform: translate(-100px, 0) scale(1); opacity: 0; }
+  50% { transform: translate(-60px, 0) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat10 {
+  0%, 100% { transform: translate(-87px, -50px) scale(1); opacity: 0; }
+  50% { transform: translate(-52px, -30px) scale(1.5); opacity: 1; }
+}
+
+@keyframes particleFloat11 {
+  0%, 100% { transform: translate(-50px, -87px) scale(1); opacity: 0; }
+  50% { transform: translate(-30px, -52px) scale(1.5); opacity: 1; }
+}
+
+/* Loading Message */
+.loader-message {
+  position: absolute;
+  bottom: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  width: 300px;
+}
+
+.message-text {
+  display: block;
+  font-family: var(--font-main);
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow:
+    0 0 10px rgba(0, 212, 255, 0.5),
+    0 0 20px rgba(26, 115, 231, 0.3);
+  letter-spacing: 0.5px;
+  animation: messageGlow 2s ease-in-out infinite;
+  min-height: 24px;
+}
+
+@keyframes messageGlow {
+  0%, 100% {
+    text-shadow:
+      0 0 10px rgba(0, 212, 255, 0.5),
+      0 0 20px rgba(26, 115, 231, 0.3);
+  }
+  50% {
+    text-shadow:
+      0 0 15px rgba(0, 212, 255, 0.8),
+      0 0 30px rgba(26, 115, 231, 0.5),
+      0 0 40px rgba(220, 8, 188, 0.3);
+  }
+}
+
+/* Animated dots */
+.message-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.8);
+  animation: dotPulse 1.4s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+  background: rgba(26, 115, 231, 0.8);
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+  background: rgba(220, 8, 188, 0.8);
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .auth-loader-content {
+    width: 220px;
+    height: 220px;
+  }
+  
+  .outer-ring {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .middle-ring {
+    width: 130px;
+    height: 130px;
+  }
+  
+  .inner-ring {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .message-text {
+    font-size: 14px;
+  }
+  
+  .loader-message {
+    bottom: -70px;
+    width: 260px;
+  }
+}
