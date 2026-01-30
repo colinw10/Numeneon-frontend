@@ -61,4 +61,5 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+  min-height: 0; /* Critical for nested flex to work */
 }

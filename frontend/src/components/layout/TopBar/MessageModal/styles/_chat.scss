@@ -7,6 +7,7 @@
   position: relative;
   overflow: hidden;
   min-height: 0; /* Critical for flex children to respect overflow */
+  height: 100%; /* Ensure it fills parent */
   
   /* Layered depth background */
   background:
