@@ -55,8 +55,9 @@ export function MessageProvider({ children }) {
     if (!user) return;
 
     const unsubscribe = subscribe('new_message', (data) => {
-      console.log('📩 New message from:', data.sender.username);
-      
+      // Only notify if the logged-in user is the recipient, not the sender
+      if (user.id === data.sender.id) return;
+
       const senderId = data.sender.id;
 
       // If this is the currently open conversation, add message immediately
@@ -195,13 +196,16 @@ export function MessageProvider({ children }) {
         });
       }
     }
-    
+    // Clear notification for this sender if present
+    if (newMessageNotification && newMessageNotification.senderId === userId) {
+      setNewMessageNotification(null);
+    }
     await fetchConversation(userId);
     try {
       await messagesService.markAllAsRead(userId);
       fetchConversations();
-    } catch (err) {
-      console.error("Failed to mark as read:", err);
+    } catch {
+      // Error intentionally ignored
     }
   };
 
