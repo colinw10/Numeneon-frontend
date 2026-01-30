@@ -24,7 +24,8 @@ import {
   MessageLineIcon,
   GridIcon,
   PostTriangleIcon,
-  ImageIcon
+  ImageIcon,
+  PlusIcon
 } from '@assets/icons';
 import ProfileCard from './components/ProfileCard';
 import ComposerModal from './components/ComposerModal';
@@ -262,9 +263,9 @@ function Profile() {
             <button 
               className="quick-composer-expand-btn"
               onClick={() => setShowComposer(true)}
-              title="Expand"
+              title="Add media or milestone"
             >
-              <MaximizeIcon size={14} strokeWidth="2.5" />
+              <PlusIcon size={16} />
             </button>
           </div>
         </div>
