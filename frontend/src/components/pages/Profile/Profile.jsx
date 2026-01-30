@@ -66,15 +66,6 @@ function Profile() {
   // Determine if viewing own profile or someone else's
   const isOwnProfile = !profileUsername || profileUsername === currentUser?.username;
   
-  // Check if profile user is a friend (for wall posting)
-  const isFriend = useMemo(() => {
-    if (isOwnProfile) return false;
-    return friends?.some(f => f.username === profileUsername);
-  }, [isOwnProfile, friends, profileUsername]);
-  
-  // Can post = own profile OR friend's profile
-  const canPost = isOwnProfile || isFriend;
-  
   // Get the profile user data
   const profileUser = useMemo(() => {
     if (isOwnProfile) {

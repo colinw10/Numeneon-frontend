@@ -155,7 +155,7 @@
 
 /* Chat Messages Container */
 .chat-messages {
-  flex: 1 1 0; /* Grow, shrink, with 0 basis */
+  flex: 1 1 auto; /* Grow and shrink to fill available space */
   overflow-y: auto;
   padding: 1.5rem;
   display: flex;
@@ -164,7 +164,7 @@
   position: relative;
   z-index: 1;
   min-height: 0; /* Critical for flex overflow to work */
-  max-height: calc(100% - 120px); /* Leave room for header and composer */
+  /* No max-height - let flex handle it with header/composer flex-shrink: 0 */
 }
 
 /* Message row - clean layout, time shows on hover */
