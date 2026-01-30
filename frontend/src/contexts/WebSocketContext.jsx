@@ -23,17 +23,19 @@ export function WebSocketProvider({ children }) {
     }
 
     const connect = () => {
-      // Determine protocol and host
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      // Always use wss for production
+      const isLocal = window.location.hostname === 'localhost' || 
+                      window.location.hostname === '127.0.0.1';
       
-      // Production: Use Render backend | Local: localhost
-      const host = window.location.hostname === 'localhost'
-        ? 'localhost:8000'
-        : 'numeneon-backend.onrender.com';
+      const protocol = isLocal ? 'ws:' : 'wss:';
+      const host = isLocal ? 'localhost:8000' : 'numeneon-backend.onrender.com';
       
       const wsUrl = `${protocol}//${host}/ws/notifications/?token=${token}`;
       
-      console.log('🔌 Connecting to WebSocket...');
+      console.log('🔌 Connecting to WebSocket:', wsUrl);
+      console.log('🔑 Token present:', !!token);
+      console.log('👤 User:', user?.username);
+      
       const ws = new WebSocket(wsUrl);
 
       ws.onopen = () => {
