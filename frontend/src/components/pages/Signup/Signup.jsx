@@ -52,6 +52,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@contexts/AuthContext";
 import "./Signup.scss";
 import { BackArrowGradientIcon, EyeIcon, EyeOffIcon } from "@assets/icons";
+import AuthLoader from "@components/ui/AuthLoader/AuthLoader";
 
 function Signup() {
   const navigate = useNavigate();
@@ -155,6 +156,7 @@ function Signup() {
 
   return (
     <div className="signup-container">
+      <AuthLoader isVisible={isLoading} mode="signup" />
       <div className="signup-card">
         <button
           onClick={() => navigate("/")}

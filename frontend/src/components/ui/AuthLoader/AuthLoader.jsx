@@ -1,27 +1,25 @@
 /**
- * AuthLoader - Teleporting/Warping loading overlay for auth operations
- * Shows a cool holographic portal effect with rotating messages
+ * AuthLoader - Fun "Revving Up" loading overlay for auth operations
+ * Simple, lightweight spinner with rotating messages
  */
 import { useState, useEffect } from 'react';
 import './AuthLoader.scss';
 
-// Fun messages that rotate during loading
+// Fun "revving" messages
 const LOADING_MESSAGES = {
   login: [
-    "Initializing neural link...",
-    "Scanning credentials...",
-    "Opening dimensional rift...",
-    "Aligning quantum particles...",
-    "Establishing secure tunnel...",
-    "Welcome back, traveler...",
+    "Revving up...",
+    "Warming the engines...",
+    "Syncing neurons...",
+    "Almost there...",
+    "Buckle up...",
   ],
   signup: [
-    "Generating unique ID...",
-    "Weaving digital DNA...",
-    "Creating your dimension...",
-    "Calibrating neural patterns...",
-    "Registering in the Numeneon...",
-    "Preparing your journey...",
+    "Crafting your profile...",
+    "Generating vibes...",
+    "Spinning up servers...",
+    "Initializing awesomeness...",
+    "Almost ready...",
   ],
 };
 
@@ -29,19 +27,17 @@ function AuthLoader({ isVisible, mode = 'login' }) {
   const [messageIndex, setMessageIndex] = useState(0);
   const messages = LOADING_MESSAGES[mode] || LOADING_MESSAGES.login;
 
-  // Rotate through messages only when visible
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible) {
+      setMessageIndex(0);
+      return;
+    }
     
     const interval = setInterval(() => {
       setMessageIndex((prev) => (prev + 1) % messages.length);
-    }, 1200);
+    }, 900);
 
-    return () => {
-      clearInterval(interval);
-      // Reset index when unmounting/hiding
-      setMessageIndex(0);
-    };
+    return () => clearInterval(interval);
   }, [isVisible, messages.length]);
 
   if (!isVisible) return null;
@@ -49,43 +45,16 @@ function AuthLoader({ isVisible, mode = 'login' }) {
   return (
     <div className="auth-loader-overlay">
       <div className="auth-loader-content">
-        {/* Outer ring - rotating */}
-        <div className="portal-ring outer-ring">
-          <div className="ring-glow"></div>
-        </div>
+        {/* Spinning ring with dashes */}
+        <div className="spinner-ring"></div>
+        <div className="spinner-ring spinner-ring-reverse"></div>
         
-        {/* Middle ring - counter-rotating */}
-        <div className="portal-ring middle-ring">
-          <div className="ring-glow"></div>
-        </div>
+        {/* Center bolt icon */}
+        <div className="center-icon">⚡</div>
         
-        {/* Inner ring - fast rotating */}
-        <div className="portal-ring inner-ring">
-          <div className="ring-glow"></div>
-        </div>
-        
-        {/* Core pulse */}
-        <div className="portal-core">
-          <div className="core-pulse"></div>
-          <div className="core-pulse delay-1"></div>
-          <div className="core-pulse delay-2"></div>
-        </div>
-        
-        {/* Particle effects */}
-        <div className="particles">
-          {[...Array(12)].map((_, i) => (
-            <div key={i} className={`particle particle-${i}`}></div>
-          ))}
-        </div>
-        
-        {/* Loading message */}
+        {/* Message */}
         <div className="loader-message">
           <span className="message-text">{messages[messageIndex]}</span>
-          <div className="message-dots">
-            <span className="dot"></span>
-            <span className="dot"></span>
-            <span className="dot"></span>
-          </div>
         </div>
       </div>
     </div>
