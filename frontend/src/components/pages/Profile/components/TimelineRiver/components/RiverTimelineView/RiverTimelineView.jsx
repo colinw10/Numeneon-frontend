@@ -132,6 +132,14 @@ function RiverTimelineView({
   
   // Determine which category is most recent
   const mostRecentType = getMostRecentType(textPosts, mediaPosts, achievementPosts);
+  
+  // Check which categories have posts (for auto-hiding empty ones)
+  const hasThoughts = textPosts && textPosts.length > 0;
+  const hasMedia = mediaPosts && mediaPosts.length > 0;
+  const hasMilestones = achievementPosts && achievementPosts.length > 0;
+  
+  // Count how many categories have content
+  const categoriesWithContent = [hasThoughts, hasMedia, hasMilestones].filter(Boolean).length;
 
   // Helper to render a thoughts column for a specific row
   const renderThoughtsColumn = (rowIndex) => {
@@ -310,61 +318,73 @@ function RiverTimelineView({
         </button>
       </div>
 
-      {/* River Column Labels - desktop only, all same size, collapsed greyed out, non-recent dimmed */}
+      {/* River Column Labels - desktop only, hide empty categories */}
       <div className="river-labels">
-        <button 
-          className={`river-label river-label--thoughts${collapsedDecks.has('thoughts') ? ' river-label--collapsed' : ''}${mostRecentType && mostRecentType !== 'thoughts' ? ' river-label--not-recent' : ''}`}
-          onClick={() => collapsedDecks.has('thoughts') ? onExpandDeck?.('thoughts') : onCollapseDeck?.('thoughts')}
-        >
-          <MessageBubbleIcon size={20} />
-          <span>Thoughts</span>
-          <span className="river-label-count">{textPosts?.length || 0}</span>
-          <span className="river-label-collapse-icon">{collapsedDecks.has('thoughts') ? '+' : '−'}</span>
-        </button>
-        <button 
-          className={`river-label river-label--media${collapsedDecks.has('media') ? ' river-label--collapsed' : ''}${mostRecentType && mostRecentType !== 'media' ? ' river-label--not-recent' : ''}`}
-          onClick={() => collapsedDecks.has('media') ? onExpandDeck?.('media') : onCollapseDeck?.('media')}
-        >
-          <ImageIcon size={20} />
-          <span>Media</span>
-          <span className="river-label-count">{mediaPosts?.length || 0}</span>
-          <span className="river-label-collapse-icon">{collapsedDecks.has('media') ? '+' : '−'}</span>
-        </button>
-        <button 
-          className={`river-label river-label--milestones${collapsedDecks.has('milestones') ? ' river-label--collapsed' : ''}${mostRecentType && mostRecentType !== 'milestones' ? ' river-label--not-recent' : ''}`}
-          onClick={() => collapsedDecks.has('milestones') ? onExpandDeck?.('milestones') : onCollapseDeck?.('milestones')}
-        >
-          <MilestoneIcon size={20} />
-          <span>Milestones</span>
-          <span className="river-label-count">{achievementPosts?.length || 0}</span>
-          <span className="river-label-collapse-icon">{collapsedDecks.has('milestones') ? '+' : '−'}</span>
-        </button>
+        {hasThoughts && (
+          <button 
+            className={`river-label river-label--thoughts${collapsedDecks.has('thoughts') ? ' river-label--collapsed' : ''}${mostRecentType && mostRecentType !== 'thoughts' ? ' river-label--not-recent' : ''}`}
+            onClick={() => collapsedDecks.has('thoughts') ? onExpandDeck?.('thoughts') : onCollapseDeck?.('thoughts')}
+          >
+            <MessageBubbleIcon size={20} />
+            <span>Thoughts</span>
+            <span className="river-label-count">{textPosts?.length || 0}</span>
+            <span className="river-label-collapse-icon">{collapsedDecks.has('thoughts') ? '+' : '−'}</span>
+          </button>
+        )}
+        {hasMedia && (
+          <button 
+            className={`river-label river-label--media${collapsedDecks.has('media') ? ' river-label--collapsed' : ''}${mostRecentType && mostRecentType !== 'media' ? ' river-label--not-recent' : ''}`}
+            onClick={() => collapsedDecks.has('media') ? onExpandDeck?.('media') : onCollapseDeck?.('media')}
+          >
+            <ImageIcon size={20} />
+            <span>Media</span>
+            <span className="river-label-count">{mediaPosts?.length || 0}</span>
+            <span className="river-label-collapse-icon">{collapsedDecks.has('media') ? '+' : '−'}</span>
+          </button>
+        )}
+        {hasMilestones && (
+          <button 
+            className={`river-label river-label--milestones${collapsedDecks.has('milestones') ? ' river-label--collapsed' : ''}${mostRecentType && mostRecentType !== 'milestones' ? ' river-label--not-recent' : ''}`}
+            onClick={() => collapsedDecks.has('milestones') ? onExpandDeck?.('milestones') : onCollapseDeck?.('milestones')}
+          >
+            <MilestoneIcon size={20} />
+            <span>Milestones</span>
+            <span className="river-label-count">{achievementPosts?.length || 0}</span>
+            <span className="river-label-collapse-icon">{collapsedDecks.has('milestones') ? '+' : '−'}</span>
+          </button>
+        )}
       </div>
 
       {/* Render all rows - newest posts in first row (top) */}
       {Array.from({ length: rowCount }, (_, rowIndex) => {
-        const expandedCount = 3 - collapsedDecks.size;
+        // Count visible columns (has content AND not collapsed)
+        const visibleCount = [
+          hasThoughts && !collapsedDecks.has('thoughts'),
+          hasMedia && !collapsedDecks.has('media'),
+          hasMilestones && !collapsedDecks.has('milestones')
+        ].filter(Boolean).length;
+        
         return (
           <div 
             key={rowIndex} 
-            className={`river-streams river-row-${rowIndex} mobile-show-${mobileCategory} river-streams--expanded-${expandedCount}`}
+            className={`river-streams river-row-${rowIndex} mobile-show-${mobileCategory} river-streams--expanded-${visibleCount}`}
           >
-            {/* Left Stream - Thoughts */}
-            {!collapsedDecks.has('thoughts') && (
+            {/* Left Stream - Thoughts (only if has posts) */}
+            {hasThoughts && !collapsedDecks.has('thoughts') && (
               <div className="river-column left-stream" data-category="thoughts">
                 {renderThoughtsColumn(rowIndex)}
               </div>
             )}
             
-            {/* Center Stream - Media */}
-            {!collapsedDecks.has('media') && (
+            {/* Center Stream - Media (only if has posts) */}
+            {hasMedia && !collapsedDecks.has('media') && (
               <div className="river-column center-stream" data-category="media">
                 {renderMediaColumn(rowIndex)}
               </div>
             )}
             
-            {/* Right Stream - Milestones */}
-            {!collapsedDecks.has('milestones') && (
+            {/* Right Stream - Milestones (only if has posts) */}
+            {hasMilestones && !collapsedDecks.has('milestones') && (
               <div className="river-column right-stream" data-category="milestones">
                 {renderMilestonesColumn(rowIndex)}
               </div>

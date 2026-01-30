@@ -295,8 +295,8 @@ function Profile() {
         profileUser={profileUser}
       />
 
-      {/* All Posts Section - Uses same chamfered river-card styles as timeline carousel */}
-      {viewMode === 'timeline' && profilePosts.length > 0 && (
+      {/* All Posts Section - Only show on OWN profile when there are more than 12 posts in any category */}
+      {isOwnProfile && viewMode === 'timeline' && profilePosts.length > 12 && (
         <div className="all-posts-section river-style">
           <div className="all-posts-header">
             <h3 className="all-posts-title">
