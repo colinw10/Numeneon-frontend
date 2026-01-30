@@ -1,9 +1,10 @@
 // 🔵 PABLO - UI/Styling | 🟢 COLIN - Post Creation Logic
 // ComposerModal.jsx - Modal for creating new posts
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './ComposerModal.scss';
 import { useAuth, usePosts } from '@contexts';
+import { uploadToCloudinary, isCloudinaryConfigured } from '@utils/cloudinary';
 import {
   MinimizeIcon,
   MaximizeIcon,
@@ -14,7 +15,8 @@ import {
   MessageBubbleIcon,
   FlagIcon,
   EmojiIcon,
-  MapPinIcon
+  MapPinIcon,
+  TrashIcon
 } from '@assets/icons';
 
 function ComposerModal({ showComposer, setShowComposer, composerType, setComposerType, targetProfileId = null, targetDisplayName = null }) {
@@ -24,15 +26,108 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
   const [isPosting, setIsPosting] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   
+  // Media upload state
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
+  const fileInputRef = useRef(null);
+  
   // Check if this is a wall post (posting on someone else's profile)
   const isWallPost = !!targetProfileId;
   
   if (!showComposer) return null;
 
+  // Handle file selection
+  const handleFileSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Only image files are allowed');
+      return;
+    }
+    
+    // Validate file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError('File size must be less than 10MB');
+      return;
+    }
+    
+    setSelectedFile(file);
+    setUploadError(null);
+    
+    // Create preview URL
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    
+    // Auto-switch to media type if not already
+    if (composerType !== 'media') {
+      setComposerType('media');
+    }
+  };
+  
+  // Handle drag and drop
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      // Simulate file input change
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      if (fileInputRef.current) {
+        fileInputRef.current.files = dataTransfer.files;
+        handleFileSelect({ target: { files: dataTransfer.files } });
+      }
+    }
+  };
+  
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+  
+  // Remove selected file
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+    setUploadError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handlePost = async () => {
-    if (!content.trim() || isPosting) return;
+    if ((!content.trim() && !selectedFile) || isPosting) return;
     
     setIsPosting(true);
+    setUploadError(null);
+    
+    let mediaUrl = null;
+    
+    // Upload image to Cloudinary first if there's a file
+    if (selectedFile) {
+      if (!isCloudinaryConfigured()) {
+        setUploadError('Cloudinary not configured. Please set up your cloud name and upload preset.');
+        setIsPosting(false);
+        return;
+      }
+      
+      setIsUploading(true);
+      try {
+        const result = await uploadToCloudinary(selectedFile);
+        mediaUrl = result.url;
+      } catch (error) {
+        setUploadError(error.message || 'Failed to upload image');
+        setIsPosting(false);
+        setIsUploading(false);
+        return;
+      }
+      setIsUploading(false);
+    }
     
     // Map composerType to post type
     const postType = composerType === 'thought' ? 'thoughts' : 
@@ -40,6 +135,9 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
     
     // Build post data - include target_profile_id for wall posts
     const postData = { content: content.trim(), type: postType };
+    if (mediaUrl) {
+      postData.media_url = mediaUrl;
+    }
     if (isWallPost) {
       postData.target_profile_id = targetProfileId;
     }
@@ -50,6 +148,7 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
     
     if (result.success) {
       setContent('');
+      handleRemoveFile();
       setShowComposer(false);
     } else {
       alert(result.error || 'Failed to create post');
@@ -64,6 +163,7 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
   };
 
   const getButtonText = () => {
+    if (isUploading) return 'Uploading...';
     if (isPosting) return 'Posting...';
     if (isWallPost) return `Post to ${targetDisplayName}'s Wall`;
     if (composerType === 'thought') return 'Post Thought';
@@ -138,12 +238,49 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
           />
 
           {composerType === 'media' && (
-            <div className="media-upload-area">
-              <div className="media-upload-placeholder">
-                <ImageIcon size={48} />
-                <p>Click to upload photo or video</p>
-                <span>or drag and drop</span>
-              </div>
+            <div 
+              className={`media-upload-area ${previewUrl ? 'has-preview' : ''}`}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="media-file-input"
+                id="media-file-input"
+              />
+              
+              {previewUrl ? (
+                <div className="media-preview-container">
+                  <img src={previewUrl} alt="Preview" className="media-preview-image" />
+                  <button 
+                    className="media-remove-btn"
+                    onClick={handleRemoveFile}
+                    title="Remove image"
+                  >
+                    <TrashIcon size={18} />
+                  </button>
+                  {isUploading && (
+                    <div className="media-upload-overlay">
+                      <div className="upload-spinner"></div>
+                      <span>Uploading...</span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <label htmlFor="media-file-input" className="media-upload-placeholder">
+                  <ImageIcon size={48} />
+                  <p>Click to upload photo</p>
+                  <span>or drag and drop</span>
+                  <span className="media-hint">PNG, JPG, GIF up to 10MB</span>
+                </label>
+              )}
+              
+              {uploadError && (
+                <div className="media-upload-error">{uploadError}</div>
+              )}
             </div>
           )}
 
@@ -203,7 +340,7 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
           <button 
             className="composer-post-btn"
             onClick={handlePost}
-            disabled={!content.trim() || isPosting}
+            disabled={(!content.trim() && !selectedFile) || isPosting || isUploading}
           >
             {getButtonText()}
           </button>
