@@ -402,11 +402,18 @@ function TimelineRiver({
   const renderPostActions = (post, isFriendView = false, postType = 'thoughts') => {
     if (!post) return null;
     
+    // User can edit/delete if:
+    // 1. It's their own profile (isOwnProfile) OR
+    // 2. They are the author of this specific post (for wall posts on friend's profile)
+    const isPostAuthor = post.author?.id === currentUser?.id || 
+                         post.author?.username === currentUser?.username;
+    const canEditDelete = !isFriendView && (isOwnProfile || isPostAuthor);
+    
     return (
       <RiverPostActions
         post={post}
         postType={postType}
-        isOwnProfile={!isFriendView && isOwnProfile}
+        isOwnProfile={canEditDelete}
         animatingHeartId={animatingHeartId}
         onLike={handleLike}
         onComment={handleCommentClick}

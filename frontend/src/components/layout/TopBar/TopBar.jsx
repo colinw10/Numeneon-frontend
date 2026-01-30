@@ -21,7 +21,7 @@ import {
 } from '@assets/icons';
 
 function TopBar() {
-  const { isMessageModalOpen, openMessages, closeMessages, newMessageNotification } = useMessages();
+  const { isMessageModalOpen, openMessages, closeMessages, newMessageNotification, unreadMessageCount } = useMessages();
   const { logout, user } = useAuth();
   const { pendingRequests } = useFriends();
   const { unreadCount } = useNotifications();
@@ -86,8 +86,13 @@ function TopBar() {
             className="icon-placeholder icon-messages" 
             title="Messages"
             onClick={openMessages}
+            style={{ cursor: 'pointer', position: 'relative' }}
           >
             <MessageBubbleIcon size={20} />
+            {/* Unread messages badge */}
+            {unreadMessageCount > 0 && (
+              <span className="notification-badge">{unreadMessageCount}</span>
+            )}
           </div>
           {user && (
             <>

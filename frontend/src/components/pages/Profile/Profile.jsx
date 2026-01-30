@@ -119,11 +119,7 @@ function Profile() {
     
     // Build post data - include target_profile_id for wall posts
     const postData = { 
-            {
-        "author": { "id": 1, "username": "pablo" },  // YOU - from JWT
-        "content": "Yo",
-        "target_profile": { "id": 5, "username": "quesoblanci" }  // Wall owner
-      }content: composerText.trim(), 
+      content: composerText.trim(), 
       type: 'thoughts'
     };
     
@@ -153,8 +149,13 @@ function Profile() {
   );
   
   // Friends' posts for "Friends Feed" - ONLY show on own profile
+  // EXCLUDE wall posts (posts with target_profile_id) - they belong only on the target's wall
   const friendsPosts = isOwnProfile 
-    ? posts.filter(p => p.author?.username !== currentUser?.username)
+    ? posts.filter(p => 
+        p.author?.username !== currentUser?.username && 
+        !p.target_profile_id && 
+        !p.target_profile
+      )
     : [];
 
   // Categorize profile user's posts into river columns
@@ -284,8 +285,8 @@ function Profile() {
         feedTextPosts={feedTextPosts}
         feedMediaPosts={feedMediaPosts}
         feedAchievementPosts={feedAchievementPosts}
-        onDeletePost={isOwnProfile ? deletePost : null}
-        onUpdatePost={isOwnProfile ? updatePost : null}
+        onDeletePost={deletePost}
+        onUpdatePost={updatePost}
         isOwnProfile={isOwnProfile}
         profileUser={profileUser}
       />

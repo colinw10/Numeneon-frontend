@@ -33,6 +33,12 @@ export function MessageProvider({ children }) {
   // NEW: Notification state for new messages
   const [newMessageNotification, setNewMessageNotification] = useState(null);
 
+  // Computed: Total unread message count across all conversations
+  const unreadMessageCount = conversations.reduce(
+    (total, conv) => total + (conv.unread_count || 0), 
+    0
+  );
+
   // Fetch conversations when user logs in, clear on logout
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -273,6 +279,7 @@ export function MessageProvider({ children }) {
         selectedMessages,
         selectedConversation: getSelectedConversation(),
         newMessageNotification,
+        unreadMessageCount,
 
         // Actions
         openMessages,
