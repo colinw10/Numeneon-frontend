@@ -444,6 +444,52 @@ textarea.composer-input {
   }
 }
 
+.composer-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.composer-action-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(140, 100, 240, 0.3);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
+  
+  &.media-btn {
+    border-color: rgba(220, 8, 188, 0.4);
+    
+    &:hover {
+      background: rgba(220, 8, 188, 0.15);
+      border-color: rgba(220, 8, 188, 0.6);
+      color: #dc08bc;
+      box-shadow: 0 0 12px rgba(220, 8, 188, 0.3);
+    }
+  }
+  
+  &.milestone-btn {
+    border-color: rgba(255, 215, 0, 0.4);
+    
+    &:hover {
+      background: rgba(255, 215, 0, 0.15);
+      border-color: rgba(255, 215, 0, 0.6);
+      color: #ffd700;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+    }
+  }
+}
+
 .composer-expand-btn {
   background: transparent;
   border: none;

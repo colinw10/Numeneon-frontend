@@ -6,7 +6,7 @@ import './Home.scss';
 import TimelineRiverFeed from './components/TimelineRiverFeed';
 import ComposerModal from '@Profile/components/ComposerModal/ComposerModal';
 import { usePosts, useFriends } from '@contexts';
-import { UserIcon, PostTriangleIcon, MaximizeIcon, PlusIcon } from '@assets/icons';
+import { UserIcon, PostTriangleIcon, ImageIcon, FlagIcon } from '@assets/icons';
 // 🛠️ Import shared helpers instead of duplicating them!
 import { getInitials } from '@utils/helpers';
 
@@ -137,13 +137,28 @@ function Home() {
             </span>
           )}
         </div>
-        <button 
-          className="composer-expand-btn"
-          onClick={() => setShowComposer(true)}
-          title="Add media or milestone"
-        >
-          <PlusIcon size={16} />
-        </button>
+        <div className="composer-actions">
+          <button 
+            className="composer-action-btn media-btn"
+            onClick={() => {
+              setComposerType('media');
+              setShowComposer(true);
+            }}
+            title="Add photo"
+          >
+            <ImageIcon size={18} />
+          </button>
+          <button 
+            className="composer-action-btn milestone-btn"
+            onClick={() => {
+              setComposerType('milestone');
+              setShowComposer(true);
+            }}
+            title="Add milestone"
+          >
+            <FlagIcon size={18} />
+          </button>
+        </div>
       </div>
 
        {/* 🟢 Section 2: Stories carousel */}

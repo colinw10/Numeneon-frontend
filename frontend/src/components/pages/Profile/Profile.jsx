@@ -25,7 +25,7 @@ import {
   GridIcon,
   PostTriangleIcon,
   ImageIcon,
-  PlusIcon
+  FlagIcon
 } from '@assets/icons';
 import ProfileCard from './components/ProfileCard';
 import ComposerModal from './components/ComposerModal';
@@ -260,13 +260,28 @@ function Profile() {
                 </span>
               )}
             </div>
-            <button 
-              className="quick-composer-expand-btn"
-              onClick={() => setShowComposer(true)}
-              title="Add media or milestone"
-            >
-              <PlusIcon size={16} />
-            </button>
+            <div className="quick-composer-actions">
+              <button 
+                className="quick-composer-action-btn media-btn"
+                onClick={() => {
+                  setComposerType('media');
+                  setShowComposer(true);
+                }}
+                title="Add photo"
+              >
+                <ImageIcon size={18} />
+              </button>
+              <button 
+                className="quick-composer-action-btn milestone-btn"
+                onClick={() => {
+                  setComposerType('milestone');
+                  setShowComposer(true);
+                }}
+                title="Add milestone"
+              >
+                <FlagIcon size={18} />
+              </button>
+            </div>
           </div>
         </div>
       )}
