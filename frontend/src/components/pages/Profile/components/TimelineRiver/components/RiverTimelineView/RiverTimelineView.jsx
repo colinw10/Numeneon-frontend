@@ -165,7 +165,7 @@ function RiverTimelineView({
             <div className="river-avatar">
               <UserIcon size={20} />
             </div>
-            <span className="river-author">{profileUser?.username || 'Me'}</span>
+            <span className="river-author">{currentPost?.author?.username || profileUser?.username || 'Me'}</span>
           </div>
           <div className="river-card-content">
             <p className="river-post-text">{currentPost?.content}</p>
@@ -208,7 +208,7 @@ function RiverTimelineView({
             <div className="river-avatar">
               <UserIcon size={20} />
             </div>
-            <span className="river-author">{profileUser?.username || 'Me'}</span>
+            <span className="river-author">{currentPost?.author?.username || profileUser?.username || 'Me'}</span>
           </div>
           <div 
             className="river-card-media" 
@@ -269,7 +269,7 @@ function RiverTimelineView({
             <div className="river-avatar">
               <UserIcon size={20} />
             </div>
-            <span className="river-author">{profileUser?.username || 'Me'}</span>
+            <span className="river-author">{currentPost?.author?.username || profileUser?.username || 'Me'}</span>
           </div>
           <div className="achievement-badge">
             <MilestoneIcon size={24} />

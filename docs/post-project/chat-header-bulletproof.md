@@ -7,6 +7,7 @@ The chat header kept disappearing or getting covered. Here's how we made it bull
 ## The Problem
 
 The chat header (showing username) would:
+
 1. Get pushed off screen by flexbox
 2. Be covered by the composer
 3. Not show immediately when opening chat
@@ -16,6 +17,7 @@ The chat header (showing username) would:
 ## The Solution
 
 ### Base Styles (Desktop)
+
 `frontend/src/components/layout/TopBar/MessageModal/styles/_chat.scss`
 
 ```scss
@@ -24,27 +26,27 @@ The chat header (showing username) would:
   height: 56px !important;
   min-height: 56px !important;
   max-height: 56px !important;
-  
+
   /* REQUIRED: Prevent flexbox from messing with it */
   flex-shrink: 0 !important;
   flex-grow: 0 !important;
   flex-basis: 56px !important;
-  
+
   /* REQUIRED: Always on top */
   position: sticky;
   top: 0;
   z-index: 100;
-  
+
   /* Styling */
   padding: 0 1.5rem;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
-  
+
   /* Layout */
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   /* Force visibility */
   visibility: visible !important;
   opacity: 1 !important;
@@ -55,12 +57,12 @@ The chat header (showing username) would:
   font-weight: 600;
   font-size: 18px;
   color: #4fffff !important;
-  
+
   /* Force visibility */
   visibility: visible !important;
   opacity: 1 !important;
   display: inline-block !important;
-  
+
   /* Fallback if empty */
   &:empty::after {
     content: "Loading...";
@@ -70,6 +72,7 @@ The chat header (showing username) would:
 ```
 
 ### Mobile Styles (768px and below)
+
 `frontend/src/components/layout/TopBar/MessageModal/styles/_responsive.scss`
 
 ```scss
@@ -88,7 +91,7 @@ The chat header (showing username) would:
     opacity: 1 !important;
     display: flex !important;
   }
-  
+
   .chat-username {
     font-size: 16px !important;
     visibility: visible !important;
@@ -103,7 +106,7 @@ The chat header (showing username) would:
     max-height: 50px !important;
     padding: 0 3rem !important;
   }
-  
+
   .chat-username {
     font-size: 14px !important;
     max-width: 60vw;
@@ -119,6 +122,7 @@ The chat header (showing username) would:
 ## Why !important?
 
 Normally `!important` is bad practice. Here it's justified because:
+
 1. This is a **critical UI element** that MUST be visible
 2. Other styles were overriding it unexpectedly
 3. We need to guarantee it works across all breakpoints
@@ -132,17 +136,17 @@ Normally `!important` is bad practice. Here it's justified because:
 ```javascript
 // BULLETPROOF: Get display name - try EVERY possible source
 const user = selectedConversation.user || {};
-const chatDisplayName = 
-  user.displayName ||                     // Direct displayName
-  user.display_name ||                    // Snake case variant
-  (user.first_name && user.last_name 
-    ? `${user.first_name} ${user.last_name}`.trim() 
-    : null) ||                            // Full name
-  user.first_name ||                      // Just first name
-  user.username ||                        // Username fallback
-  'Unknown User';                         // Ultimate fallback
+const chatDisplayName =
+  user.displayName || // Direct displayName
+  user.display_name || // Snake case variant
+  (user.first_name && user.last_name
+    ? `${user.first_name} ${user.last_name}`.trim()
+    : null) || // Full name
+  user.first_name || // Just first name
+  user.username || // Username fallback
+  "Unknown User"; // Ultimate fallback
 
-console.log('📛 Chat header display name:', chatDisplayName);
+console.log("📛 Chat header display name:", chatDisplayName);
 ```
 
 ---
@@ -159,7 +163,7 @@ const openMessages = async (targetUser = null) => {
     setSelectedUserInfo(userInfo);
     setSelectedUserId(targetUser.id);
     setSelectedMessages([]);
-    
+
     // THEN open modal
     setIsMessageModalOpen(true);
   }
@@ -171,6 +175,7 @@ const openMessages = async (targetUser = null) => {
 ## Debugging
 
 If header still doesn't show, check DevTools console for:
+
 ```
 📛 Chat header display name: [name] | User object: {...}
 ```

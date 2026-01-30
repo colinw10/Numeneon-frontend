@@ -25,16 +25,16 @@ const canPost = isOwnProfile || isFriend;
 
 // When posting on friend's wall, include their ID
 const handleInlinePost = async () => {
-  const postData = { 
-    content: composerText.trim(), 
-    type: 'thoughts'
+  const postData = {
+    content: composerText.trim(),
+    type: "thoughts",
   };
-  
+
   // If posting on a friend's wall, include their user ID
   if (!isOwnProfile && isFriend && profileUser?.id) {
     postData.target_profile_id = profileUser.id;
   }
-  
+
   const result = await createPost(postData);
   // ...
 };
@@ -44,13 +44,14 @@ const handleInlinePost = async () => {
 
 ```javascript
 // Shows posts BY this user OR posts TO this user's wall
-const profilePosts = posts.filter(p => 
-  // Posts authored by profile owner
-  p.author?.username === profileUser?.username || 
-  // Wall posts - check multiple possible response formats
-  p.target_profile_id === profileUser?.id ||
-  p.target_profile?.id === profileUser?.id ||
-  p.target_profile?.username === profileUser?.username
+const profilePosts = posts.filter(
+  (p) =>
+    // Posts authored by profile owner
+    p.author?.username === profileUser?.username ||
+    // Wall posts - check multiple possible response formats
+    p.target_profile_id === profileUser?.id ||
+    p.target_profile?.id === profileUser?.id ||
+    p.target_profile?.username === profileUser?.username,
 );
 ```
 
@@ -60,24 +61,30 @@ const profilePosts = posts.filter(p =>
 // When creating post - attach target_profile_id if backend doesn't return it
 const createPost = async (postData) => {
   const newPost = await postsService.create(postData);
-  
+
   // Fallback: manually attach if backend doesn't return it
   if (postData.target_profile_id && !newPost.target_profile_id) {
     newPost.target_profile_id = postData.target_profile_id;
   }
-  
-  setPosts(prev => [newPost, ...prev]);
+
+  setPosts((prev) => [newPost, ...prev]);
   return { success: true, post: newPost };
 };
 
 // When liking/updating - preserve target_profile_id
 const likePost = async (postId) => {
   const updatedPost = await postsService.like(postId);
-  setPosts(prev => prev.map(post =>
-    post.id === postId 
-      ? { ...updatedPost, target_profile_id: post.target_profile_id || updatedPost.target_profile_id }
-      : post
-  ));
+  setPosts((prev) =>
+    prev.map((post) =>
+      post.id === postId
+        ? {
+            ...updatedPost,
+            target_profile_id:
+              post.target_profile_id || updatedPost.target_profile_id,
+          }
+        : post,
+    ),
+  );
 };
 ```
 
@@ -86,6 +93,7 @@ const likePost = async (postId) => {
 ## Backend Requirements
 
 ### Post Model
+
 ```python
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
@@ -93,15 +101,16 @@ class Post(models.Model):
     type = models.CharField(max_length=20, default='thoughts')
     # NEW: For wall posts
     target_profile = models.ForeignKey(
-        User, 
-        on_delete=models.CASCADE, 
+        User,
+        on_delete=models.CASCADE,
         related_name='wall_posts',
-        null=True, 
+        null=True,
         blank=True
     )
 ```
 
 ### PostSerializer
+
 ```python
 class PostSerializer(serializers.ModelSerializer):
     target_profile_id = serializers.PrimaryKeyRelatedField(
@@ -111,7 +120,7 @@ class PostSerializer(serializers.ModelSerializer):
         allow_null=True
     )
     target_profile = UserSerializer(read_only=True)
-    
+
     class Meta:
         model = Post
         fields = [..., 'target_profile', 'target_profile_id']
@@ -122,7 +131,9 @@ class PostSerializer(serializers.ModelSerializer):
 ## Request/Response Example
 
 ### POST /api/posts/
+
 **Request:**
+
 ```json
 {
   "content": "Hey, cool profile!",
@@ -132,6 +143,7 @@ class PostSerializer(serializers.ModelSerializer):
 ```
 
 **Response:**
+
 ```json
 {
   "id": 123,
