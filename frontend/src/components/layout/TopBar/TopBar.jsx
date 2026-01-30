@@ -7,6 +7,7 @@ import './TopBar.scss';
 import MessageModal from './MessageModal/MessageModal';
 import SearchModal from './SearchModal/SearchModal';
 import NotificationModal from './NotificationModal/NotificationModal';
+import NewMessagesModal from './NewMessagesModal/NewMessagesModal';
 import { ThemeToggle } from '@components/ui/ThemeToggle';
 import { useMessages, useAuth, useFriends, useSearch, useSideNav, useNotifications } from '@contexts';
 import { 
@@ -32,6 +33,9 @@ function TopBar() {
   // 🔵 Local state for notification modal
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   
+  // 🔵 Local state for new messages modal
+  const [isNewMessagesOpen, setIsNewMessagesOpen] = useState(false);
+  
   // 🔵 Friend accepted toast
   const [showFriendToast, setShowFriendToast] = useState(false);
   const [friendToastName, setFriendToastName] = useState('');
@@ -44,6 +48,15 @@ function TopBar() {
       setShowFriendToast(false);
       setIsToastClosing(false);
     }, 300);
+  };
+  
+  // Handle message icon click - show dropdown if unread, otherwise open full modal
+  const handleMessageClick = () => {
+    if (unreadMessageCount > 0) {
+      setIsNewMessagesOpen(true);
+    } else {
+      openMessages();
+    }
   };
 
   const handleLogout = () => {
@@ -85,7 +98,7 @@ function TopBar() {
           <div 
             className="icon-placeholder icon-messages" 
             title="Messages"
-            onClick={openMessages}
+            onClick={handleMessageClick}
             style={{ cursor: 'pointer', position: 'relative' }}
           >
             <MessageBubbleIcon size={20} />
@@ -147,6 +160,12 @@ function TopBar() {
       <NotificationModal
         isOpen={isNotificationsOpen}
         onClose={() => setIsNotificationsOpen(false)}
+      />
+      
+      {/* New Messages Dropdown Modal */}
+      <NewMessagesModal
+        isOpen={isNewMessagesOpen}
+        onClose={() => setIsNewMessagesOpen(false)}
       />
       
       {/* 🔵 Friend Accepted Toast */}

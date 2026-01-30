@@ -40,28 +40,26 @@
   transform: scale(1.1);
 }
 
-/* Notification badge - glowing dot, expands on hover */
+/* Notification badge - always visible with count + breathing animation */
 .notification-badge {
   position: absolute;
-  top: -2px;
-  right: -2px;
-  min-width: 8px;
-  width: 8px;
-  height: 8px;
-  padding: 0;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
   
-  /* Amber glow dot */
+  /* Solid amber background - no blur */
   background: var(--amber);
-  color: transparent;
-  font-size: 0;
+  color: rgba(28, 10, 1, 0.95);
+  font-size: 0.65rem;
   font-weight: 800;
-  border-radius: 50%;
+  border-radius: 9px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
   
-  /* Glow effect */
+  /* Clean glow effect */
   box-shadow:
     0 0 6px var(--amber),
     0 0 12px rgba(251, 191, 36, 0.6);
@@ -69,29 +67,17 @@
   /* Smooth transition for hover */
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   
-  /* Mysterious breathing pulse */
+  /* Mysterious breathing pulse - shrink and grow */
   animation: breathe 3s ease-in-out infinite;
 }
 
-/* Expand on hover to reveal count */
-.icon-notifications:hover .notification-badge {
-  top: -6px;
-  right: -6px;
-  min-width: 18px;
-  width: 18px;
-  height: 18px;
-  padding: 0 4px;
-  
-  /* Reveal text */
-  color: rgba(28, 10, 1, 0.95);
-  font-size: 0.65rem;
-  
-  /* Stop animation, stay solid */
+/* Slight scale on hover - pause animation */
+.icon-notifications:hover .notification-badge,
+.icon-messages:hover .notification-badge {
+  transform: scale(1.15);
   animation: none;
-  opacity: 1;
-  transform: scale(1);
   
-  /* Enhanced glow when expanded */
+  /* Enhanced glow when hovered */
   box-shadow:
     0 0 8px var(--amber),
     0 0 16px rgba(251, 191, 36, 0.7),

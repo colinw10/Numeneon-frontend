@@ -336,11 +336,12 @@ function MessageModal({ onClose }) {
                     const displayName = conv.user?.displayName || `${conv.user?.first_name || ''} ${conv.user?.last_name || ''}`.trim() || conv.user?.username || 'Unknown';
                     const isActive = conv.user?.id === selectedUserId;
                     const messagePreview = lastMessage?.content || lastMessage?.text || 'No messages yet';
+                    const hasUnread = conv.unread_count > 0;
                     
                     return (
                       <div 
                         key={conv.id || conv.user?.id}
-                        className={`conversation-item ${isActive ? 'active' : ''}`}
+                        className={`conversation-item ${isActive ? 'active' : ''} ${hasUnread ? 'unread' : ''}`}
                         onClick={() => {
                           selectConversation(conv.user?.id, conv.user);
                           setMobileView('chat'); // Switch to chat view on mobile
@@ -355,13 +356,18 @@ function MessageModal({ onClose }) {
                         </div>
                         <div className="conversation-info">
                           <span className="conversation-name">{displayName}</span>
-                          <span className="conversation-preview">
+                          <span className={`conversation-preview ${hasUnread ? 'unread' : ''}`}>
                             {messagePreview.substring(0, 30) + (messagePreview.length > 30 ? '...' : '')}
                           </span>
                         </div>
-                        <span className="conversation-time">
-                          {formatRelativeTime(lastMessage?.created_at || conv.lastMessageTime)}
-                        </span>
+                        <div className="conversation-meta">
+                          <span className="conversation-time">
+                            {formatRelativeTime(lastMessage?.created_at || conv.lastMessageTime)}
+                          </span>
+                          {hasUnread && (
+                            <span className="unread-badge">{conv.unread_count}</span>
+                          )}
+                        </div>
                       </div>
                     );
                   })}
