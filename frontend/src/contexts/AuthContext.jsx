@@ -66,22 +66,25 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState(null);
 
   // TODO: useEffect to check auth on mount
   // HINT: Check localStorage for 'accessToken', then call /api/auth/me/
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem("accessToken");
-      if (token) {
+      const storedToken = localStorage.getItem("accessToken");
+      if (storedToken) {
         try {
           // Use service to see if the existing token is still valid
           const userData = await authService.getCurrentUser();
           setUser(userData);
+          setToken(storedToken);
           setIsAuthenticated(true);
         } catch {
           // if the token is invalid/expired, clear it out
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
+          setToken(null);
         }
       }
       setIsLoading(false); // Auth check complete
@@ -97,6 +100,7 @@ export const AuthProvider = ({ children }) => {
       const { access, refresh } = response.data;
       localStorage.setItem('accessToken', access);
       localStorage.setItem('refreshToken', refresh);
+      setToken(access);
       // call service to get the full user object
       const userData = await authService.getCurrentUser();
       setUser(userData);
@@ -131,6 +135,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     authService.logout(); // clear tokens from localStorage
     setUser(null); // clear user state
+    setToken(null);
     setIsAuthenticated(false);
     window.location.href = "/login"; // force redirect to login page - clean state
   };
@@ -151,6 +156,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        token,
         isLoading,
         isAuthenticated,
         login,
