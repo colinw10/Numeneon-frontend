@@ -389,14 +389,23 @@ function MessageModal({ onClose }) {
           {/* Right: Chat View */}
           <div className={`message-chat ${mobileView === 'list' ? 'hide' : ''}`}>
             {selectedConversation ? (() => {
-              // Get display name for the selected conversation user
-              const chatDisplayName = selectedConversation.user?.displayName || 
-                `${selectedConversation.user?.first_name || ''} ${selectedConversation.user?.last_name || ''}`.trim() || 
-                selectedConversation.user?.username || 'Unknown';
+              // BULLETPROOF: Get display name - try EVERY possible source
+              const user = selectedConversation.user || {};
+              const chatDisplayName = 
+                user.displayName ||                                           // Direct displayName
+                user.display_name ||                                          // Snake case variant
+                (user.first_name && user.last_name 
+                  ? `${user.first_name} ${user.last_name}`.trim() 
+                  : null) ||                                                  // Full name
+                user.first_name ||                                            // Just first name
+                user.username ||                                              // Username fallback
+                'Unknown User';                                               // Ultimate fallback
+              
+              console.log('📛 Chat header display name:', chatDisplayName, '| User object:', user);
               
               return (
               <>
-                {/* Chat Header */}
+                {/* Chat Header - MUST ALWAYS SHOW */}
                 <div className="chat-header">
                   {/* Mobile back button */}
                   <button 
