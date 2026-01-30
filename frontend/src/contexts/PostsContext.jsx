@@ -137,8 +137,11 @@ export const PostsProvider = ({ children }) => {
   try {
     const updatedPost = await postsService.update(id, data); // Returns updated post
       // Replace old post with updated one in state
+      // PRESERVE target_profile_id if it existed (for wall posts)
       setPosts(prev => prev.map(post =>
-        post.id === id? updatedPost : post // If id matches, use updated; otherwise keep original
+        post.id === id 
+          ? { ...updatedPost, target_profile_id: post.target_profile_id || updatedPost.target_profile_id }
+          : post
       ));
       return {success: true};
       } catch (err) {
@@ -199,8 +202,11 @@ const likePost = async (id) => {
   try {
     const updatedPost = await postsService.like(id);
     // Update the post in state with new like count and is_liked status
+    // PRESERVE target_profile_id if it existed (for wall posts)
     setPosts(prev => prev.map(post =>
-      post.id === id ? updatedPost : post
+      post.id === id 
+        ? { ...updatedPost, target_profile_id: post.target_profile_id || updatedPost.target_profile_id }
+        : post
     ));
     return { success: true, data: updatedPost };
   } catch (err) {
