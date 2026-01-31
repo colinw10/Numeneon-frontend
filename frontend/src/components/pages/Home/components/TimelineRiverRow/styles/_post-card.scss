@@ -217,7 +217,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--cyan);
+  color: var(--blue-primary);
   font-size: var(--font-size-sm);
   flex-shrink: 0;
   overflow: hidden;
@@ -230,7 +230,7 @@
 }
 
 .river-avatar svg {
-  color: var(--cyan);
+  color: var(--blue-primary);
 }
 
 .river-post-info {
@@ -293,9 +293,9 @@
 
 /* Thought badge */
 .river-post-card.post--thoughts .river-type-badge {
-  color: var(--cyan);
-  background: rgba(79, 255, 255, 0.15);
-  border-color: rgba(79, 255, 255, 0.4);
+  color: var(--blue-primary);
+  background: rgba(26, 115, 231, 0.10);
+  border-color: rgba(26, 115, 231, 0.25);
 }
 
 /* Media badge */
@@ -360,7 +360,7 @@
 /* See more link for grid view */
 .see-more-link {
   font-size: var(--font-size-xs);
-  color: var(--cyan);
+  color: var(--blue-primary);
   cursor: pointer;
   opacity: 0.8;
   transition: opacity 0.2s;
