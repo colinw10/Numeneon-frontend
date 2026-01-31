@@ -805,12 +805,31 @@
   }
   
   .composer-input {
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 40px 0.5rem 60px; /* Reduced padding for narrower icons */
     min-height: 36px;
   }
   
   textarea.composer-input {
     min-height: 36px;
+  }
+  
+  .composer-action-btn {
+    width: 28px;
+    min-width: 28px;
+    
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+  
+  .composer-post-icon {
+    width: 36px;
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
   
   .story-card {
@@ -876,6 +895,29 @@
   .modal-content textarea {
     min-height: 90px;
     font-size: var(--font-size-sm);
+  }
+  
+  .composer-input {
+    padding: 0.5rem 36px 0.5rem 52px; /* Even narrower for very small screens */
+  }
+  
+  .composer-action-btn {
+    width: 24px;
+    min-width: 24px;
+    
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+  
+  .composer-post-icon {
+    width: 32px;
+    
+    svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 }
 

@@ -4,10 +4,12 @@
  * SETUP: Create a free Cloudinary account at https://cloudinary.com
  * Then create an "unsigned upload preset" in Settings > Upload
  *
- * Replace these values with your own:
+ * Set these in your .env file:
+ * VITE_CLOUDINARY_CLOUD_NAME=your_cloud_name
+ * VITE_CLOUDINARY_UPLOAD_PRESET=your_upload_preset
  */
-const CLOUDINARY_CLOUD_NAME = "YOUR_CLOUD_NAME"; // e.g., 'dxyz123abc'
-const CLOUDINARY_UPLOAD_PRESET = "YOUR_UPLOAD_PRESET"; // e.g., 'numeneon_uploads'
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "";
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "";
 
 /**
  * Upload an image to Cloudinary
@@ -62,10 +64,7 @@ export const uploadToCloudinary = async (file) => {
  * Check if Cloudinary is configured
  */
 export const isCloudinaryConfigured = () => {
-  return (
-    CLOUDINARY_CLOUD_NAME !== "YOUR_CLOUD_NAME" &&
-    CLOUDINARY_UPLOAD_PRESET !== "YOUR_UPLOAD_PRESET"
-  );
+  return Boolean(CLOUDINARY_CLOUD_NAME && CLOUDINARY_UPLOAD_PRESET);
 };
 
 export default uploadToCloudinary;
