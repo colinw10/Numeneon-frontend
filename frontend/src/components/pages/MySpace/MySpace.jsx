@@ -37,12 +37,55 @@ import myAvatar from '@assets/icons/avatars/my-avatar.png';
 import bipolarInvert from '@assets/wallpapers/Bipolar-invert.png';
 import bipolarPink from '@assets/wallpapers/Bipolar-pink.png';
 import bipolarTeal from '@assets/wallpapers/Bipolar-teal.png';
+import triad from '@assets/wallpapers/triad.png';
+import triad2 from '@assets/wallpapers/triad-2.png';
+import triad3 from '@assets/wallpapers/triad-3.png';
+import triad31 from '@assets/wallpapers/triad-3-1.png';
 
+// Image wallpapers
 const WALLPAPER_MAP = {
   none: null,
   invert: bipolarInvert,
   pink: bipolarPink,
   teal: bipolarTeal,
+  triad: triad,
+  triad2: triad2,
+  triad3: triad3,
+  triad31: triad31,
+};
+
+// CSS gradient wallpapers
+const CSS_WALLPAPER_MAP = {
+  cyberpunk: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+  neonCity: 'linear-gradient(180deg, #0a0015 0%, #1a0030 30%, #ff00ff20 70%, #00ffff10 100%)',
+  vaporwave: 'linear-gradient(180deg, #ff71ce 0%, #01cdfe 25%, #05ffa1 50%, #b967ff 75%, #fffb96 100%)',
+  matrix: 'linear-gradient(180deg, #000000 0%, #003300 50%, #00ff00 100%)',
+  sunset: 'linear-gradient(180deg, #0f0f23 0%, #1a1a2e 20%, #16213e 40%, #e94560 70%, #ff6b6b 100%)',
+  aurora: 'linear-gradient(135deg, #000428 0%, #004e92 25%, #00d4ff 50%, #7b2ff7 75%, #f107a3 100%)',
+  deepSpace: 'radial-gradient(ellipse at bottom, #1b2838 0%, #090a0f 100%)',
+  hologram: 'linear-gradient(45deg, #12c2e9 0%, #c471ed 50%, #f64f59 100%)',
+  midnight: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1a1a2e 100%)',
+  bloodMoon: 'radial-gradient(circle at 30% 30%, #4a0000 0%, #1a0000 50%, #0a0000 100%)',
+  electric: 'linear-gradient(135deg, #000000 0%, #1a0a30 25%, #0a1a30 50%, #00ffff30 100%)',
+  fire: 'linear-gradient(180deg, #000000 0%, #1a0a00 30%, #ff4500 70%, #ff8c00 100%)',
+  cosmic: 'radial-gradient(ellipse at center, #1a0030 0%, #0d001a 50%, #000000 100%)',
+  glitch: 'repeating-linear-gradient(90deg, #ff00ff10 0px, #ff00ff10 2px, transparent 2px, transparent 4px), linear-gradient(180deg, #0a0a0a 0%, #1a1a2e 100%)',
+  grid: 'repeating-linear-gradient(0deg, transparent 0px, transparent 49px, #00ffff20 49px, #00ffff20 50px), repeating-linear-gradient(90deg, transparent 0px, transparent 49px, #00ffff20 49px, #00ffff20 50px), linear-gradient(180deg, #000000 0%, #0a0a1a 100%)',
+  // Animated wallpapers (base gradient - animation handled by CSS class)
+  floatingOrbs: 'linear-gradient(135deg, #0a0015 0%, #1a0030 100%)',
+  starfield: 'radial-gradient(ellipse at bottom, #0d1b2a 0%, #000000 100%)',
+  bubbles: 'linear-gradient(180deg, #000428 0%, #004e92 100%)',
+  fireflies: 'linear-gradient(180deg, #0a0a0a 0%, #1a2a1a 50%, #0a0a0a 100%)',
+  neonRain: 'linear-gradient(180deg, #0a0015 0%, #000000 100%)',
+};
+
+// Map wallpaper IDs to animation class names
+const ANIMATED_WALLPAPER_MAP = {
+  floatingOrbs: 'animated-orbs',
+  starfield: 'animated-starfield',
+  bubbles: 'animated-bubbles',
+  fireflies: 'animated-fireflies',
+  neonRain: 'animated-neon-rain',
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -90,6 +133,17 @@ const DEFAULT_MYSPACE_DATA = {
   sliderStyle: 1, // 1-10 for different slider styles
 };
 
+// Load saved preferences from localStorage (for immediate hydration)
+const getSavedPreferences = (username) => {
+  if (!username) return {};
+  try {
+    const saved = localStorage.getItem(`myspace_${username}`);
+    return saved ? JSON.parse(saved) : {};
+  } catch {
+    return {};
+  }
+};
+
 // Get friend avatar from TOP8_AVATARS config
 const getFriendAvatar = (index) => TOP8_AVATARS[index] || REBEL_AVATARS[0];
 
@@ -110,8 +164,11 @@ function MySpace() {
     ? currentUser 
     : friends.find(f => f.username === username);
   
-  // MySpace profile state
-  const [mySpaceData, setMySpaceData] = useState(DEFAULT_MYSPACE_DATA);
+  // MySpace profile state - initialize with saved preferences for instant load
+  const [mySpaceData, setMySpaceData] = useState(() => ({
+    ...DEFAULT_MYSPACE_DATA,
+    ...getSavedPreferences(displayUsername),
+  }));
   const [isEditing, setIsEditing] = useState(false);
   
   // Re-load data when username changes (navigating to different user's space)
@@ -170,7 +227,7 @@ function MySpace() {
   
   // Save non-playlist data to localStorage as backup
   useEffect(() => {
-    if (isOwnSpace && mySpaceData !== DEFAULT_MYSPACE_DATA) {
+    if (isOwnSpace && displayUsername) {
       const dataToSave = { ...mySpaceData };
       delete dataToSave.playlist; // Don't cache playlist - needs preview_url from API
       localStorage.setItem(`myspace_${displayUsername}`, JSON.stringify(dataToSave));
@@ -199,18 +256,23 @@ function MySpace() {
     ? (currentUser?.profile_picture || MY_AVATAR)
     : (viewedUser?.profile_picture || TOP8_AVATARS[topFriends.findIndex(f => f?.username === username)] || REBEL_AVATARS[0]);
 
-  // Get wallpaper style
+  // Get wallpaper style (supports both image and CSS gradient wallpapers)
   const wallpaperSrc = WALLPAPER_MAP[mySpaceData.wallpaper];
+  const cssWallpaper = CSS_WALLPAPER_MAP[mySpaceData.wallpaper];
+  const animatedClass = ANIMATED_WALLPAPER_MAP[mySpaceData.wallpaper] || '';
   const wallpaperStyle = wallpaperSrc ? {
     backgroundImage: `url(${wallpaperSrc})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundAttachment: 'fixed',
+  } : cssWallpaper ? {
+    background: cssWallpaper,
+    backgroundAttachment: 'fixed',
   } : {};
   
   return (
     <div 
-      className={`myspace-page theme-${mySpaceData.theme}`}
+      className={`myspace-page theme-${mySpaceData.theme} ${animatedClass}`}
       style={wallpaperStyle}
     >
       <header className="myspace-header">

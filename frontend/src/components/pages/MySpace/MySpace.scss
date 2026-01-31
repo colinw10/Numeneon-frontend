@@ -331,3 +331,232 @@ html:has(.myspace-page) {
     box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
   }
 }
+
+// ============================================
+// ANIMATED WALLPAPERS
+// ============================================
+
+// Floating Orbs - glowing circles that drift around
+.myspace-page.animated-orbs {
+  position: relative;
+  overflow: hidden;
+  
+  &::before,
+  &::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(60px);
+  }
+  
+  &::before {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 0, 255, 0.4) 0%, transparent 70%);
+    top: 20%;
+    left: 10%;
+    animation: floatOrb1 15s ease-in-out infinite;
+  }
+  
+  &::after {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.4) 0%, transparent 70%);
+    bottom: 20%;
+    right: 10%;
+    animation: floatOrb2 18s ease-in-out infinite;
+  }
+}
+
+@keyframes floatOrb1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(100px, 50px) scale(1.1); }
+  50% { transform: translate(50px, 100px) scale(0.9); }
+  75% { transform: translate(-50px, 50px) scale(1.05); }
+}
+
+@keyframes floatOrb2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-80px, -60px) scale(0.95); }
+  50% { transform: translate(-40px, -100px) scale(1.1); }
+  75% { transform: translate(60px, -40px) scale(1); }
+}
+
+// Starfield - twinkling stars
+.myspace-page.animated-starfield {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, white, transparent),
+      radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 90px 40px, white, transparent),
+      radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 160px 120px, white, transparent),
+      radial-gradient(2px 2px at 200px 50px, rgba(255,255,255,0.9), transparent),
+      radial-gradient(1px 1px at 250px 160px, white, transparent),
+      radial-gradient(2px 2px at 300px 100px, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1px 1px at 350px 200px, white, transparent),
+      radial-gradient(2px 2px at 400px 60px, rgba(255,255,255,0.8), transparent);
+    background-size: 400px 300px;
+    animation: twinkle 4s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+// Bubbles - rising circles
+.myspace-page.animated-bubbles {
+  position: relative;
+  overflow: hidden;
+  
+  &::before,
+  &::after {
+    content: '';
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), rgba(0,212,255,0.1));
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  
+  &::before {
+    width: 60px;
+    height: 60px;
+    left: 20%;
+    bottom: -80px;
+    animation: bubbleRise1 12s ease-in-out infinite;
+  }
+  
+  &::after {
+    width: 40px;
+    height: 40px;
+    left: 60%;
+    bottom: -60px;
+    animation: bubbleRise2 10s ease-in-out infinite 2s;
+  }
+}
+
+@keyframes bubbleRise1 {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-120vh) scale(0.5); opacity: 0; }
+}
+
+@keyframes bubbleRise2 {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10% { opacity: 0.7; }
+  50% { transform: translateY(-60vh) translateX(30px) scale(0.8); }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-120vh) translateX(-20px) scale(0.4); opacity: 0; }
+}
+
+// Fireflies - glowing dots that float around
+.myspace-page.animated-fireflies {
+  position: relative;
+  overflow: hidden;
+  
+  &::before,
+  &::after {
+    content: '';
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #9fff5f;
+    box-shadow: 0 0 10px #9fff5f, 0 0 20px #9fff5f, 0 0 30px #5fff5f;
+  }
+  
+  &::before {
+    top: 30%;
+    left: 20%;
+    animation: fireflyFloat1 8s ease-in-out infinite;
+  }
+  
+  &::after {
+    top: 60%;
+    right: 25%;
+    animation: fireflyFloat2 10s ease-in-out infinite 1s;
+  }
+}
+
+@keyframes fireflyFloat1 {
+  0%, 100% { transform: translate(0, 0); opacity: 0.3; }
+  25% { transform: translate(100px, -50px); opacity: 1; }
+  50% { transform: translate(150px, 30px); opacity: 0.5; }
+  75% { transform: translate(50px, 80px); opacity: 0.9; }
+}
+
+@keyframes fireflyFloat2 {
+  0%, 100% { transform: translate(0, 0); opacity: 0.4; }
+  20% { transform: translate(-80px, 40px); opacity: 1; }
+  40% { transform: translate(-120px, -30px); opacity: 0.6; }
+  60% { transform: translate(-60px, -80px); opacity: 0.9; }
+  80% { transform: translate(20px, -40px); opacity: 0.5; }
+}
+
+// Neon Rain - falling vertical lines
+.myspace-page.animated-neon-rain {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: fixed;
+    top: -100%;
+    left: 0;
+    right: 0;
+    height: 200%;
+    pointer-events: none;
+    z-index: 0;
+    background-image: 
+      linear-gradient(180deg, transparent 0%, #ff00ff60 50%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #00ffff50 50%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #ff00ff40 50%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #00ffff60 50%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #ff00ff50 50%, transparent 100%),
+       linear-gradient(180deg, transparent 0%, #9900ff80 50%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #02238fa2 90%, transparent 10%);
+      
+    background-size: 2px 100px, 2px 80px, 1px 90px, 2px 70px, 1px 85px;
+    background-position: 15% 0, 35% 30px, 55% 60px, 75% 10px, 90% 50px;
+    background-repeat: repeat-y;
+    animation: neonRainFall 3s linear infinite;
+  }
+}
+
+@keyframes neonRainFall {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
+}
+
+// Make sure content stays above animations
+.myspace-page.animated-orbs,
+.myspace-page.animated-starfield,
+.myspace-page.animated-bubbles,
+.myspace-page.animated-fireflies,
+.myspace-page.animated-neon-rain {
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
