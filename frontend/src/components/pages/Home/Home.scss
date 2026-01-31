@@ -800,22 +800,14 @@
   }
   
   .composer-section {
-    padding: 0.5rem;
+    padding: 0.4rem;
     margin-bottom: 0.75rem;
+    gap: 0.35rem; /* Even tighter gap */
   }
   
-  .composer-input {
-    padding: 0.5rem 40px 0.5rem 60px; /* Reduced padding for narrower icons */
-    min-height: 36px;
-  }
-  
-  textarea.composer-input {
-    min-height: 36px;
-  }
-  
-  .composer-action-btn {
+  .composer-avatar {
     width: 28px;
-    min-width: 28px;
+    height: 28px;
     
     svg {
       width: 14px;
@@ -823,12 +815,32 @@
     }
   }
   
-  .composer-post-icon {
-    width: 36px;
+  .composer-input {
+    padding: 0.5rem 38px 0.5rem 56px; /* Slightly more room for text */
+    min-height: 36px;
+    font-size: 14px;
+  }
+  
+  textarea.composer-input {
+    min-height: 36px;
+  }
+  
+  .composer-action-btn {
+    width: 26px;
+    min-width: 26px;
     
     svg {
-      width: 16px;
-      height: 16px;
+      width: 13px;
+      height: 13px;
+    }
+  }
+  
+  .composer-post-icon {
+    width: 34px;
+    
+    svg {
+      width: 15px;
+      height: 15px;
     }
   }
   
