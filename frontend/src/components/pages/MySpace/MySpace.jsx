@@ -41,6 +41,7 @@ import triad from '@assets/wallpapers/triad.png';
 import triad2 from '@assets/wallpapers/triad-2.png';
 import triad3 from '@assets/wallpapers/triad-3.png';
 import triad31 from '@assets/wallpapers/triad-3-1.png';
+import triasPattern from '@assets/wallpapers/trias-pattern.png';
 
 // Image wallpapers
 const WALLPAPER_MAP = {
@@ -52,6 +53,7 @@ const WALLPAPER_MAP = {
   triad2: triad2,
   triad3: triad3,
   triad31: triad31,
+  triasPattern: triasPattern,
 };
 
 // CSS gradient wallpapers
