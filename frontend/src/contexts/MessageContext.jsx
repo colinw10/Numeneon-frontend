@@ -1,10 +1,10 @@
 // 🔵 PABLO - UI Architect
 // MessageContext.jsx - Shared state for messaging system (API-connected)
 //
-// UPDATED WITH WEBSOCKETS 
-// Now receives real-time message notifications instead of polling
+// UPDATED WITH WEBSOCKETS + POLLING FALLBACK
+// Uses WebSockets when available, falls back to polling when not connected
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useAuth } from "./AuthContext";
 import { useWebSocket } from "./WebSocketContext";
 import messagesService from "@services/messagesService";
@@ -13,7 +13,7 @@ const MessageContext = createContext();
 
 export function MessageProvider({ children }) {
   const { user, isAuthenticated } = useAuth();
-  const { subscribe } = useWebSocket();
+  const { subscribe, isConnected } = useWebSocket();
 
   // Modal visibility
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
@@ -32,6 +32,9 @@ export function MessageProvider({ children }) {
 
   // NEW: Notification state for new messages
   const [newMessageNotification, setNewMessageNotification] = useState(null);
+
+  // Polling interval ref
+  const pollingIntervalRef = useRef(null);
 
   // Computed: Total unread message count across all conversations
   const unreadMessageCount = conversations.reduce(
@@ -92,13 +95,67 @@ export function MessageProvider({ children }) {
     return unsubscribe;
   }, [user, subscribe, selectedUserId]);
 
+  // 🔄 POLLING FALLBACK: When WebSocket is not connected, poll for new messages
+  useEffect(() => {
+    // Clear any existing polling
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+
+    // Only poll when user is authenticated AND WebSocket is NOT connected
+    if (isAuthenticated && user && !isConnected) {
+      console.log('📡 WebSocket not connected, starting message polling...');
+      
+      // Poll every 5 seconds for conversations (background)
+      pollingIntervalRef.current = setInterval(async () => {
+        // Always refresh conversations list for unread badge
+        await fetchConversations();
+        
+        // If modal is open and viewing a conversation, refresh messages too
+        if (isMessageModalOpen && selectedUserId) {
+          try {
+            const messages = await messagesService.getConversation(selectedUserId);
+            setSelectedMessages(messages || []);
+          } catch (err) {
+            console.error('Polling: Failed to fetch messages:', err);
+          }
+        }
+      }, 5000);
+    }
+
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
+    };
+  }, [isAuthenticated, user, isConnected, isMessageModalOpen, selectedUserId]);
+
   // GET /api/messages/conversations/ - Load all conversations
   const fetchConversations = async () => {
     setIsLoading(true);
     setError(null);
     try {
       const data = await messagesService.getConversations();
-      setConversations(data);
+      
+      // 🔧 FRONTEND FIX: Recalculate unread count to exclude messages WE sent
+      // Backend bug: unread_count includes messages the user sent
+      const fixedData = data.map(conv => {
+        // If last message is from US, we shouldn't count it as unread
+        const lastMsgFromUs = conv.last_message?.sender?.id === user?.id;
+        
+        // If the backend says unread but last message is from us, it's wrong
+        // Set to 0 (we can't know the true count without all messages)
+        const correctedUnread = lastMsgFromUs ? 0 : (conv.unread_count || 0);
+        
+        return {
+          ...conv,
+          unread_count: correctedUnread,
+        };
+      });
+      
+      setConversations(fixedData);
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to fetch conversations");
       console.error("Failed to fetch conversations:", err);
@@ -213,14 +270,36 @@ export function MessageProvider({ children }) {
   const sendMessage = async (text) => {
     if (!text.trim() || !selectedUserId) return { success: false };
 
+    // Create optimistic message to show immediately
+    const tempId = `temp-${Date.now()}`;
+    const optimisticMessage = {
+      id: tempId,
+      sender: { 
+        id: user.id, 
+        username: user.username,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      },
+      content: text.trim(),
+      created_at: new Date().toISOString(),
+      is_read: true,
+      _pending: true, // Flag to show sending state
+    };
+
+    // 1. Immediately add to UI (optimistic update)
+    setSelectedMessages((prev) => [...prev, optimisticMessage]);
+
     try {
+      // 2. Send to backend
       const newMessage = await messagesService.sendMessage(
         selectedUserId,
         text.trim()
       );
 
-      // Optimistically add to local state
-      setSelectedMessages((prev) => [...prev, newMessage]);
+      // 3. Replace temp message with real one from server
+      setSelectedMessages((prev) => 
+        prev.map((msg) => msg.id === tempId ? newMessage : msg)
+      );
 
       // Refresh conversations to update last_message preview
       fetchConversations();
@@ -228,6 +307,10 @@ export function MessageProvider({ children }) {
       return { success: true };
     } catch (err) {
       console.error("Failed to send message:", err);
+      
+      // Remove the optimistic message on failure
+      setSelectedMessages((prev) => prev.filter((msg) => msg.id !== tempId));
+      
       return {
         success: false,
         error: err.response?.data?.detail || "Failed to send",
