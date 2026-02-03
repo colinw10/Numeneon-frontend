@@ -75,6 +75,12 @@ function NotificationModal({ isOpen, onClose }) {
                   if (notif.type === 'wall_post') {
                     // Wall posts - go to the user's own profile to see the post
                     navigate(`/profile`);
+                  } else if (notif.type === 'post_comment') {
+                    // Post comments - go to own profile to see the commented post
+                    navigate(`/profile`);
+                  } else if (notif.type === 'friend_accepted') {
+                    // Friend accepted - go to the new friend's profile
+                    navigate(`/profile/${notif.friend?.username}`);
                   } else if (notif.author?.username) {
                     navigate(`/profile/${notif.author.username}`);
                   }
@@ -83,8 +89,20 @@ function NotificationModal({ isOpen, onClose }) {
               >
                  <div className="notif-content">
                     <p className="notif-text">
-                      <span className="notif-name">{notif.author?.username || 'Someone'}</span>
-                      {' '}{notif.type === 'wall_post' ? 'posted on your wall' : (notif.message || 'posted something')}
+                      <span className="notif-name">
+                        {notif.type === 'post_comment' 
+                          ? (notif.commenter?.first_name || notif.commenter?.username || 'Someone')
+                          : notif.type === 'friend_accepted'
+                            ? (notif.friend?.first_name || notif.friend?.username || 'Someone')
+                            : (notif.author?.username || 'Someone')}
+                      </span>
+                      {' '}{notif.type === 'wall_post' 
+                        ? 'posted on your wall' 
+                        : notif.type === 'post_comment'
+                          ? 'commented on your post'
+                          : notif.type === 'friend_accepted'
+                            ? 'accepted your friend request'
+                            : (notif.message || 'posted something')}
                     </p>
                     <span className="notif-time">
                       {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

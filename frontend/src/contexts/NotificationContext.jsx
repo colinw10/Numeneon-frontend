@@ -57,14 +57,48 @@ export const NotificationProvider = ({ children }) => {
       });
     };
 
+    // Listen for post comments (when someone comments on your post)
+    const handlePostComment = (data) => {
+      console.log('🔔 Post comment notification:', data);
+      addNotification({
+        id: Date.now(),
+        type: 'post_comment',
+        read: false,
+        created_at: new Date().toISOString(),
+        message: data.message || `${data.commenter?.first_name || data.commenter?.username || 'Someone'} commented on your post`,
+        post: data.post,
+        comment: data.comment,
+        commenter: data.commenter,
+        ...data
+      });
+    };
+
+    // Listen for friend request accepted (when someone accepts your friend request)
+    const handleFriendAccepted = (data) => {
+      console.log('🔔 Friend accepted notification:', data);
+      addNotification({
+        id: Date.now(),
+        type: 'friend_accepted',
+        read: false,
+        created_at: new Date().toISOString(),
+        message: data.message || `${data.friend?.first_name || data.friend?.username || 'Someone'} accepted your friend request`,
+        friend: data.friend,
+        ...data
+      });
+    };
+
     const unsubscribePost = subscribe('new_post_notification', handleNewPost);
     const unsubscribeNewPost = subscribe('new_post', handleNewPost);
     const unsubscribeWallPost = subscribe('wall_post', handleWallPost);
+    const unsubscribePostComment = subscribe('post_comment', handlePostComment);
+    const unsubscribeFriendAccepted = subscribe('friend_accepted', handleFriendAccepted);
 
     return () => {
       unsubscribePost();
       unsubscribeNewPost();
       unsubscribeWallPost();
+      unsubscribePostComment();
+      unsubscribeFriendAccepted();
     };
   }, [user, subscribe]);
 
