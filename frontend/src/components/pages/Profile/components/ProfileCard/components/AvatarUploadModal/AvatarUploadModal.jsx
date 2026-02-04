@@ -5,7 +5,8 @@ import { useState, useRef } from 'react';
 import './AvatarUploadModal.scss';
 import { 
   CloseIcon, 
-  UserIcon
+  UserIcon,
+  EditIcon
 } from '@assets/icons';
 import { uploadToCloudinary, isCloudinaryConfigured } from '@utils/cloudinary';
 import { updateProfile } from '@services/usersService';
@@ -17,7 +18,6 @@ function AvatarUploadModal({ isOpen, onClose }) {
   
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [cropShape, setCropShape] = useState('circle'); // 'circle' or 'square'
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
   
@@ -134,7 +134,6 @@ function AvatarUploadModal({ isOpen, onClose }) {
   // Clean up and close
   const handleClose = () => {
     handleRemoveFile();
-    setCropShape('circle');
     onClose();
   };
   
@@ -145,8 +144,8 @@ function AvatarUploadModal({ isOpen, onClose }) {
       <div className="avatar-modal-content" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="avatar-modal-header">
-          <h2>Update Profile Photo</h2>
-          <button className="avatar-modal-close" onClick={handleClose}>
+          <h2>Profile Pic</h2>
+          <button className="avatar-close-x" onClick={handleClose}>
             <CloseIcon size={20} />
           </button>
         </div>
@@ -167,7 +166,7 @@ function AvatarUploadModal({ isOpen, onClose }) {
             {previewUrl ? (
               <div className="avatar-preview-container">
                 <div 
-                  className={`avatar-preview-frame avatar-preview-frame--${cropShape} ${isDragging ? 'is-dragging' : ''}`}
+                  className={`avatar-preview-frame avatar-preview-frame--circle ${isDragging ? 'is-dragging' : ''}`}
                   onMouseDown={handleDragStart}
                   onMouseMove={handleDragMove}
                   onMouseUp={handleDragEnd}
@@ -187,13 +186,12 @@ function AvatarUploadModal({ isOpen, onClose }) {
                     draggable={false}
                   />
                 </div>
-                <span className="avatar-drag-hint">Drag to reposition</span>
                 <button 
-                  className="avatar-remove-btn" 
-                  onClick={handleRemoveFile}
-                  title="Remove"
+                  className="avatar-edit-btn" 
+                  onClick={() => fileInputRef.current?.click()}
+                  title="Change photo"
                 >
-                  <CloseIcon size={18} />
+                  <EditIcon size={18} />
                 </button>
                 
                 {/* Upload overlay */}
@@ -224,41 +222,34 @@ function AvatarUploadModal({ isOpen, onClose }) {
           {uploadError && (
             <div className="avatar-upload-error">{uploadError}</div>
           )}
-          
-          {/* Crop shape selector - only show when image is selected */}
-          {previewUrl && (
-            <div className="avatar-shape-selector">
-              <span className="shape-label">Display shape:</span>
-              <div className="shape-options">
-                <button
-                  className={`shape-option shape-option--circle ${cropShape === 'circle' ? 'active' : ''}`}
-                  onClick={() => setCropShape('circle')}
-                  title="Circle"
-                >
-                  <div className="shape-preview shape-preview--circle"></div>
-                  <span>Circle</span>
-                </button>
-                <button
-                  className={`shape-option shape-option--square ${cropShape === 'square' ? 'active' : ''}`}
-                  onClick={() => setCropShape('square')}
-                  title="Square"
-                >
-                  <div className="shape-preview shape-preview--square"></div>
-                  <span>Square</span>
-                </button>
-              </div>
-            </div>
-          )}
         </div>
         
         {/* Footer */}
         <div className="avatar-modal-footer">
+          <div className="avatar-actions-left">
+            <button 
+              className="avatar-icon-btn" 
+              onClick={handleClose}
+              title="Cancel"
+            >
+              Cancel
+            </button>
+            {previewUrl && (
+              <button 
+                className="avatar-icon-btn" 
+                onClick={() => fileInputRef.current?.click()}
+                title="Choose different photo"
+              >
+                Edit
+              </button>
+            )}
+          </div>
           <button 
             className="avatar-save-btn" 
             onClick={handleSave}
             disabled={!selectedFile || isUploading}
           >
-            {isUploading ? 'UPLOADING...' : 'SAVE PHOTO'}
+            {isUploading ? 'UPLOADING...' : 'SAVE'}
           </button>
         </div>
       </div>
