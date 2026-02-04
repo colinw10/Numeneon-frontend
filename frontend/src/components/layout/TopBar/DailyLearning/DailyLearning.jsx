@@ -29,25 +29,28 @@ function DailyLearning({ variant = 'topbar' }) {
   if (variant === 'sidebar') {
     return (
       <div className="daily-learning-sidebar">
-        {/* Letter tabs */}
-        <div className="dls-tabs">
-          {categories.map((cat, idx) => (
-            <button
-              key={cat.key}
-              className={`dls-tab ${activeCategory === idx ? 'active' : ''}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setActiveCategory(idx);
-              }}
-              title={cat.label}
-              style={{ 
-                color: cat.color,
-                borderColor: activeCategory === idx ? cat.color : 'transparent'
-              }}
-            >
-              {cat.icon}
-            </button>
-          ))}
+        {/* Title + Letter tabs */}
+        <div className="dls-left">
+          <div className="dls-title">Learn</div>
+          <div className="dls-tabs">
+            {categories.map((cat, idx) => (
+              <button
+                key={cat.key}
+                className={`dls-tab ${activeCategory === idx ? 'active' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveCategory(idx);
+                }}
+                title={cat.label}
+                style={{ 
+                  color: cat.color,
+                  borderColor: activeCategory === idx ? cat.color : 'transparent'
+                }}
+              >
+                {cat.icon}
+              </button>
+            ))}
+          </div>
         </div>
         
         {/* Content - clickable to go to /learn */}

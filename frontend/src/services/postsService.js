@@ -59,7 +59,7 @@ const postsService = {
       mentioned_user_id: data.mentioned_user_id,
       mentioned_username: data.mentioned_username,
       reply_to_comment_id: data.parent_comment_id,
-      type: 'thoughts'
+      type: "thoughts",
     });
     return response.data;
   },
