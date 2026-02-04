@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "term": "idempotent",
+    "pronunciation": "eye-dem-POH-tent",
+    "definition": "An operation that produces the same result no matter how many times it's executed",
+    "example": "HTTP PUT is idempotent - sending the same request twice has the same effect as sending it once.",
+    "sentence": "We designed our payment API to be idempotent so duplicate requests won't charge users twice."
+  },
+  {
+    "id": 2,
+    "term": "middleware",
+    "pronunciation": "MID-uhl-wair",
+    "definition": "Software that acts as a bridge between an operating system or database and applications",
+    "example": "Express middleware functions can modify request/response objects before reaching route handlers.",
+    "sentence": "The authentication middleware intercepts every request to verify the user's JWT token."
+  },
+  {
+    "id": 3,
+    "term": "serialization",
+    "pronunciation": "seer-ee-uh-lih-ZAY-shun",
+    "definition": "Converting an object into a format that can be stored or transmitted and reconstructed later",
+    "example": "JSON.stringify() serializes JavaScript objects into JSON strings.",
+    "sentence": "We use serialization to convert user data into JSON before sending it over the network."
+  },
+  {
+    "id": 4,
+    "term": "webhook",
+    "pronunciation": "WEB-hook",
+    "definition": "An HTTP callback that sends real-time data to other applications when an event occurs",
+    "example": "Stripe sends a webhook to your server when a payment succeeds or fails.",
+    "sentence": "We set up a webhook to notify our Slack channel whenever a new user signs up."
+  },
+  {
+    "id": 5,
+    "term": "latency",
+    "pronunciation": "LAY-ten-see",
+    "definition": "The delay between a request and its response; time data takes to travel",
+    "example": "A CDN reduces latency by serving content from servers geographically closer to users.",
+    "sentence": "Our API latency dropped from 200ms to 50ms after we added Redis caching."
+  },
+  {
+    "id": 6,
+    "term": "throughput",
+    "pronunciation": "THROO-put",
+    "definition": "The amount of data or operations processed in a given time period",
+    "example": "Our server handles 10,000 requests per second at peak throughput.",
+    "sentence": "We increased throughput by 300% after implementing horizontal scaling."
+  },
+  {
+    "id": 7,
+    "term": "polymorphism",
+    "pronunciation": "pol-ee-MOR-fiz-um",
+    "definition": "The ability of different objects to respond to the same method call in different ways",
+    "example": "Both Cat and Dog classes can have a speak() method that outputs different sounds.",
+    "sentence": "Polymorphism lets us call render() on any component without knowing its specific type."
+  },
+  {
+    "id": 8,
+    "term": "abstraction",
+    "pronunciation": "ab-STRAK-shun",
+    "definition": "Hiding complex implementation details behind a simpler interface",
+    "example": "React's useState hook abstracts away the complexity of state management.",
+    "sentence": "Good abstraction lets developers use the API without understanding its internals."
+  },
+  {
+    "id": 9,
+    "term": "encapsulation",
+    "pronunciation": "en-kap-suh-LAY-shun",
+    "definition": "Bundling data and methods that operate on that data within a single unit, restricting direct access",
+    "example": "Private class fields (#) in JavaScript enforce encapsulation.",
+    "sentence": "Encapsulation prevents external code from directly modifying the object's internal state."
+  },
+  {
+    "id": 10,
+    "term": "immutable",
+    "pronunciation": "ih-MYOO-tuh-bul",
+    "definition": "Unable to be changed after creation; modifications create new instances",
+    "example": "In React, state should be treated as immutable - use setState instead of direct mutation.",
+    "sentence": "Using immutable data structures eliminates an entire class of bugs caused by unexpected mutations."
+  },
+  {
+    "id": 11,
+    "term": "asynchronous",
+    "pronunciation": "ay-SIN-kruh-nus",
+    "definition": "Operations that don't block execution while waiting for completion",
+    "example": "fetch() is asynchronous - JavaScript continues running while waiting for the response.",
+    "sentence": "Asynchronous code allows the UI to remain responsive during network requests."
+  },
+  {
+    "id": 12,
+    "term": "deprecated",
+    "pronunciation": "DEP-ruh-kay-tid",
+    "definition": "Marked as outdated and scheduled for removal in future versions",
+    "example": "componentWillMount is deprecated in React - use useEffect instead.",
+    "sentence": "The API endpoint was deprecated last year and will be removed in v3.0."
+  },
+  {
+    "id": 13,
+    "term": "refactoring",
+    "pronunciation": "ree-FAK-ter-ing",
+    "definition": "Restructuring code without changing its external behavior to improve readability or performance",
+    "example": "Extracting repeated code into a reusable function is a common refactoring pattern.",
+    "sentence": "We spent a sprint refactoring the legacy codebase to use modern React hooks."
+  },
+  {
+    "id": 14,
+    "term": "boilerplate",
+    "pronunciation": "BOY-ler-playt",
+    "definition": "Standard, repetitive code that must be included with little or no modification",
+    "example": "Create React App generates boilerplate so you don't have to configure webpack manually.",
+    "sentence": "The framework requires too much boilerplate - 50 lines just to set up a basic route."
+  },
+  {
+    "id": 15,
+    "term": "memoization",
+    "pronunciation": "mem-oh-ih-ZAY-shun",
+    "definition": "Caching the results of expensive function calls to avoid redundant computations",
+    "example": "React.memo() prevents re-renders when props haven't changed.",
+    "sentence": "Memoization reduced our Fibonacci calculator from exponential to linear time complexity."
+  },
+  {
+    "id": 16,
+    "term": "singleton",
+    "pronunciation": "SING-gul-ton",
+    "definition": "A design pattern that restricts a class to a single instance throughout the application",
+    "example": "Database connection pools are often implemented as singletons.",
+    "sentence": "The logger is a singleton to ensure all modules write to the same output stream."
+  },
+  {
+    "id": 17,
+    "term": "verbose",
+    "pronunciation": "ver-BOHS",
+    "definition": "Using more words or code than necessary; overly detailed",
+    "example": "Java is often criticized for being verbose compared to Python.",
+    "sentence": "Enable verbose logging to see detailed debug information during development."
+  },
+  {
+    "id": 18,
+    "term": "deterministic",
+    "pronunciation": "dee-ter-min-IS-tik",
+    "definition": "Always producing the same output given the same input; no randomness",
+    "example": "Pure functions are deterministic - add(2, 3) always returns 5.",
+    "sentence": "Tests should be deterministic so they don't randomly fail in CI/CD pipelines."
+  },
+  {
+    "id": 19,
+    "term": "obfuscation",
+    "pronunciation": "ob-fuh-SKAY-shun",
+    "definition": "Making code difficult to understand, often to protect intellectual property",
+    "example": "Minified JavaScript is a form of obfuscation - variable names become single letters.",
+    "sentence": "We use obfuscation on the client bundle to deter reverse engineering."
+  },
+  {
+    "id": 20,
+    "term": "paradigm",
+    "pronunciation": "PAIR-uh-dime",
+    "definition": "A fundamental style or approach to programming (e.g., functional, object-oriented)",
+    "example": "React encourages a declarative paradigm over imperative DOM manipulation.",
+    "sentence": "Switching from OOP to a functional paradigm changed how I think about state."
+  },
+  {
+    "id": 21,
+    "term": "recursion",
+    "pronunciation": "ree-KUR-zhun",
+    "definition": "A function that calls itself to solve smaller instances of the same problem",
+    "example": "Calculating factorial: factorial(n) = n * factorial(n-1)",
+    "sentence": "The file tree component uses recursion to render nested folders of any depth."
+  },
+  {
+    "id": 22,
+    "term": "endpoint",
+    "pronunciation": "END-poynt",
+    "definition": "A specific URL where an API can be accessed to perform operations",
+    "example": "POST /api/users is the endpoint for creating new users.",
+    "sentence": "We added a new endpoint for bulk importing contacts from CSV files."
+  },
+  {
+    "id": 23,
+    "term": "payload",
+    "pronunciation": "PAY-lohd",
+    "definition": "The actual data being transmitted in a request or message, excluding headers/metadata",
+    "example": "The POST request payload contains the user's registration information.",
+    "sentence": "Keep the payload small to reduce bandwidth usage on mobile connections."
+  },
+  {
+    "id": 24,
+    "term": "sanitization",
+    "pronunciation": "san-ih-tih-ZAY-shun",
+    "definition": "Cleaning user input to prevent security vulnerabilities like XSS or SQL injection",
+    "example": "Always sanitize HTML input before rendering to prevent script injection.",
+    "sentence": "The sanitization middleware strips dangerous characters from all form submissions."
+  },
+  {
+    "id": 25,
+    "term": "debouncing",
+    "pronunciation": "dee-BOWN-sing",
+    "definition": "Delaying function execution until a pause in rapid events (like typing)",
+    "example": "Debounce search input so API calls only fire after the user stops typing.",
+    "sentence": "We added debouncing to prevent 20 API calls when a user types a search query."
+  },
+  {
+    "id": 26,
+    "term": "throttling",
+    "pronunciation": "THROT-ling",
+    "definition": "Limiting how often a function can execute within a time period",
+    "example": "Throttle scroll handlers to fire at most once every 100ms.",
+    "sentence": "API throttling prevents abuse by limiting each user to 100 requests per minute."
+  },
+  {
+    "id": 27,
+    "term": "hydration",
+    "pronunciation": "hy-DRAY-shun",
+    "definition": "Attaching JavaScript event handlers to server-rendered HTML to make it interactive",
+    "example": "Next.js hydrates the page after the initial server-side render completes.",
+    "sentence": "The hydration mismatch error occurs when server and client HTML don't match."
+  },
+  {
+    "id": 28,
+    "term": "transpilation",
+    "pronunciation": "trans-pih-LAY-shun",
+    "definition": "Converting source code from one language version to another (e.g., ES6 to ES5)",
+    "example": "Babel transpiles modern JavaScript to run in older browsers.",
+    "sentence": "TypeScript requires transpilation to JavaScript before browsers can execute it."
+  },
+  {
+    "id": 29,
+    "term": "semantic",
+    "pronunciation": "suh-MAN-tik",
+    "definition": "Relating to meaning; code or markup that clearly conveys its purpose",
+    "example": "Using <nav> instead of <div> is more semantic for navigation elements.",
+    "sentence": "Semantic HTML improves accessibility and SEO by conveying meaning to screen readers."
+  },
+  {
+    "id": 30,
+    "term": "agnostic",
+    "pronunciation": "ag-NOS-tik",
+    "definition": "Designed to work with any technology, framework, or platform",
+    "example": "This state management library is framework-agnostic - it works with React, Vue, or vanilla JS.",
+    "sentence": "We built the design system to be platform-agnostic so it works on web and mobile."
+  }
+]

@@ -1,7 +1,7 @@
 // 🔵 PABLO - UI/Styling | 🟢 COLIN - Post Creation Logic
 // ComposerModal.jsx - Modal for creating new posts
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './ComposerModal.scss';
 import { useAuth, usePosts } from '@contexts';
 import { uploadToCloudinary, isCloudinaryConfigured } from '@utils/cloudinary';
@@ -19,7 +19,7 @@ import {
   TrashIcon
 } from '@assets/icons';
 
-function ComposerModal({ showComposer, setShowComposer, composerType, setComposerType, targetProfileId = null, targetDisplayName = null }) {
+function ComposerModal({ showComposer, setShowComposer, composerType, setComposerType, targetProfileId = null, targetDisplayName = null, initialContent = '', onOpen = null }) {
   const { user } = useAuth();
   const { createPost } = usePosts();
   const [content, setContent] = useState('');
@@ -35,6 +35,14 @@ function ComposerModal({ showComposer, setShowComposer, composerType, setCompose
   
   // Check if this is a wall post (posting on someone else's profile)
   const isWallPost = !!targetProfileId;
+  
+  // Initialize content from inline composer when modal opens
+  useEffect(() => {
+    if (showComposer && initialContent) {
+      setContent(initialContent);
+      onOpen?.(); // Clear the inline composer
+    }
+  }, [showComposer]);
   
   if (!showComposer) return null;
 

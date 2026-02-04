@@ -15,6 +15,7 @@ export default defineConfig({
       "@services": path.resolve(__dirname, "./src/services"),
       "@utils": path.resolve(__dirname, "./src/utils"),
       "@styles": path.resolve(__dirname, "./src/styles"),
+      "@data": path.resolve(__dirname, "./src/data"),
 
       // Component type aliases
       "@layout": path.resolve(__dirname, "./src/components/layout"),
@@ -40,10 +41,10 @@ export default defineConfig({
           // instead of a short name that SCSS can't find
           return `@use '${path.resolve(
             __dirname,
-            "src/styles/variables"
+            "src/styles/variables",
           )}' as *; @use '${path.resolve(
             __dirname,
-            "src/styles/mixins"
+            "src/styles/mixins",
           )}' as *;\n${content}`;
         },
       },

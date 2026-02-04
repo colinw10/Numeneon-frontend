@@ -9,6 +9,7 @@ import { usePosts, useFriends } from '@contexts';
 import { UserIcon, PostTriangleIcon, ImageIcon, FlagIcon } from '@assets/icons';
 // 🛠️ Import shared helpers instead of duplicating them!
 import { getInitials } from '@utils/helpers';
+import DailyLearning from '@layout/TopBar/DailyLearning';
 
 function Home() {
   // Get real data from contexts
@@ -185,6 +186,8 @@ function Home() {
             </div>
           ))}
         </div>
+        {/* Daily Learning Widget - fits in space next to stories */}
+        <DailyLearning variant="sidebar" />
       </div>
 
        {/* 🟢 Section 3: Timeline River Feed (the main posts) */}
@@ -216,6 +219,8 @@ function Home() {
         setShowComposer={setShowComposer}
         composerType={composerType}
         setComposerType={setComposerType}
+        initialContent={composerText}
+        onOpen={() => setComposerText('')}
       />
     </div>
   );

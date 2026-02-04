@@ -42,6 +42,7 @@ import triad2 from '@assets/wallpapers/triad-2.png';
 import triad3 from '@assets/wallpapers/triad-3.png';
 import triad31 from '@assets/wallpapers/triad-3-1.png';
 import triasPattern from '@assets/wallpapers/trias-pattern.png';
+import peacockWarp from '@assets/wallpapers/PEACOCK-warp.jpg';
 
 // Image wallpapers
 const WALLPAPER_MAP = {
@@ -54,6 +55,7 @@ const WALLPAPER_MAP = {
   triad3: triad3,
   triad31: triad31,
   triasPattern: triasPattern,
+  peacockWarp: peacockWarp,
 };
 
 // CSS gradient wallpapers
@@ -265,7 +267,7 @@ function MySpace() {
   const wallpaperStyle = wallpaperSrc ? {
     backgroundImage: `url(${wallpaperSrc})`,
     backgroundSize: 'cover',
-    backgroundPosition: 'center',
+    backgroundPosition: 'center bottom',
     backgroundAttachment: 'fixed',
   } : cssWallpaper ? {
     background: cssWallpaper,

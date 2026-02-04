@@ -10,7 +10,7 @@ import triad2 from '@assets/wallpapers/triad-2.png';
 import triad3 from '@assets/wallpapers/triad-3.png';
 import triad31 from '@assets/wallpapers/triad-3-1.png';
 
-import peacockWarp from '@assets/wallpapers/PEACOCK-warp.png';
+import peacockWarp from '@assets/wallpapers/PEACOCK-warp.jpg';
 import triasPattern from '@assets/wallpapers/trias-pattern.png';
 
 const THEME_OPTIONS = [

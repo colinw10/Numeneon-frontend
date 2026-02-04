@@ -1,0 +1,272 @@
+[
+  {
+    "id": 1,
+    "term": "ephemeral",
+    "pronunciation": "ih-FEM-er-ul",
+    "partOfSpeech": "adjective",
+    "definition": "Lasting for a very short time; transitory",
+    "sentence": "Social media stories are ephemeral by design, disappearing after 24 hours.",
+    "synonyms": ["fleeting", "transient", "momentary"]
+  },
+  {
+    "id": 2,
+    "term": "ubiquitous",
+    "pronunciation": "yoo-BIK-wih-tus",
+    "partOfSpeech": "adjective",
+    "definition": "Present, appearing, or found everywhere",
+    "sentence": "Smartphones have become ubiquitous in modern society.",
+    "synonyms": ["omnipresent", "pervasive", "universal"]
+  },
+  {
+    "id": 3,
+    "term": "esoteric",
+    "pronunciation": "es-oh-TAIR-ik",
+    "partOfSpeech": "adjective",
+    "definition": "Intended for or understood by only a small group with specialized knowledge",
+    "sentence": "The professor's lecture on quantum mechanics was too esoteric for the general audience.",
+    "synonyms": ["arcane", "obscure", "abstruse"]
+  },
+  {
+    "id": 4,
+    "term": "pragmatic",
+    "pronunciation": "prag-MAT-ik",
+    "partOfSpeech": "adjective",
+    "definition": "Dealing with things sensibly and realistically based on practical considerations",
+    "sentence": "We need a pragmatic solution that works within our budget constraints.",
+    "synonyms": ["practical", "realistic", "sensible"]
+  },
+  {
+    "id": 5,
+    "term": "eloquent",
+    "pronunciation": "EL-oh-kwent",
+    "partOfSpeech": "adjective",
+    "definition": "Fluent, persuasive, and expressive in speech or writing",
+    "sentence": "Her eloquent defense of free speech moved the entire courtroom.",
+    "synonyms": ["articulate", "expressive", "persuasive"]
+  },
+  {
+    "id": 6,
+    "term": "pernicious",
+    "pronunciation": "per-NISH-us",
+    "partOfSpeech": "adjective",
+    "definition": "Having a harmful effect, especially in a gradual or subtle way",
+    "sentence": "The pernicious spread of misinformation undermines public trust in institutions.",
+    "synonyms": ["harmful", "destructive", "detrimental"]
+  },
+  {
+    "id": 7,
+    "term": "ameliorate",
+    "pronunciation": "uh-MEEL-yuh-rayt",
+    "partOfSpeech": "verb",
+    "definition": "To make something bad or unsatisfactory better",
+    "sentence": "The new policies aim to ameliorate the housing crisis in urban areas.",
+    "synonyms": ["improve", "enhance", "alleviate"]
+  },
+  {
+    "id": 8,
+    "term": "obfuscate",
+    "pronunciation": "OB-fuh-skayt",
+    "partOfSpeech": "verb",
+    "definition": "To make obscure, unclear, or unintelligible",
+    "sentence": "Politicians often obfuscate their true intentions with vague language.",
+    "synonyms": ["confuse", "obscure", "muddle"]
+  },
+  {
+    "id": 9,
+    "term": "elucidate",
+    "pronunciation": "ih-LOO-sih-dayt",
+    "partOfSpeech": "verb",
+    "definition": "To make something clear; to explain",
+    "sentence": "The diagram helps elucidate the complex relationship between the components.",
+    "synonyms": ["clarify", "explain", "illuminate"]
+  },
+  {
+    "id": 10,
+    "term": "perfunctory",
+    "pronunciation": "per-FUNK-tor-ee",
+    "partOfSpeech": "adjective",
+    "definition": "Carried out with minimal effort or reflection; mechanical",
+    "sentence": "His perfunctory apology did nothing to repair the damaged relationship.",
+    "synonyms": ["cursory", "superficial", "halfhearted"]
+  },
+  {
+    "id": 11,
+    "term": "cogent",
+    "pronunciation": "KOH-jent",
+    "partOfSpeech": "adjective",
+    "definition": "Clear, logical, and convincing",
+    "sentence": "She presented a cogent argument that swayed the skeptical investors.",
+    "synonyms": ["compelling", "persuasive", "convincing"]
+  },
+  {
+    "id": 12,
+    "term": "sycophant",
+    "pronunciation": "SIK-oh-fant",
+    "partOfSpeech": "noun",
+    "definition": "A person who acts obsequiously to gain advantage; a flatterer",
+    "sentence": "The CEO surrounded himself with sycophants who never challenged his decisions.",
+    "synonyms": ["flatterer", "toady", "yes-man"]
+  },
+  {
+    "id": 13,
+    "term": "recalcitrant",
+    "pronunciation": "rih-KAL-sih-trunt",
+    "partOfSpeech": "adjective",
+    "definition": "Stubbornly resistant to authority or control",
+    "sentence": "The recalcitrant employee refused to follow the new safety protocols.",
+    "synonyms": ["defiant", "obstinate", "uncooperative"]
+  },
+  {
+    "id": 14,
+    "term": "fastidious",
+    "pronunciation": "fa-STID-ee-us",
+    "partOfSpeech": "adjective",
+    "definition": "Very attentive to detail; concerned with accuracy and precision",
+    "sentence": "Her fastidious code reviews caught bugs that others missed.",
+    "synonyms": ["meticulous", "particular", "scrupulous"]
+  },
+  {
+    "id": 15,
+    "term": "laconic",
+    "pronunciation": "luh-KON-ik",
+    "partOfSpeech": "adjective",
+    "definition": "Using very few words; brief and to the point",
+    "sentence": "His laconic reply of 'no' ended the debate instantly.",
+    "synonyms": ["terse", "concise", "succinct"]
+  },
+  {
+    "id": 16,
+    "term": "ostentatious",
+    "pronunciation": "os-ten-TAY-shus",
+    "partOfSpeech": "adjective",
+    "definition": "Characterized by vulgar or pretentious display; designed to impress",
+    "sentence": "The ostentatious mansion seemed out of place in the modest neighborhood.",
+    "synonyms": ["showy", "flashy", "pretentious"]
+  },
+  {
+    "id": 17,
+    "term": "vicarious",
+    "pronunciation": "vy-KAIR-ee-us",
+    "partOfSpeech": "adjective",
+    "definition": "Experienced through imagined participation in another's experience",
+    "sentence": "He lived vicariously through his children's athletic achievements.",
+    "synonyms": ["indirect", "secondhand", "surrogate"]
+  },
+  {
+    "id": 18,
+    "term": "tacit",
+    "pronunciation": "TAS-it",
+    "partOfSpeech": "adjective",
+    "definition": "Understood or implied without being stated explicitly",
+    "sentence": "There was a tacit agreement among the team to never discuss the failed project.",
+    "synonyms": ["implicit", "unspoken", "understood"]
+  },
+  {
+    "id": 19,
+    "term": "superfluous",
+    "pronunciation": "soo-PER-floo-us",
+    "partOfSpeech": "adjective",
+    "definition": "Unnecessary; more than what is needed",
+    "sentence": "The editor removed superfluous adjectives to tighten the prose.",
+    "synonyms": ["excessive", "redundant", "surplus"]
+  },
+  {
+    "id": 20,
+    "term": "juxtapose",
+    "pronunciation": "JUK-stuh-pohz",
+    "partOfSpeech": "verb",
+    "definition": "To place side by side for comparison or contrast",
+    "sentence": "The documentary juxtaposes scenes of wealth and poverty to highlight inequality.",
+    "synonyms": ["contrast", "compare", "set side by side"]
+  },
+  {
+    "id": 21,
+    "term": "verbose",
+    "pronunciation": "ver-BOHS",
+    "partOfSpeech": "adjective",
+    "definition": "Using more words than necessary; wordy",
+    "sentence": "His verbose writing style made the simple concept confusing.",
+    "synonyms": ["wordy", "long-winded", "prolix"]
+  },
+  {
+    "id": 22,
+    "term": "lucid",
+    "pronunciation": "LOO-sid",
+    "partOfSpeech": "adjective",
+    "definition": "Expressed clearly; easy to understand",
+    "sentence": "Her lucid explanation made the complex algorithm accessible to beginners.",
+    "synonyms": ["clear", "intelligible", "comprehensible"]
+  },
+  {
+    "id": 23,
+    "term": "tenacious",
+    "pronunciation": "teh-NAY-shus",
+    "partOfSpeech": "adjective",
+    "definition": "Holding firmly to something; persistent",
+    "sentence": "Her tenacious debugging finally uncovered the elusive race condition.",
+    "synonyms": ["persistent", "determined", "resolute"]
+  },
+  {
+    "id": 24,
+    "term": "acumen",
+    "pronunciation": "AK-yoo-men",
+    "partOfSpeech": "noun",
+    "definition": "The ability to make good judgments and quick decisions",
+    "sentence": "Her business acumen helped the startup navigate multiple funding rounds.",
+    "synonyms": ["shrewdness", "insight", "sagacity"]
+  },
+  {
+    "id": 25,
+    "term": "pedantic",
+    "pronunciation": "peh-DAN-tik",
+    "partOfSpeech": "adjective",
+    "definition": "Excessively concerned with minor details or rules; showing off learning",
+    "sentence": "His pedantic insistence on Oxford commas annoyed his colleagues.",
+    "synonyms": ["nitpicking", "academic", "dogmatic"]
+  },
+  {
+    "id": 26,
+    "term": "equivocate",
+    "pronunciation": "ih-KWIV-oh-kayt",
+    "partOfSpeech": "verb",
+    "definition": "To use ambiguous language to conceal the truth or avoid commitment",
+    "sentence": "The politician equivocated when asked about her stance on the controversial bill.",
+    "synonyms": ["hedge", "evade", "prevaricate"]
+  },
+  {
+    "id": 27,
+    "term": "exacerbate",
+    "pronunciation": "ig-ZAS-er-bayt",
+    "partOfSpeech": "verb",
+    "definition": "To make a problem, bad situation, or feeling worse",
+    "sentence": "Adding more features will only exacerbate the technical debt problem.",
+    "synonyms": ["worsen", "aggravate", "intensify"]
+  },
+  {
+    "id": 28,
+    "term": "acquiesce",
+    "pronunciation": "ak-wee-ES",
+    "partOfSpeech": "verb",
+    "definition": "To accept something reluctantly but without protest",
+    "sentence": "After much debate, the team acquiesced to the client's design requests.",
+    "synonyms": ["consent", "comply", "yield"]
+  },
+  {
+    "id": 29,
+    "term": "intransigent",
+    "pronunciation": "in-TRAN-sih-jent",
+    "partOfSpeech": "adjective",
+    "definition": "Unwilling to change one's views or agree; uncompromising",
+    "sentence": "The intransigent stakeholder refused to budge on the deadline despite the team's concerns.",
+    "synonyms": ["stubborn", "inflexible", "unyielding"]
+  },
+  {
+    "id": 30,
+    "term": "prescient",
+    "pronunciation": "PRESH-ent",
+    "partOfSpeech": "adjective",
+    "definition": "Having knowledge of events before they take place",
+    "sentence": "Her prescient investment in renewable energy paid off decades later.",
+    "synonyms": ["prophetic", "foresighted", "visionary"]
+  }
+]
