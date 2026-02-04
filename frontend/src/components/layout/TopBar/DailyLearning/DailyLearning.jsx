@@ -16,6 +16,7 @@ function DailyLearning({ variant = 'topbar' }) {
     { key: 'loop', icon: 'L', label: 'Loop', data: today.loop, color: '#4ade80' },
     { key: 'method', icon: 'M', label: 'Method', data: today.method, color: '#f97316' },
     { key: 'vocabulary', icon: 'V', label: 'Vocab', data: today.vocabulary, color: '#a78bfa' },
+    { key: 'mythology', icon: 'Ψ', label: 'Myth', data: today.mythology, color: '#fbbf24' },
   ];
 
   const currentCat = categories[activeCategory];
@@ -57,6 +58,20 @@ function DailyLearning({ variant = 'topbar' }) {
         <div className="dls-content" onClick={handleContentClick}>
           <div className="dls-term">{currentCat.data.term}</div>
           <div className="dls-definition">{currentCat.data.definition}</div>
+          
+          {/* Show extra fields if available */}
+          {currentCat.data.code && (
+            <pre className="dls-code">{currentCat.data.code}</pre>
+          )}
+          {currentCat.data.gotcha && (
+            <div className="dls-gotcha">⚠️ {currentCat.data.gotcha}</div>
+          )}
+          {currentCat.data.example && (
+            <div className="dls-example">{currentCat.data.example}</div>
+          )}
+          {currentCat.data.myth && (
+            <div className="dls-myth">{currentCat.data.myth}</div>
+          )}
         </div>
 
         <div className="dls-footer" onClick={handleContentClick}>

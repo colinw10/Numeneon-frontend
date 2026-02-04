@@ -1,0 +1,317 @@
+[
+  {
+    "id": 1,
+    "term": "Zeus",
+    "culture": "Greek",
+    "pronunciation": "ZOOS",
+    "definition": "King of the Olympian gods, ruler of the sky, lightning, thunder, law, order, and justice",
+    "myth": "Zeus overthrew his father Cronus and divided the world with his brothers - he took the sky, Poseidon the sea, and Hades the underworld.",
+    "symbol": "⚡ Thunderbolt"
+  },
+  {
+    "id": 2,
+    "term": "Quetzalcoatl",
+    "culture": "Aztec",
+    "pronunciation": "ket-sahl-koh-AH-tl",
+    "definition": "The Feathered Serpent god of wind, air, and learning. Creator deity who brought knowledge to humanity",
+    "myth": "Quetzalcoatl descended to the underworld to retrieve the bones of ancient humans and created the current race of people by sprinkling his own blood on them.",
+    "symbol": "🐍 Feathered Serpent"
+  },
+  {
+    "id": 3,
+    "term": "Anubis",
+    "culture": "Egyptian",
+    "pronunciation": "ah-NOO-bis",
+    "definition": "God of mummification and the afterlife, protector of graves and guide to the underworld",
+    "myth": "Anubis weighs the hearts of the deceased against the feather of Ma'at to determine their worthiness for the afterlife.",
+    "symbol": "🐺 Jackal"
+  },
+  {
+    "id": 4,
+    "term": "Shiva",
+    "culture": "Hindu",
+    "pronunciation": "SHEE-vah",
+    "definition": "The Destroyer and Transformer, one of the principal deities of Hinduism, part of the Trimurti",
+    "myth": "Shiva performs the cosmic dance of destruction and creation called Tandava, which maintains the cycle of the universe.",
+    "symbol": "🔱 Trident"
+  },
+  {
+    "id": 5,
+    "term": "Odin",
+    "culture": "Norse",
+    "pronunciation": "OH-din",
+    "definition": "The Allfather, god of wisdom, poetry, death, divination, and magic. Ruler of Asgard",
+    "myth": "Odin sacrificed his eye at Mimir's well to gain wisdom and hung himself on Yggdrasil for nine days to learn the secrets of the runes.",
+    "symbol": "👁️ Single Eye"
+  },
+  {
+    "id": 6,
+    "term": "Amaterasu",
+    "culture": "Japanese",
+    "pronunciation": "ah-mah-teh-RAH-soo",
+    "definition": "Goddess of the sun and the universe, ruler of the heavens and ancestor of the Japanese imperial family",
+    "myth": "When Amaterasu hid in a cave, plunging the world into darkness, the other gods lured her out with a mirror and dance.",
+    "symbol": "☀️ Rising Sun"
+  },
+  {
+    "id": 7,
+    "term": "Morrigan",
+    "culture": "Celtic",
+    "pronunciation": "MOR-ih-gan",
+    "definition": "Phantom Queen, goddess of war, fate, and death. Often appears as a trio of sisters or a crow",
+    "myth": "The Morrigan would fly over battlefields as a crow, choosing who would die and influencing the outcome of wars.",
+    "symbol": "🦅 Crow"
+  },
+  {
+    "id": 8,
+    "term": "Anansi",
+    "culture": "West African",
+    "pronunciation": "ah-NAHN-see",
+    "definition": "Trickster god who takes the form of a spider, keeper of all stories and wisdom",
+    "myth": "Anansi tricked the sky god Nyame into giving him ownership of all stories by capturing a python, hornets, and a leopard.",
+    "symbol": "🕷️ Spider"
+  },
+  {
+    "id": 9,
+    "term": "Huitzilopochtli",
+    "culture": "Aztec",
+    "pronunciation": "weet-see-loh-POHCHT-lee",
+    "definition": "God of sun, war, and human sacrifice. Patron deity of the Aztec capital Tenochtitlan",
+    "myth": "Born fully armed from his mother Coatlicue, he immediately defeated his 400 siblings who tried to kill her.",
+    "symbol": "🦅 Hummingbird"
+  },
+  {
+    "id": 10,
+    "term": "Athena",
+    "culture": "Greek",
+    "pronunciation": "uh-THEE-nuh",
+    "definition": "Goddess of wisdom, handicraft, and strategic warfare. Patron of the city of Athens",
+    "myth": "Athena sprang fully grown and armored from the forehead of Zeus after he swallowed her pregnant mother Metis.",
+    "symbol": "🦉 Owl"
+  },
+  {
+    "id": 11,
+    "term": "Thoth",
+    "culture": "Egyptian",
+    "pronunciation": "THOTH",
+    "definition": "God of wisdom, writing, hieroglyphs, science, magic, and the moon. Inventor of writing",
+    "myth": "Thoth invented hieroglyphics and was the scribe who recorded the verdict when hearts were weighed in the afterlife.",
+    "symbol": "🌙 Ibis"
+  },
+  {
+    "id": 12,
+    "term": "Ganesha",
+    "culture": "Hindu",
+    "pronunciation": "guh-NAY-shuh",
+    "definition": "God of beginnings, wisdom, and remover of obstacles. Has an elephant head",
+    "myth": "Shiva beheaded Ganesha not knowing he was his son, then replaced his head with an elephant's to bring him back to life.",
+    "symbol": "🐘 Elephant"
+  },
+  {
+    "id": 13,
+    "term": "Loki",
+    "culture": "Norse",
+    "pronunciation": "LOH-kee",
+    "definition": "Trickster god of mischief, lies, and chaos. Shape-shifter who causes trouble for the gods",
+    "myth": "Loki's children include the wolf Fenrir, the world serpent Jörmungandr, and Hel, goddess of the underworld.",
+    "symbol": "🔥 Fire"
+  },
+  {
+    "id": 14,
+    "term": "Izanagi",
+    "culture": "Japanese",
+    "pronunciation": "ee-zah-NAH-gee",
+    "definition": "Creator deity who with his wife Izanami created the islands of Japan and many gods",
+    "myth": "When Izanagi fled the underworld after seeing his dead wife's rotting form, the gods of purification were born from his cleansing ritual.",
+    "symbol": "🏝️ Islands"
+  },
+  {
+    "id": 15,
+    "term": "Brigid",
+    "culture": "Celtic",
+    "pronunciation": "BREE-jid",
+    "definition": "Triple goddess of poetry, healing, and smithcraft. Associated with fire and spring",
+    "myth": "Brigid's sacred flame at Kildare was tended by 19 priestesses and burned for over 1,000 years until the 13th century.",
+    "symbol": "🔥 Sacred Flame"
+  },
+  {
+    "id": 16,
+    "term": "Eshu",
+    "culture": "Yoruba",
+    "pronunciation": "EH-shoo",
+    "definition": "Divine messenger and trickster, guardian of crossroads and doorways between worlds",
+    "myth": "Eshu carries messages between humans and the Orishas. He must be honored first in any ritual or the prayers won't reach the gods.",
+    "symbol": "🚪 Crossroads"
+  },
+  {
+    "id": 17,
+    "term": "Tezcatlipoca",
+    "culture": "Aztec",
+    "pronunciation": "tez-kaht-lee-POH-kah",
+    "definition": "Smoking Mirror, god of night, sorcery, and the north. Rival of Quetzalcoatl",
+    "myth": "Tezcatlipoca lost his foot when it was bitten off by the earth monster Cipactli during the creation of the world.",
+    "symbol": "🪞 Obsidian Mirror"
+  },
+  {
+    "id": 18,
+    "term": "Poseidon",
+    "culture": "Greek",
+    "pronunciation": "poh-SY-dun",
+    "definition": "God of the sea, storms, earthquakes, and horses. Brother of Zeus",
+    "myth": "Poseidon created horses as a gift to impress Demeter and later gave Athena's city its first horse.",
+    "symbol": "🔱 Trident"
+  },
+  {
+    "id": 19,
+    "term": "Isis",
+    "culture": "Egyptian",
+    "pronunciation": "EYE-sis",
+    "definition": "Goddess of magic, motherhood, and wisdom. One of the most important deities in Egyptian mythology",
+    "myth": "Isis reassembled the dismembered body of her husband Osiris and used magic to conceive their son Horus.",
+    "symbol": "🪽 Throne"
+  },
+  {
+    "id": 20,
+    "term": "Vishnu",
+    "culture": "Hindu",
+    "pronunciation": "VISH-noo",
+    "definition": "The Preserver, maintains cosmic order. Has 10 avatars including Rama and Krishna",
+    "myth": "Vishnu descends to Earth in different forms (avatars) whenever evil threatens to overwhelm good.",
+    "symbol": "🪷 Lotus"
+  },
+  {
+    "id": 21,
+    "term": "Freya",
+    "culture": "Norse",
+    "pronunciation": "FRAY-uh",
+    "definition": "Goddess of love, beauty, fertility, war, and death. Leader of the Valkyries",
+    "myth": "Freya receives half of those who die in battle in her hall Fólkvangr - the other half go to Odin's Valhalla.",
+    "symbol": "🐱 Cat"
+  },
+  {
+    "id": 22,
+    "term": "Susanoo",
+    "culture": "Japanese",
+    "pronunciation": "soo-sah-NOH-oh",
+    "definition": "Storm god and sea god, brother of Amaterasu. Both heroic and troublesome",
+    "myth": "Susanoo slew the eight-headed serpent Yamata no Orochi and found the legendary sword Kusanagi in its tail.",
+    "symbol": "🌊 Storm"
+  },
+  {
+    "id": 23,
+    "term": "Cernunnos",
+    "culture": "Celtic",
+    "pronunciation": "ker-NOO-nos",
+    "definition": "Horned god of wild things, forests, fertility, and the underworld",
+    "myth": "Depicted with antlers and surrounded by animals, Cernunnos represents the cycle of nature, death, and rebirth.",
+    "symbol": "🦌 Antlers"
+  },
+  {
+    "id": 24,
+    "term": "Oya",
+    "culture": "Yoruba",
+    "pronunciation": "OH-yah",
+    "definition": "Warrior goddess of winds, lightning, storms, death, and rebirth",
+    "myth": "Oya guards the gates of cemeteries and is called upon to help souls transition to the afterlife.",
+    "symbol": "💨 Wind"
+  },
+  {
+    "id": 25,
+    "term": "Xolotl",
+    "culture": "Aztec",
+    "pronunciation": "SHOH-lohtl",
+    "definition": "God of lightning, death, and the underworld. Twin brother of Quetzalcoatl with a dog head",
+    "myth": "Xolotl guided the sun through the underworld each night and accompanied the dead on their journey.",
+    "symbol": "🐕 Dog"
+  },
+  {
+    "id": 26,
+    "term": "Hades",
+    "culture": "Greek",
+    "pronunciation": "HAY-deez",
+    "definition": "God of the dead and king of the underworld. Not evil, but stern and fair",
+    "myth": "Hades abducted Persephone to be his queen, leading to the creation of the seasons when she must return each year.",
+    "symbol": "💀 Helm of Darkness"
+  },
+  {
+    "id": 27,
+    "term": "Ra",
+    "culture": "Egyptian",
+    "pronunciation": "RAH",
+    "definition": "Sun god and king of the gods. Sails across the sky each day in his solar barque",
+    "myth": "Each night Ra travels through the underworld and battles the chaos serpent Apophis to ensure the sun rises again.",
+    "symbol": "☀️ Sun Disk"
+  },
+  {
+    "id": 28,
+    "term": "Kali",
+    "culture": "Hindu",
+    "pronunciation": "KAH-lee",
+    "definition": "Goddess of time, creation, destruction, and power. Fierce protector against evil",
+    "myth": "Kali emerged from Durga's forehead in battle and became so intoxicated with destruction that only Shiva could calm her.",
+    "symbol": "⚔️ Sword"
+  },
+  {
+    "id": 29,
+    "term": "Thor",
+    "culture": "Norse",
+    "pronunciation": "THOR",
+    "definition": "God of thunder, lightning, storms, strength, and protection of mankind",
+    "myth": "Thor's hammer Mjölnir always returns to his hand after being thrown and can only be wielded by the worthy.",
+    "symbol": "🔨 Hammer"
+  },
+  {
+    "id": 30,
+    "term": "Tsukuyomi",
+    "culture": "Japanese",
+    "pronunciation": "tsoo-koo-YOH-mee",
+    "definition": "God of the moon, born from Izanagi's right eye when he washed after leaving the underworld",
+    "myth": "Tsukuyomi killed the food goddess Uke Mochi in disgust, causing his sister Amaterasu to never look at him again - separating day and night.",
+    "symbol": "🌙 Moon"
+  },
+  {
+    "id": 31,
+    "term": "Danu",
+    "culture": "Celtic",
+    "pronunciation": "DAH-noo",
+    "definition": "Mother goddess and ancestor of the Tuatha Dé Danann, the supernatural race of Ireland",
+    "myth": "The Tuatha Dé Danann, children of Danu, arrived in Ireland in clouds of mist and defeated the previous inhabitants.",
+    "symbol": "🌊 River"
+  },
+  {
+    "id": 32,
+    "term": "Shango",
+    "culture": "Yoruba",
+    "pronunciation": "SHAHN-goh",
+    "definition": "God of thunder, lightning, fire, and justice. Once a powerful king who became divine",
+    "myth": "Shango was a mortal king who could breathe fire. After his death, he ascended to become an Orisha.",
+    "symbol": "⚡ Double Axe"
+  },
+  {
+    "id": 33,
+    "term": "Tlaloc",
+    "culture": "Aztec",
+    "pronunciation": "TLAH-lok",
+    "definition": "God of rain, fertility, and water. Vital for agriculture in ancient Mexico",
+    "myth": "Tlaloc's paradise Tlalocan was reserved for those who died by drowning, lightning, or water-related diseases.",
+    "symbol": "🌧️ Rain"
+  },
+  {
+    "id": 34,
+    "term": "Apollo",
+    "culture": "Greek",
+    "pronunciation": "uh-POL-oh",
+    "definition": "God of music, poetry, art, sun, light, knowledge, and healing",
+    "myth": "Apollo slew the Python at Delphi and established his oracle there, the most important in ancient Greece.",
+    "symbol": "🎵 Lyre"
+  },
+  {
+    "id": 35,
+    "term": "Sekhmet",
+    "culture": "Egyptian",
+    "pronunciation": "SEK-met",
+    "definition": "Lioness goddess of war, destruction, and healing. 'She who is powerful'",
+    "myth": "Ra sent Sekhmet to punish humanity, but she became so bloodthirsty he had to trick her with beer dyed red to stop the slaughter.",
+    "symbol": "🦁 Lioness"
+  }
+]
