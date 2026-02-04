@@ -300,11 +300,12 @@ function Profile() {
       )}
 
       {/* Timeline River Flow - Three Column Layout */}
+      {/* Pass ALL posts - TimelineRiver handles row-chunking internally */}
       <TimelineRiver 
         viewMode={isOwnProfile ? viewMode : 'timeline'}
-        textPosts={textPosts.slice(0, 12)}
-        mediaPosts={mediaPosts.slice(0, 12)}
-        achievementPosts={achievementPosts.slice(0, 12)}
+        textPosts={textPosts}
+        mediaPosts={mediaPosts}
+        achievementPosts={achievementPosts}
         feedTextPosts={feedTextPosts}
         feedMediaPosts={feedMediaPosts}
         feedAchievementPosts={feedAchievementPosts}

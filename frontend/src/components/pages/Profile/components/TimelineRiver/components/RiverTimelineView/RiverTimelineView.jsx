@@ -19,44 +19,57 @@ import './RiverTimelineView.scss';
 const CAROUSEL_LIMIT = 12;
 
 /**
- * Chunk posts into rows of max CAROUSEL_LIMIT (12)
- * Posts are assumed to be sorted newest-first from the API
+ * Chunk a single category's posts aligned to a specified row count.
+ * Row 0 gets the remainder (newest), subsequent rows get 12 each.
+ * Empty arrays fill rows where this category has no posts.
  * 
- * Example: 15 posts → [[posts 0-2 (newest 3)], [posts 3-14 (older 12)]]
- * Row 0 (top): 3 newest posts
- * Row 1 (bottom): 12 older posts
+ * KEY DESIGN: When ANY category hits 12+, ALL categories get aligned to the same row count.
+ * This keeps newest posts synchronized across all types in Row 0.
  */
-const chunkPostsIntoRows = (posts) => {
-  if (!posts || posts.length === 0) return [];
-  if (posts.length <= CAROUSEL_LIMIT) return [posts];
+const chunkPostsAligned = (posts, totalRows) => {
+  if (!posts || posts.length === 0) {
+    return Array(totalRows).fill([]);
+  }
   
-  const rows = [];
-  const totalPosts = posts.length;
-  const remainder = totalPosts % CAROUSEL_LIMIT;
+  const chunks = [];
+  const remainder = posts.length % CAROUSEL_LIMIT;
   
-  // First row gets the remainder (newest posts) if there is one
-  // Otherwise first row gets full 12
-  if (remainder > 0) {
-    rows.push(posts.slice(0, remainder));
-    // Remaining posts chunked into groups of 12
-    for (let i = remainder; i < totalPosts; i += CAROUSEL_LIMIT) {
-      rows.push(posts.slice(i, i + CAROUSEL_LIMIT));
+  if (posts.length <= CAROUSEL_LIMIT) {
+    // Fits in one row
+    chunks.push(posts);
+  } else if (remainder > 0) {
+    // Row 0: gets remainder (newest posts)
+    chunks.push(posts.slice(0, remainder));
+    // Remaining rows get 12 each
+    for (let i = remainder; i < posts.length; i += CAROUSEL_LIMIT) {
+      chunks.push(posts.slice(i, i + CAROUSEL_LIMIT));
     }
   } else {
-    // All rows have exactly 12
-    for (let i = 0; i < totalPosts; i += CAROUSEL_LIMIT) {
-      rows.push(posts.slice(i, i + CAROUSEL_LIMIT));
+    // Evenly divisible - each row gets 12
+    for (let i = 0; i < posts.length; i += CAROUSEL_LIMIT) {
+      chunks.push(posts.slice(i, i + CAROUSEL_LIMIT));
     }
   }
   
-  return rows;
+  // Pad with empty arrays if this category has fewer rows than total
+  while (chunks.length < totalRows) {
+    chunks.push([]);
+  }
+  
+  return chunks;
 };
 
 /**
- * Calculate how many rows we need based on the category with most posts
+ * Calculate how many rows we need based on the largest category
  */
-const calculateRowCount = (textRows, mediaRows, achievementRows) => {
-  return Math.max(textRows.length, mediaRows.length, achievementRows.length);
+const calculateRowCount = (textPosts, mediaPosts, achievementPosts) => {
+  const maxCategoryLength = Math.max(
+    (textPosts || []).length,
+    (mediaPosts || []).length,
+    (achievementPosts || []).length
+  );
+  if (maxCategoryLength <= CAROUSEL_LIMIT) return 1;
+  return Math.ceil(maxCategoryLength / CAROUSEL_LIMIT);
 };
 
 /**
@@ -122,13 +135,14 @@ function RiverTimelineView({
     }
     onCardClick?.(post);
   };
-  // Chunk each category into rows
-  const textRows = chunkPostsIntoRows(textPosts);
-  const mediaRows = chunkPostsIntoRows(mediaPosts);
-  const achievementRows = chunkPostsIntoRows(achievementPosts);
+  // Calculate total rows needed (based on largest category)
+  const rowCount = calculateRowCount(textPosts, mediaPosts, achievementPosts);
   
-  // Total number of rows needed
-  const rowCount = calculateRowCount(textRows, mediaRows, achievementRows);
+  // Chunk each category into aligned rows
+  // KEY: All categories align to same row count when ANY exceeds 12
+  const textRows = chunkPostsAligned(textPosts, rowCount);
+  const mediaRows = chunkPostsAligned(mediaPosts, rowCount);
+  const achievementRows = chunkPostsAligned(achievementPosts, rowCount);
   
   // Determine which category is most recent
   const mostRecentType = getMostRecentType(textPosts, mediaPosts, achievementPosts);

@@ -53,26 +53,82 @@ const chunkPostsIntoRows = (posts) => {
 };
 
 /**
- * Split a user's grouped data into multiple rows if any category exceeds 12 posts.
+ * Split a user's grouped data into multiple rows if ANY category exceeds 12 posts.
  * Returns an array of rowData objects, each with max 12 posts per category.
+ * 
+ * KEY DESIGN: When ANY category hits 12+, a new row is created for ALL categories.
+ * This keeps the timeline synchronized - Row 0 always = newest posts across ALL types.
+ * 
+ * Example: 15 thoughts, 3 media, 1 milestone
+ *   Row 0 (newest): thoughts[0-2], media[0-2], milestones[0]  ← all newest
+ *   Row 1 (older):  thoughts[3-14], empty, empty              ← overflow from thoughts
  */
 const splitGroupIntoRows = (groupData) => {
   const { user, thoughts = [], media = [], milestones = [] } = groupData;
   
-  const thoughtRows = chunkPostsIntoRows(thoughts);
-  const mediaRows = chunkPostsIntoRows(media);
-  const milestoneRows = chunkPostsIntoRows(milestones);
+  // Calculate how many rows we need based on the LARGEST category
+  const maxCategoryLength = Math.max(thoughts.length, media.length, milestones.length);
   
-  const rowCount = Math.max(thoughtRows.length, mediaRows.length, milestoneRows.length);
+  // If no category exceeds limit, single row
+  if (maxCategoryLength <= CAROUSEL_LIMIT) {
+    return [{
+      user,
+      thoughts,
+      media,
+      milestones,
+      rowIndex: 0,
+    }];
+  }
   
+  // Calculate row count based on largest category
+  const rowCount = Math.ceil(maxCategoryLength / CAROUSEL_LIMIT);
+  
+  // Helper: chunk a single category's posts aligned to global row structure
+  // Row 0 gets the "remainder" (newest), subsequent rows get 12 each
+  const chunkAligned = (posts, totalRows) => {
+    if (!posts || posts.length === 0) {
+      return Array(totalRows).fill([]);
+    }
+    
+    const chunks = [];
+    const remainder = posts.length % CAROUSEL_LIMIT;
+    
+    // Row 0: gets remainder (or full 12 if evenly divisible)
+    if (remainder > 0) {
+      chunks.push(posts.slice(0, remainder));
+      // Remaining rows get 12 each
+      for (let i = remainder; i < posts.length; i += CAROUSEL_LIMIT) {
+        chunks.push(posts.slice(i, i + CAROUSEL_LIMIT));
+      }
+    } else {
+      // Evenly divisible - each row gets 12
+      for (let i = 0; i < posts.length; i += CAROUSEL_LIMIT) {
+        chunks.push(posts.slice(i, i + CAROUSEL_LIMIT));
+      }
+    }
+    
+    // Pad with empty arrays if this category has fewer rows than total
+    while (chunks.length < totalRows) {
+      chunks.push([]);
+    }
+    
+    return chunks;
+  };
+  
+  // Chunk each category aligned to the same row structure
+  const thoughtChunks = chunkAligned(thoughts, rowCount);
+  const mediaChunks = chunkAligned(media, rowCount);
+  const milestoneChunks = chunkAligned(milestones, rowCount);
+  
+  // Build rows
   const rows = [];
   for (let i = 0; i < rowCount; i++) {
     rows.push({
       user,
-      thoughts: thoughtRows[i] || [],
-      media: mediaRows[i] || [],
-      milestones: milestoneRows[i] || [],
-      rowIndex: i, // Track which row this is
+      thoughts: thoughtChunks[i] || [],
+      media: mediaChunks[i] || [],
+      milestones: milestoneChunks[i] || [],
+      rowIndex: i,
     });
   }
   

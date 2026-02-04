@@ -19,29 +19,73 @@ import RiverSmartDeck from '../RiverSmartDeck';
 const CAROUSEL_LIMIT = 12;
 
 /**
- * Chunk posts into rows of max CAROUSEL_LIMIT (12)
- * Newest posts in first chunk, older in subsequent chunks
+ * Chunk a single category's posts aligned to a specified row count.
+ * Row 0 gets the remainder (newest), subsequent rows get 12 each.
+ * Empty arrays fill rows where this category has no posts.
  */
-const chunkPostsIntoRows = (posts) => {
-  if (!posts || posts.length === 0) return [];
-  if (posts.length <= CAROUSEL_LIMIT) return [posts];
+const chunkPostsAligned = (posts, totalRows) => {
+  if (!posts || posts.length === 0) {
+    return Array(totalRows).fill([]);
+  }
   
-  const rows = [];
-  const totalPosts = posts.length;
-  const remainder = totalPosts % CAROUSEL_LIMIT;
+  const chunks = [];
+  const remainder = posts.length % CAROUSEL_LIMIT;
   
-  if (remainder > 0) {
-    rows.push(posts.slice(0, remainder));
-    for (let i = remainder; i < totalPosts; i += CAROUSEL_LIMIT) {
-      rows.push(posts.slice(i, i + CAROUSEL_LIMIT));
+  if (posts.length <= CAROUSEL_LIMIT) {
+    // Fits in one row
+    chunks.push(posts);
+  } else if (remainder > 0) {
+    // Row 0: gets remainder (newest posts)
+    chunks.push(posts.slice(0, remainder));
+    // Remaining rows get 12 each
+    for (let i = remainder; i < posts.length; i += CAROUSEL_LIMIT) {
+      chunks.push(posts.slice(i, i + CAROUSEL_LIMIT));
     }
   } else {
-    for (let i = 0; i < totalPosts; i += CAROUSEL_LIMIT) {
-      rows.push(posts.slice(i, i + CAROUSEL_LIMIT));
+    // Evenly divisible - each row gets 12
+    for (let i = 0; i < posts.length; i += CAROUSEL_LIMIT) {
+      chunks.push(posts.slice(i, i + CAROUSEL_LIMIT));
     }
   }
   
-  return rows;
+  // Pad with empty arrays if this category has fewer rows than total
+  while (chunks.length < totalRows) {
+    chunks.push([]);
+  }
+  
+  return chunks;
+};
+
+/**
+ * Split a friend's posts into aligned rows.
+ * KEY DESIGN: When ANY category hits 12+, ALL categories get aligned to the same row count.
+ * This keeps newest posts synchronized across all types in Row 0.
+ */
+const splitFriendIntoRows = (friend) => {
+  const { thoughts = [], media = [], milestones = [] } = friend;
+  
+  // Calculate max category length to determine row count
+  const maxCategoryLength = Math.max(thoughts.length, media.length, milestones.length);
+  
+  // Single row if nothing exceeds limit
+  if (maxCategoryLength <= CAROUSEL_LIMIT) {
+    return {
+      thoughtRows: thoughts.length > 0 ? [thoughts] : [],
+      mediaRows: media.length > 0 ? [media] : [],
+      milestoneRows: milestones.length > 0 ? [milestones] : [],
+      rowCount: 1
+    };
+  }
+  
+  // Multiple rows needed - align all categories
+  const rowCount = Math.ceil(maxCategoryLength / CAROUSEL_LIMIT);
+  
+  return {
+    thoughtRows: chunkPostsAligned(thoughts, rowCount),
+    mediaRows: chunkPostsAligned(media, rowCount),
+    milestoneRows: chunkPostsAligned(milestones, rowCount),
+    rowCount
+  };
 };
 
 /**
@@ -139,17 +183,11 @@ function RiverFeedView({
     onCardClick?.(post);
   };
   
-  // Pre-process friends to chunk their posts into rows
+  // Pre-process friends to chunk their posts into aligned rows
+  // KEY: When ANY category exceeds 12, ALL categories align to same row count
   const friendsWithRows = friendsGrouped.map(friend => ({
     ...friend,
-    thoughtRows: chunkPostsIntoRows(friend.thoughts),
-    mediaRows: chunkPostsIntoRows(friend.media),
-    milestoneRows: chunkPostsIntoRows(friend.milestones),
-    rowCount: Math.max(
-      chunkPostsIntoRows(friend.thoughts).length,
-      chunkPostsIntoRows(friend.media).length,
-      chunkPostsIntoRows(friend.milestones).length
-    )
+    ...splitFriendIntoRows(friend)
   }));
 
   // Render a thought column for a friend at a specific row
