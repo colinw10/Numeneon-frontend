@@ -244,6 +244,27 @@ function TimelineRiverRow({ rowData, onCommentClick, activeCommentPostId, commen
     return false;
   };
   
+  // Handle reply to comment (with @mention for notifications)
+  const handleReplyToComment = async (postId, replyData) => {
+    // replyData contains: content, mentioned_user_id, mentioned_username, parent_comment_id
+    const result = await createReply(postId, { 
+      content: replyData.content, 
+      type: 'thoughts',
+      mentioned_user_id: replyData.mentioned_user_id,
+      mentioned_username: replyData.mentioned_username,
+      reply_to_comment_id: replyData.parent_comment_id
+    });
+    if (result.success) {
+      setThreadReplies(prev => ({
+        ...prev,
+        [postId]: [...(prev[postId] || []), result.data]
+      }));
+      setExpandedThreadId(postId);
+      return true;
+    }
+    return false;
+  };
+  
   // Handle reply update
   const handleUpdateReply = async (replyId, data) => {
     const result = await updatePost(replyId, data);
@@ -351,6 +372,7 @@ function TimelineRiverRow({ rowData, onCommentClick, activeCommentPostId, commen
         onReplySubmit={handleReplySubmit}
         onUpdateReply={handleUpdateReply}
         onDeleteReply={handleDeleteReply}
+        onReplyToComment={handleReplyToComment}
         // Comment composer props
         activeCommentPostId={activeCommentPostId}
         commentText={commentText}

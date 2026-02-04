@@ -55,6 +55,7 @@ function PostCard({
   onReplySubmit,
   onUpdateReply,
   onDeleteReply,
+  onReplyToComment, // New: Reply to a comment with @mention
   // Comment composer props
   activeCommentPostId,
   commentText,
@@ -393,6 +394,7 @@ function PostCard({
           onCollapse={() => onToggleThread(post.id)}
           onUpdateReply={onUpdateReply}
           onDeleteReply={onDeleteReply}
+          onReplyToComment={onReplyToComment}
           showAllReplies={showAllReplies[post.id]}
           onToggleShowAll={() => onToggleShowAllReplies(post.id)}
         />
@@ -451,6 +453,7 @@ function PostCard({
                     onCollapse={() => {}}
                     onUpdateReply={onUpdateReply}
                     onDeleteReply={onDeleteReply}
+                    onReplyToComment={onReplyToComment}
                     showAllReplies={showAllReplies[post.id]}
                     onToggleShowAll={() => onToggleShowAllReplies(post.id)}
                   />

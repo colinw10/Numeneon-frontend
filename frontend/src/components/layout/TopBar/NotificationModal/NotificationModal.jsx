@@ -78,6 +78,9 @@ function NotificationModal({ isOpen, onClose }) {
                   } else if (notif.type === 'post_comment') {
                     // Post comments - go to own profile to see the commented post
                     navigate(`/profile`);
+                  } else if (notif.type === 'comment_reply') {
+                    // Comment reply - go to own profile to see the reply
+                    navigate(`/profile`);
                   } else if (notif.type === 'friend_accepted') {
                     // Friend accepted - go to the new friend's profile
                     navigate(`/profile/${notif.friend?.username}`);
@@ -92,18 +95,26 @@ function NotificationModal({ isOpen, onClose }) {
                       <span className="notif-name">
                         {notif.type === 'post_comment' 
                           ? (notif.commenter?.first_name || notif.commenter?.username || 'Someone')
-                          : notif.type === 'friend_accepted'
-                            ? (notif.friend?.first_name || notif.friend?.username || 'Someone')
-                            : (notif.author?.username || 'Someone')}
+                          : notif.type === 'comment_reply'
+                            ? (notif.replier?.first_name || notif.replier?.username || 'Someone')
+                            : notif.type === 'friend_accepted'
+                              ? (notif.friend?.first_name || notif.friend?.username || 'Someone')
+                              : (notif.author?.username || 'Someone')}
                       </span>
                       {' '}{notif.type === 'wall_post' 
                         ? 'posted on your wall' 
                         : notif.type === 'post_comment'
                           ? 'commented on your post'
-                          : notif.type === 'friend_accepted'
-                            ? 'accepted your friend request'
-                            : (notif.message || 'posted something')}
+                          : notif.type === 'comment_reply'
+                            ? 'replied to your comment'
+                            : notif.type === 'friend_accepted'
+                              ? 'accepted your friend request'
+                              : (notif.message || 'posted something')}
                     </p>
+                    {/* Show preview for comment replies */}
+                    {notif.type === 'comment_reply' && notif.reply?.content && (
+                      <p className="notif-preview">"{notif.reply.content.substring(0, 50)}{notif.reply.content.length > 50 ? '...' : ''}"</p>
+                    )}
                     <span className="notif-time">
                       {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>

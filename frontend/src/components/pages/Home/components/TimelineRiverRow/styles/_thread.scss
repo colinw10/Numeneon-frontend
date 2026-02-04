@@ -355,3 +355,123 @@
     color: var(--color-cyan);
   }
 }
+
+/* ============================================
+   REPLY TO COMMENT - @mention styles
+   ============================================ */
+
+/* @mention tag in comment content */
+.mention-tag {
+  color: var(--color-cyan);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: var(--color-magenta);
+    text-decoration: underline;
+  }
+}
+
+/* Reply button style */
+.reply-action-btn--reply {
+  &:hover {
+    color: var(--color-cyan) !important;
+    background: rgba(79, 255, 255, 0.1) !important;
+  }
+}
+
+/* Reply to comment form */
+.reply-to-comment-form {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(79, 255, 255, 0.15);
+}
+
+.reply-to-input-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.reply-to-input {
+  width: 100%;
+  background:
+    linear-gradient(145deg, #0a0a0a, #000000),
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%);
+  background-size: 100% 100%, 150% 150%;
+  background-position: 0% 50%, 75% 75%;
+  background-blend-mode: overlay;
+  border: 1px solid rgba(79, 255, 255, 0.3);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-family: 'degular', sans-serif;
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  resize: none;
+  outline: none;
+  transition: border-color 0.3s ease;
+  min-height: 32px;
+  box-sizing: border-box;
+  
+  &:focus {
+    border-color: rgba(79, 255, 255, 0.5);
+  }
+  
+  &::placeholder {
+    color: var(--text-muted);
+  }
+}
+
+.reply-to-actions {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+}
+
+.reply-to-cancel {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  color: rgba(255, 100, 100, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  
+  &:hover {
+    color: #ff4444;
+    background: rgba(255, 68, 68, 0.1);
+  }
+}
+
+.reply-to-submit {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  color: rgba(79, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  
+  &:hover:not(:disabled) {
+    color: var(--color-cyan);
+    background: rgba(79, 255, 255, 0.1);
+    filter: drop-shadow(0 0 6px rgba(79, 255, 255, 0.4));
+  }
+  
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}

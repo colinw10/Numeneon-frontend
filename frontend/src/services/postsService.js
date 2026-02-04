@@ -50,6 +50,19 @@ const postsService = {
     });
     return response.data;
   },
+  // POST reply to a comment (with @mention for notifications)
+  createCommentReply: async (postId, data) => {
+    // data should include: content, mentioned_user_id, mentioned_username, parent_comment_id
+    const response = await apiClient.post("/posts/", {
+      content: data.content,
+      parent_id: postId,
+      mentioned_user_id: data.mentioned_user_id,
+      mentioned_username: data.mentioned_username,
+      reply_to_comment_id: data.parent_comment_id,
+      type: 'thoughts'
+    });
+    return response.data;
+  },
   // PATCH /api/posts/:id/ → update post (partial update, not full replace)
   update: async (id, data) => {
     // data is an object like { content: "edited text" }

@@ -155,6 +155,16 @@
   line-height: 1.5;
 }
 
+.notif-preview {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 4px 0 0 0;
+  padding-left: 8px;
+  border-left: 2px solid rgba(79, 255, 255, 0.3);
+  opacity: 0.8;
+}
+
 .notif-name {
   font-family: var(--font-title);
   font-weight: 500;

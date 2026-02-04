@@ -73,6 +73,24 @@ export const NotificationProvider = ({ children }) => {
       });
     };
 
+    // Listen for comment replies (when someone replies to your comment with @mention)
+    const handleCommentReply = (data) => {
+      console.log('🔔 Comment reply notification:', data);
+      addNotification({
+        id: Date.now(),
+        type: 'comment_reply',
+        read: false,
+        created_at: new Date().toISOString(),
+        message: data.message || `${data.replier?.first_name || data.replier?.username || 'Someone'} replied to your comment`,
+        post: data.post,
+        comment: data.comment,
+        reply: data.reply,
+        replier: data.replier,
+        mentioned_username: data.mentioned_username,
+        ...data
+      });
+    };
+
     // Listen for friend request accepted (when someone accepts your friend request)
     const handleFriendAccepted = (data) => {
       console.log('🔔 Friend accepted notification:', data);
@@ -91,6 +109,7 @@ export const NotificationProvider = ({ children }) => {
     const unsubscribeNewPost = subscribe('new_post', handleNewPost);
     const unsubscribeWallPost = subscribe('wall_post', handleWallPost);
     const unsubscribePostComment = subscribe('post_comment', handlePostComment);
+    const unsubscribeCommentReply = subscribe('comment_reply', handleCommentReply);
     const unsubscribeFriendAccepted = subscribe('friend_accepted', handleFriendAccepted);
 
     return () => {
@@ -98,6 +117,7 @@ export const NotificationProvider = ({ children }) => {
       unsubscribeNewPost();
       unsubscribeWallPost();
       unsubscribePostComment();
+      unsubscribeCommentReply();
       unsubscribeFriendAccepted();
     };
   }, [user, subscribe]);
