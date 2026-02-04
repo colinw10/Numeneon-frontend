@@ -20,6 +20,7 @@ import {
   CameraLensIcon
 } from '@assets/icons';
 import { useFriends, useMessages } from '@contexts';
+import AvatarUploadModal from '../AvatarUploadModal';
 
 // Color variants for interactive letters
 const colorVariants = ['magenta', 'cyan', 'aqua', 'purple', 'blue'];
@@ -28,6 +29,7 @@ function ProfileCardFront({ setIsFlipped, posts, user, isOwnProfile = true }) {
   // Track which letters have been hovered (for "hover all" replay)
   const hoveredRef = useRef(new Set());
   const isAnimatingRef = useRef(false);
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [replayGlitch, setReplayGlitch] = useState(false);
   const [showShareToast, setShowShareToast] = useState(false);
   const [friendRequestPending, setFriendRequestPending] = useState(false);
@@ -165,11 +167,11 @@ function ProfileCardFront({ setIsFlipped, posts, user, isOwnProfile = true }) {
         {/* Overlapping avatar container with engagement ring */}
         <div className="avatar-wrapper">
           <div className="avatar-engagement-ring">
-            <svg width="130" height="130" viewBox="0 0 130 130">
+            <svg width="150" height="150" viewBox="0 0 150 150">
               {/* Background ring */}
               <circle 
                 className="ring-bg" 
-                cx="65" cy="65" r="60" 
+                cx="75" cy="75" r="70" 
                 fill="none" 
                 stroke="rgba(255,255,255,0.15)" 
                 strokeWidth="6"
@@ -177,27 +179,43 @@ function ProfileCardFront({ setIsFlipped, posts, user, isOwnProfile = true }) {
               {/* Progress ring - animates on load */}
               <circle 
                 className="ring-progress" 
-                cx="65" cy="65" r="60" 
+                cx="75" cy="75" r="70" 
                 fill="none" 
                 stroke="#1ae784"
                 strokeWidth="6"
                 strokeLinecap="round"
-                strokeDasharray="377"
-                strokeDashoffset="377"
-                transform="rotate(-90 65 65)"
+                strokeDasharray="440"
+                strokeDashoffset="440"
+                transform="rotate(-90 75 75)"
               />
             </svg>
           </div>
           <div className="profile-avatar">
-            <UserIcon size={80} />
+            {user?.profile?.avatar ? (
+              <img src={user.profile.avatar} alt={user.username} className="avatar-image" />
+            ) : (
+              <UserIcon size={90} />
+            )}
             {isOwnProfile && (
-              <button className="avatar-camera-badge" title="Upload photo">
+              <button 
+                className="avatar-camera-badge" 
+                title="Upload photo"
+                onClick={() => setShowAvatarModal(true)}
+              >
                 <CameraLensIcon size={18} />
               </button>
             )}
           </div>
         </div>
       </div>
+
+      {/* Avatar Upload Modal */}
+      {isOwnProfile && (
+        <AvatarUploadModal 
+          isOpen={showAvatarModal} 
+          onClose={() => setShowAvatarModal(false)} 
+        />
+      )}
 
       {/* Two-Column Profile Meta */}
       <div className="profile-meta river-meta">

@@ -635,7 +635,7 @@
   
   .quick-composer-textarea {
     min-height: 44px;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.75rem 0.5rem 76px;
     font-size: var(--font-size-body);
     
     &::placeholder {
@@ -657,6 +657,11 @@
       width: 18px;
       height: 18px;
     }
+  }
+  
+  .quick-composer-action-btn {
+    width: 36px;
+    min-width: 36px;
   }
   
   .quick-composer-expand-btn {
@@ -686,7 +691,7 @@
 @media (max-width: 480px) {
   .quick-composer-textarea {
     min-height: 40px;
-    padding: 0.4rem 0.6rem;
+    padding: 0.4rem 0.6rem 0.4rem 76px;
     font-size: var(--font-size-sm);
     
     &::placeholder {

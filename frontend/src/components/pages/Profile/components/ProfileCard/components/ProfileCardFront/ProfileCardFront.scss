@@ -71,8 +71,8 @@
 /* Engagement ring around avatar */
 .profile-card-front .avatar-engagement-ring {
   position: absolute;
-  width: 130px;
-  height: 130px;
+  width: 150px;
+  height: 150px;
   z-index: 1;
   pointer-events: none;
   
@@ -114,8 +114,8 @@
 }
 
 .profile-card-front .profile-avatar {
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   background: linear-gradient(135deg, rgba(26, 115, 231, 0.3), rgba(220, 8, 188, 0.3));
   display: flex;
@@ -137,6 +137,13 @@
 .profile-card-front .profile-avatar > svg {
   color: rgba(255, 255, 255, 0.9);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.profile-card-front .profile-avatar .avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 /* Camera badge for photo upload */
@@ -779,8 +786,8 @@
   }
   
   .profile-card-front .profile-avatar {
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
   }
   
   .profile-card-front .profile-avatar svg {
@@ -843,12 +850,12 @@
   
   /* Scale down engagement ring for mobile */
   .profile-card-front .avatar-engagement-ring {
-    width: 80px;
-    height: 80px;
+    width: 110px;
+    height: 110px;
     
     svg {
-      width: 80px;
-      height: 80px;
+      width: 110px;
+      height: 110px;
       filter: drop-shadow(0 0 6px rgba(26, 231, 132, 0.4));
     }
     
