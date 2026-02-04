@@ -362,10 +362,22 @@
 
 /* @mention tag in comment content */
 .mention-tag {
-  color: var(--color-cyan);
   font-weight: 600;
   cursor: pointer;
   transition: color 0.2s ease;
+  
+  /* Type-based colors matching category headers */
+  &--thoughts {
+    color: #1ce0e0; /* cyan/blue */
+  }
+  
+  &--media {
+    color: #ad7afe; /* purple */
+  }
+  
+  &--milestones {
+    color: #30c87f; /* green */
+  }
   
   &:hover {
     color: var(--color-magenta);

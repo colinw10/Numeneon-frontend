@@ -238,7 +238,7 @@ function ThreadView({
                     {reply.content.split(/(@\w+)/g).map((part, index) => {
                       if (part.startsWith('@')) {
                         return (
-                          <span key={index} className="mention-tag">
+                          <span key={index} className={`mention-tag mention-tag--${postType}`}>
                             {part}
                           </span>
                         );

@@ -247,13 +247,13 @@ function TimelineRiverRow({ rowData, onCommentClick, activeCommentPostId, commen
   // Handle reply to comment (with @mention for notifications)
   const handleReplyToComment = async (postId, replyData) => {
     // replyData contains: content, mentioned_user_id, mentioned_username, parent_comment_id
+    // Only send content and type - the @mention is already in the content text
+    // Backend will need separate endpoint for mention notifications
     const result = await createReply(postId, { 
       content: replyData.content, 
-      type: 'thoughts',
-      mentioned_user_id: replyData.mentioned_user_id,
-      mentioned_username: replyData.mentioned_username,
-      reply_to_comment_id: replyData.parent_comment_id
+      type: 'thoughts'
     });
+    console.log('🔵 Reply to comment result:', result);
     if (result.success) {
       setThreadReplies(prev => ({
         ...prev,
@@ -262,6 +262,7 @@ function TimelineRiverRow({ rowData, onCommentClick, activeCommentPostId, commen
       setExpandedThreadId(postId);
       return true;
     }
+    console.error('❌ Reply to comment failed:', result.error);
     return false;
   };
   
