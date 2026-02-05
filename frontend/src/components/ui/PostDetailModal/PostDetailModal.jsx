@@ -7,6 +7,7 @@ import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { usePosts } from '@contexts/PostsContext';
 import { useAuth } from '@contexts/AuthContext';
+import postsService from '@services/postsService';
 import { 
   CloseIcon, 
   UserIcon, 
@@ -30,13 +31,40 @@ function PostDetailModal({ postId, onClose }) {
   const [replies, setReplies] = useState([]);
   const [isLoadingReplies, setIsLoadingReplies] = useState(false);
   
+  // State for the post itself (may need to fetch from API)
+  const [post, setPost] = useState(null);
+  const [isLoadingPost, setIsLoadingPost] = useState(true);
+  const [postError, setPostError] = useState(null);
+  
   // State for editing/deleting comments
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingCommentContent, setEditingCommentContent] = useState('');
   const [deletingCommentId, setDeletingCommentId] = useState(null);
   
-  // Find the post from context
-  const post = posts.find(p => p.id === postId);
+  // Fetch post - first check context, then fetch from API
+  useEffect(() => {
+    if (!postId) return;
+    
+    // First, try to find in local context
+    const localPost = posts.find(p => p.id === postId);
+    if (localPost) {
+      setPost(localPost);
+      setIsLoadingPost(false);
+    } else {
+      // Not in context, fetch from API
+      setIsLoadingPost(true);
+      postsService.getById(postId)
+        .then(fetchedPost => {
+          setPost(fetchedPost);
+          setIsLoadingPost(false);
+        })
+        .catch(err => {
+          console.error('Failed to fetch post:', err);
+          setPostError('Could not load post');
+          setIsLoadingPost(false);
+        });
+    }
+  }, [postId, posts]);
   
   // Fetch replies when modal opens
   useEffect(() => {
@@ -60,7 +88,8 @@ function PostDetailModal({ postId, onClose }) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
   
-  if (!post) {
+  // Show loading or error state
+  if (isLoadingPost || !post) {
     return createPortal(
       <div className="post-detail-overlay" onClick={onClose}>
         <div className="post-detail-content post-detail-content--loading" onClick={(e) => e.stopPropagation()}>
@@ -68,7 +97,11 @@ function PostDetailModal({ postId, onClose }) {
             <CloseIcon size={24} />
           </button>
           <div className="post-detail-loading">
-            <p>Loading post...</p>
+            {postError ? (
+              <p style={{ color: '#ff6b6b' }}>{postError}</p>
+            ) : (
+              <p>Loading post...</p>
+            )}
           </div>
         </div>
       </div>,
