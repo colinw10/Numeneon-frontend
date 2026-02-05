@@ -12,7 +12,6 @@ import {
   ShareIcon,
   CheckIcon,
   MoreHorizontalIcon,
-  ActivityIcon,
   AddFriendIcon,
   FriendsIcon,
   ClockIcon,
@@ -315,11 +314,8 @@ function ProfileCardFront({ setIsFlipped, posts, user, isOwnProfile = true }) {
             <button className="action-icon-btn share-btn" title="Share Profile" onClick={handleShareProfile}>
               <ShareIcon size={18} />
             </button>
-            <button className="action-icon-btn more-btn" title="More Options">
+            <button className="action-icon-btn more-btn" onClick={() => setIsFlipped(true)} title="Analytics">
               <MoreHorizontalIcon size={18} />
-            </button>
-            <button className="action-icon-btn analytics-btn" onClick={() => setIsFlipped(true)} title="Analytics">
-              <ActivityIcon size={18} />
             </button>
           </>
         )}

@@ -1,5 +1,12 @@
 import { useState, useRef } from 'react';
 import './About.scss';
+import { 
+  ThoughtBubbleIcon, 
+  ImageIcon, 
+  MilestoneIcon, 
+  GuitarIcon, 
+  TargetReticleIcon 
+} from '@assets/icons';
 
 // 🟣 CRYSTAL - Friends System Lead
 // About.jsx - About page
@@ -89,12 +96,108 @@ function About() {
           </blockquote>
         </div>
 
+        <div className="grid-item river-timeline feature-highlight">
+          <span className="item-number">◊</span>
+          <h2>The River Timeline</h2>
+          <p className="feature-intro">
+            Three parallel streams flowing through your feed. Not an algorithm—a river.
+          </p>
+          <div className="river-columns">
+            <div className="river-col thoughts">
+              <span className="col-icon">
+                <ThoughtBubbleIcon size={24} className="smart-deck-icon-svg" />
+              </span>
+              <span className="col-label">Thoughts</span>
+              <span className="col-desc">Quick takes, reflections</span>
+            </div>
+            <div className="river-col media">
+              <span className="col-icon">
+                <ImageIcon size={24} className="smart-deck-icon-svg" />
+              </span>
+              <span className="col-label">Media</span>
+              <span className="col-desc">Photos, videos, visuals</span>
+            </div>
+            <div className="river-col milestones">
+              <span className="col-icon">
+                <MilestoneIcon size={24} className="smart-deck-icon-svg" />
+              </span>
+              <span className="col-label">Milestones</span>
+              <span className="col-desc">Achievements, life events</span>
+            </div>
+          </div>
+          <p>
+            Each friend gets a row. Their posts flow into columns by type—up to 12 per category 
+            before a new row is created. Scroll horizontally through their content, vertically 
+            through your friends. Everything in chronological order. No engagement-bait reshuffling.
+          </p>
+          <p className="river-difference">
+            <strong>Why it's different:</strong> Traditional feeds bury your friend's third post 
+            under a stranger's viral video. Here, you see the full picture—grouped, organized, 
+            and actually browsable. Your feed becomes a gallery, not a slot machine.
+          </p>
+        </div>
+
         <div className="grid-item timing">
           <span className="item-number">•••</span>
           <h2>The internet used to work.</h2>
           <p>
             Your feed showed what your friends posted. In order. No algorithm deciding what 
             you "need" to see. Revolutionary, right? We're just bringing it back.
+          </p>
+        </div>
+
+        <div className="grid-item learning feature-highlight">
+          <span className="item-number">∞</span>
+          <h2>Learning in Public</h2>
+          <p>
+            Numeneon was built as a learning project—and we're not hiding that. This isn't 
+            a VC-backed startup with 50 engineers. It's a small crew teaching ourselves 
+            React, Django, WebSockets, and real-time systems by actually building something.
+          </p>
+          <p>
+            Every feature is documented. Every decision is explained. The codebase is open, 
+            the process is transparent. We're students of the craft, and this is our workshop.
+          </p>
+          <p className="learning-philosophy">
+            The best way to learn isn't tutorials—it's building something you actually care about 
+            and figuring it out as you go. That's what Numeneon is.
+          </p>
+        </div>
+
+        <div className="grid-item myspace-basement feature-highlight">
+          <span className="item-number">
+            <GuitarIcon size={18} className="guitar-icon" />
+          </span>
+          <h2>The Basement</h2>
+          <p className="basement-intro">
+            Below the neon-lit top floor of Numeneon lies something different. A hidden door. 
+            A staircase down. The basement studio.
+          </p>
+          <p>
+            Think of Numeneon as a building. The main app is the penthouse—clean lines, 
+            cyber aesthetics, the River Timeline flowing through glass walls. But every 
+            building has a basement.
+          </p>
+          <p>
+            The MySpace throwback page is that basement. A private studio where your Top 8 
+            friends hang out. Custom themes. Embedded music players. Sparkle cursors and 
+            marquee text. All the chaotic self-expression that made early social media 
+            actually personal.
+          </p>
+          <div className="basement-feature">
+            <span className="basement-icon">
+              <TargetReticleIcon size={24} className="search-icon" />
+            </span>
+            <p>
+              <strong>The Elevator:</strong> A dedicated search engine in the basement that 
+              pulls friends down from the Numeneon top floor. Find your people, drag them 
+              to your space, rank them in your Top 8. It's invitation-only—your basement, 
+              your rules.
+            </p>
+          </div>
+          <p className="basement-philosophy">
+            Not everyone needs to see it. Not everyone will get it. That's the point. 
+            Some spaces should be earned, not discovered by algorithm.
           </p>
         </div>
 
