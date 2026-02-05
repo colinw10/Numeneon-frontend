@@ -73,9 +73,10 @@ const postsService = {
   delete: async (id) => {
     await apiClient.delete(`/posts/${id}/`); // No return - DELETE gives 204 No Content
   },
-  // POST /api/posts/:id/like/ → toggle like on a post
-  like: async (id) => {
-    const response = await apiClient.post(`/posts/${id}/like/`);
+  // POST /api/posts/:id/like/ → like or unlike a post
+  // action: 'like' | 'unlike' - explicit action prevents mobile double-tap issues
+  like: async (id, action) => {
+    const response = await apiClient.post(`/posts/${id}/like/`, { action });
     return response.data; // Returns updated post with new likes_count and is_liked
   },
   // POST /api/posts/:id/share/ → increment share count

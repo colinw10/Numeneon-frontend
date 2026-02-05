@@ -197,10 +197,14 @@ const createReply = async (parentId, content) => {
   }
 };
 
-// LIKE/UNLIKE a post
+// LIKE/UNLIKE a post - uses explicit action to prevent mobile double-tap race conditions
 const likePost = async (id) => {
   try {
-    const updatedPost = await postsService.like(id);
+    // Find current post state to determine the action
+    const currentPost = posts.find(p => p.id === id);
+    const action = currentPost?.is_liked ? 'unlike' : 'like';
+    
+    const updatedPost = await postsService.like(id, action);
     // Update the post in state with new like count and is_liked status
     // PRESERVE target_profile_id if it existed (for wall posts)
     setPosts(prev => prev.map(post =>
