@@ -263,6 +263,16 @@
   max-width: 100%;
 }
 
+/* When only 1 column visible, center it and give reasonable max-width */
+.river-streams--expanded-1 {
+  justify-content: center;
+  
+  .river-column {
+    flex: 0 1 600px; /* Don't grow beyond 600px, but can shrink */
+    max-width: 600px;
+  }
+}
+
 /* River Continuation - All posts after first 12 */
 .river-continuation {
   margin-top: var(--space-lg);
