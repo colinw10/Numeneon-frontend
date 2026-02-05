@@ -1,15 +1,19 @@
 // 🔵 PABLO - UI Architect
 // NotificationModal.jsx - Minimal notification dropdown
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFriends, useNotifications } from '@contexts';
+import PostDetailModal from '@ui/PostDetailModal';
 import './NotificationModal.scss';
 
 function NotificationModal({ isOpen, onClose }) {
   const navigate = useNavigate();
   const { pendingRequests, acceptRequest, declineRequest } = useFriends();
   const { notifications, markAsRead, clearNotifications } = useNotifications();
+  
+  // State for viewing a post in modal
+  const [viewingPostId, setViewingPostId] = useState(null);
 
   useEffect(() => {
     const handleKeyDown = (e) => e.key === 'Escape' && onClose();
@@ -71,18 +75,17 @@ function NotificationModal({ isOpen, onClose }) {
                 className={`notif-item notif-clickable ${!notif.read ? 'notif-unread' : ''}`}
                 onClick={() => {
                   markAsRead(notif.id);
-                  // Navigate based on notification type
-                  if (notif.type === 'wall_post') {
-                    // Wall posts - go to the user's own profile to see the post
-                    navigate(`/profile`);
-                  } else if (notif.type === 'post_comment') {
-                    // Post comments - go to own profile to see the commented post
-                    navigate(`/profile`);
-                  } else if (notif.type === 'comment_reply') {
-                    // Comment reply - go to own profile to see the reply
-                    navigate(`/profile`);
-                  } else if (notif.type === 'friend_accepted') {
-                    // Friend accepted - go to the new friend's profile
+                  // Open post modal for post-related notifications
+                  if (notif.type === 'wall_post' || notif.type === 'post_comment' || notif.type === 'comment_reply') {
+                    const postId = notif.post?.id || notif.post_id;
+                    if (postId) {
+                      setViewingPostId(postId);
+                      // Keep dropdown open, modal will overlay
+                      return;
+                    }
+                  }
+                  // Navigate for other notification types
+                  if (notif.type === 'friend_accepted') {
                     navigate(`/profile/${notif.friend?.username}`);
                   } else if (notif.author?.username) {
                     navigate(`/profile/${notif.author.username}`);
@@ -131,6 +134,17 @@ function NotificationModal({ isOpen, onClose }) {
           </button>
         )}
       </div>
+      
+      {/* Post Detail Modal - opens when clicking post-related notifications */}
+      {viewingPostId && (
+        <PostDetailModal 
+          postId={viewingPostId} 
+          onClose={() => {
+            setViewingPostId(null);
+            onClose(); // Also close notification dropdown
+          }} 
+        />
+      )}
     </div>
   );
 }
