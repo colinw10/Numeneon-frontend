@@ -21,7 +21,7 @@ import {
 } from '@assets/icons';
 import './PostDetailModal.scss';
 
-function PostDetailModal({ postId, onClose }) {
+function PostDetailModal({ postId, onClose, onPostNotFound }) {
   const navigate = useNavigate();
   const { posts, likePost, sharePost, createReply, fetchReplies, updatePost, deletePost } = usePosts();
   const { user: currentUser } = useAuth();
@@ -62,9 +62,13 @@ function PostDetailModal({ postId, onClose }) {
           console.error('Failed to fetch post:', err);
           setPostError('Could not load post');
           setIsLoadingPost(false);
+          // Notify parent that post doesn't exist (for removing stale notifications)
+          if (onPostNotFound) {
+            onPostNotFound(postId);
+          }
         });
     }
-  }, [postId, posts]);
+  }, [postId, posts, onPostNotFound]);
   
   // Fetch replies when modal opens
   useEffect(() => {

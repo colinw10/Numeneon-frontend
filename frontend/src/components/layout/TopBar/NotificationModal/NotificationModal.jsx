@@ -10,10 +10,11 @@ import './NotificationModal.scss';
 function NotificationModal({ isOpen, onClose }) {
   const navigate = useNavigate();
   const { pendingRequests, acceptRequest, declineRequest } = useFriends();
-  const { notifications, markAsRead, clearNotifications } = useNotifications();
+  const { notifications, markAsRead, removeNotification, clearNotifications } = useNotifications();
   
   // State for viewing a post in modal
   const [viewingPostId, setViewingPostId] = useState(null);
+  const [viewingNotificationId, setViewingNotificationId] = useState(null);
 
   useEffect(() => {
     const handleKeyDown = (e) => e.key === 'Escape' && onClose();
@@ -80,6 +81,7 @@ function NotificationModal({ isOpen, onClose }) {
                     const postId = notif.post?.id || notif.post_id;
                     if (postId) {
                       setViewingPostId(postId);
+                      setViewingNotificationId(notif.id);
                       // Keep dropdown open, modal will overlay
                       return;
                     }
@@ -141,8 +143,17 @@ function NotificationModal({ isOpen, onClose }) {
           postId={viewingPostId} 
           onClose={() => {
             setViewingPostId(null);
+            setViewingNotificationId(null);
             onClose(); // Also close notification dropdown
-          }} 
+          }}
+          onPostNotFound={() => {
+            // Post doesn't exist anymore, remove the notification
+            if (viewingNotificationId) {
+              removeNotification(viewingNotificationId);
+            }
+            setViewingPostId(null);
+            setViewingNotificationId(null);
+          }}
         />
       )}
     </div>

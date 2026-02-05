@@ -133,6 +133,10 @@ export const NotificationProvider = ({ children }) => {
     );
   };
   
+  const removeNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+  
   const clearNotifications = () => {
     setNotifications([]);
   };
@@ -143,7 +147,8 @@ export const NotificationProvider = ({ children }) => {
     <NotificationContext.Provider value={{ 
       notifications, 
       unreadCount, 
-      markAsRead, 
+      markAsRead,
+      removeNotification,
       clearNotifications 
     }}>
       {children}
