@@ -5,8 +5,8 @@ import { useEffect } from 'react';
 import { useMessages } from '@contexts/MessageContext';
 import '../NotificationModal/NotificationModal.scss';
 
-// Helper: Format relative time
-const formatRelativeTime = (date) => {
+// Helper: Format relative time (available for future use)
+const _formatRelativeTime = (date) => {
   if (!date) return '';
   const now = new Date();
   const diffMs = now - new Date(date);

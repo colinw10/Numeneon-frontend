@@ -38,7 +38,7 @@ function TopBar() {
   
   // 🔵 Friend accepted toast
   const [showFriendToast, setShowFriendToast] = useState(false);
-  const [friendToastName, setFriendToastName] = useState('');
+  const [friendToastName, _setFriendToastName] = useState('');
   const [isToastClosing, setIsToastClosing] = useState(false);
   
   // Handle toast close with fade-out

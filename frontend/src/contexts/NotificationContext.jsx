@@ -26,6 +26,11 @@ export const NotificationProvider = ({ children }) => {
     localStorage.setItem('notifications', JSON.stringify(notifications));
   }, [notifications]);
 
+  // Define addNotification BEFORE it's used in the WebSocket effect
+  const addNotification = (notification) => {
+    setNotifications(prev => [notification, ...prev]);
+  };
+
   // Subscribe to WebSocket events
   useEffect(() => {
     if (!user) return;
@@ -120,11 +125,7 @@ export const NotificationProvider = ({ children }) => {
       unsubscribeCommentReply();
       unsubscribeFriendAccepted();
     };
-  }, [user, subscribe]);
-
-  const addNotification = (notification) => {
-    setNotifications(prev => [notification, ...prev]);
-  };
+  }, [user, subscribe, addNotification]);
 
   const markAsRead = (id) => {
     setNotifications(prev => 

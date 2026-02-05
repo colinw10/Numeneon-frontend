@@ -57,8 +57,6 @@ function MessageModal({ onClose }) {
     selectedConversation,
     selectConversation, 
     sendMessage,
-    getDisplayName,
-    getInitials: contextGetInitials,
     openMessages
   } = useMessages();
   

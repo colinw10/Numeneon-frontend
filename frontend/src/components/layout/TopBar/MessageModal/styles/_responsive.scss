@@ -207,6 +207,18 @@
     display: none;
   }
   
+  /* Messages container - ensure messages don't get cut off at top */
+  .chat-messages {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Composer - add safe area padding for Android keyboards */
+  .chat-composer {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem)) !important;
+  }
+  
   /* Simple back arrow button on mobile */
   .chat-back-btn {
     display: flex;
@@ -329,5 +341,16 @@
   .chat-close-btn {
     width: 28px !important;
     height: 28px !important;
+  }
+  
+  /* Messages area - ensure proper spacing from header */
+  .chat-messages {
+    padding-top: 1rem !important;
+    margin-top: 0 !important;
+  }
+  
+  /* Composer - add safe area for Android/Samsung keyboards */
+  .chat-composer {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem)) !important;
   }
 }

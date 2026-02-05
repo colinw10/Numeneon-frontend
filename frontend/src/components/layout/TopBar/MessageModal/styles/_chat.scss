@@ -196,8 +196,10 @@
 .chat-messages {
   flex: 1 1 auto; /* Grow and shrink to fill available space */
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 1.5rem;
   padding-top: 1rem; /* Reduced top padding since header is above */
+  padding-bottom: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -205,6 +207,7 @@
   z-index: 1;
   min-height: 0; /* Critical for flex overflow to work */
   margin-top: 0; /* Ensure no gap above */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS/Android */
 }
 
 /* Message row - clean layout, time shows on hover */
