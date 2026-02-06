@@ -560,100 +560,10 @@
   }
 }
 
-/* Desktop: full-page-composer-row - keep original layout with buttons inside input */
-.full-page-composer-row {
-  width: 100%;
-  position: relative;
-}
-
-.full-page-composer-row .comment-input-wrapper {
-  width: 100%;
-  position: relative;
-}
-
-.full-page-composer-row .comment-media-btn {
-  position: absolute;
-  bottom: 8px;
-  right: 50px;
-  background: transparent;
-  border: none;
-  padding: 6px;
-  color: rgba(220, 8, 188, 0.5);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  z-index: 5;
-}
-
-.full-page-composer-row .comment-media-btn:hover {
-  color: var(--magenta);
-  background: rgba(220, 8, 188, 0.1);
-}
-
-/* Desktop: send button positioned inside input wrapper */
-.full-page-composer-row > .comment-submit-btn {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
-  background: transparent;
-  border: none;
-  color: rgba(26, 231, 132, 0.5);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  z-index: 5;
-}
-
-.full-page-composer-row > .comment-submit-btn:hover:not(:disabled) {
-  color: var(--accent);
-  background: rgba(26, 231, 132, 0.1);
-}
-
-.full-page-composer-row > .comment-submit-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.full-page-composer-row .comment-input {
-  min-height: 32px;
-  max-height: 60px;
-  padding-right: 90px; /* Space for media + submit buttons */
-  font-size: 1rem;
-  letter-spacing: 0.02em;
-  line-height: 1.4;
-  resize: none;
-  width: 100%;
-}
-
-.full-page-composer-row .comment-input::placeholder {
-  font-size: 1rem;
-  letter-spacing: 0.02em;
-}
-
 .full-page-composer-fixed .comment-input-wrapper {
   flex: 1;
   position: relative;
   width: 100%;
-}
-
-/* Ensure composer-actions is positioned correctly in full-page view */
-.full-page-composer-fixed .comment-input-wrapper .composer-actions {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  left: auto; /* Ensure left is not set */
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  z-index: 10;
 }
 
 .full-page-composer-fixed .comment-input {
@@ -669,6 +579,72 @@
 .full-page-composer-fixed .comment-input::placeholder {
   font-size: 1rem;
   letter-spacing: 0.02em;
+}
+
+/* Expanded composer row - input + send button side by side */
+.expanded-composer-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.expanded-composer-row .comment-input-wrapper {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+}
+
+.expanded-composer-row .comment-input {
+  padding-right: 45px;
+  min-height: 44px;
+  font-size: 16px;
+}
+
+.expanded-composer-row .comment-media-btn {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  color: rgba(220, 8, 188, 0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.expanded-composer-row .comment-media-btn:hover {
+  color: var(--magenta);
+}
+
+.expanded-send-btn {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 231, 132, 0.072);
+  border: 1px solid rgba(26, 231, 132, 0.3);
+  border-radius: 8px;
+  color: rgba(26, 231, 132, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.expanded-send-btn:hover:not(:disabled) {
+  background: rgba(26, 231, 132, 0.15);
+  border-color: rgba(26, 231, 132, 0.5);
+  color: var(--accent);
+}
+
+.expanded-send-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 /* Action buttons container inside textarea */
@@ -715,89 +691,6 @@
   color: var(--accent);
   background: rgba(26, 231, 132, 0.1);
   filter: drop-shadow(0 0 6px rgba(26, 231, 132, 0.4));
-}
-
-/* ============================================
-   MOBILE / PWA FIXES FOR COMPOSER
-   Ensure buttons are visible and accessible
-   ============================================ */
-
-@media (max-width: 600px) {
-  .full-page-composer-fixed {
-    padding: var(--space-md);
-    padding-right: calc(var(--space-md) + env(safe-area-inset-right, 0px));
-    padding-left: calc(var(--space-md) + env(safe-area-inset-left, 0px));
-    padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom, 0px));
-  }
-  
-  /* Mobile: Composer row with input + send button side by side */
-  .full-page-composer-row {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: flex-end !important;
-    gap: var(--space-sm) !important;
-    width: 100%;
-    position: static !important;
-  }
-  
-  .full-page-composer-row .comment-input-wrapper {
-    flex: 1 !important;
-    position: relative !important;
-    min-width: 0;
-  }
-  
-  .full-page-composer-row .comment-input {
-    padding-right: 50px !important; /* Space for media button only */
-    font-size: 16px !important;
-    min-height: 44px !important;
-  }
-  
-  /* Media button stays inside input */
-  .full-page-composer-row .comment-media-btn {
-    position: absolute !important;
-    right: 8px !important;
-    left: auto !important;
-    bottom: 8px !important;
-    top: auto !important;
-    width: 32px;
-    height: 32px;
-    padding: 6px;
-  }
-  
-  /* Send button OUTSIDE input, to the right - NOT absolute positioned */
-  .full-page-composer-row > .comment-submit-btn {
-    position: static !important;
-    flex-shrink: 0 !important;
-    width: 48px !important;
-    height: 48px !important;
-    min-width: 48px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: rgba(26, 231, 132, 0.15) !important;
-    border: 1px solid rgba(26, 231, 132, 0.3) !important;
-    border-radius: 12px !important;
-    color: rgba(26, 231, 132, 0.9) !important;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .full-page-composer-row > .comment-submit-btn:hover:not(:disabled) {
-    background: rgba(26, 231, 132, 0.25) !important;
-    border-color: rgba(26, 231, 132, 0.5) !important;
-    transform: scale(1.05);
-  }
-  
-  .full-page-composer-row > .comment-submit-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-}
-
-@media (max-width: 400px) {
-  .full-page-composer-row .comment-input {
-    padding-right: 45px;
-  }
 }
 
 /* ============================================

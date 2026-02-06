@@ -494,8 +494,8 @@ function PostCard({
                 </div>
               </div>
 
-              {/* Composer */}
-              <div className="full-page-composer-row">
+              {/* Composer - flexbox layout: input with media btn + send btn on right */}
+              <div className="expanded-composer-row">
                 <div className="comment-input-wrapper">
                   <textarea
                     className="comment-input"
@@ -517,8 +517,6 @@ function PostCard({
                       }
                     }}
                   />
-                  
-                  {/* Media button inside input */}
                   <button 
                     className="comment-media-btn"
                     title="Add media"
@@ -527,10 +525,8 @@ function PostCard({
                     <ImageIcon size={18} stroke="rgba(220, 8, 188, 0.5)" strokeWidth="1.5" />
                   </button>
                 </div>
-                
-                {/* Send button outside, to the right */}
                 <button 
-                  className="comment-submit-btn"
+                  className="expanded-send-btn"
                   disabled={!commentText.trim() || isSaving}
                   onClick={async () => {
                     if (commentText.trim()) {
@@ -539,7 +535,7 @@ function PostCard({
                     }
                   }}
                 >
-                  <ChevronRightIcon size={24} stroke="rgba(26, 231, 132, 0.8)" strokeWidth="2.5" />
+                  <ChevronRightIcon size={24} stroke="currentColor" strokeWidth="2.5" />
                 </button>
               </div>
             </div>
