@@ -580,57 +580,295 @@
 // Mobile responsive
 @media (max-width: 768px) {
   .learn-page {
-    padding: 1rem;
-    padding-top: 80px;
+    padding: 0.75rem;
+    padding-top: calc(70px + env(safe-area-inset-top, 0px));
   }
   
-  .learn-header h1 {
-    font-size: 2rem;
-    letter-spacing: 2px;
+  .learn-header {
+    margin-bottom: 1rem;
+    
+    .back-btn {
+      top: calc(75px + env(safe-area-inset-top, 0px));
+      padding: 0.4rem 0.75rem;
+      font-size: 0.7rem;
+    }
+    
+    h1 {
+      font-size: 1.75rem;
+      letter-spacing: 2px;
+    }
+    
+    .learn-date {
+      font-size: 0.75rem;
+    }
   }
   
   .learn-tabs {
     gap: 0.5rem;
+    margin-bottom: 1rem;
   }
   
   .learn-tab {
     width: 60px;
-    height: 50px;
+    height: 45px;
     padding: 0.5rem;
     
     span {
-      font-size: 0.6rem;
+      font-size: 0.55rem;
+      letter-spacing: 0.5px;
     }
     
     .tab-icon {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
   }
   
-  .learn-cards {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .learn-content {
+    padding: 0 0.5rem;
   }
   
   .learn-card {
-    padding: 1rem;
-    min-height: 150px;
+    padding: 1.25rem;
+    min-height: auto;
+    
+    // Smaller cut corners on mobile
+    clip-path: polygon(
+      12px 0, 100% 0, 100% calc(100% - 12px),
+      calc(100% - 12px) 100%, 0 100%, 0 12px
+    );
+    
+    &::after {
+      clip-path: polygon(
+        10px 0, 100% 0, 100% calc(100% - 10px),
+        calc(100% - 10px) 100%, 0 100%, 0 10px
+      );
+    }
+    
+    .card-header {
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .card-category {
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+    }
+    
+    .know-btn {
+      font-size: 0.55rem;
+      padding: 0.4rem 0.75rem;
+    }
     
     .card-term {
-      font-size: 1.25rem;
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+    
+    .card-pronunciation {
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
     }
     
     .card-definition {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    
+    .card-section {
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      
+      h3 {
+        font-size: 0.65rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+    }
+    
+    .card-code {
+      padding: 0.75rem;
+      font-size: 0.75rem;
+      
+      code {
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+    }
+    
+    .card-gotcha {
+      padding: 0.75rem;
+      margin-top: 1rem;
+      
+      p {
+        font-size: 0.85rem;
+      }
+    }
+    
+    .synonym-tag {
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
     }
   }
   
   .learn-stats {
-    grid-template-columns: repeat(2, 1fr);
+    margin-top: 1.5rem;
+    padding: 1rem;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    
+    // Smaller cut corners
+    clip-path: polygon(
+      10px 0, 100% 0, 100% calc(100% - 10px),
+      calc(100% - 10px) 100%, 0 100%, 0 10px
+    );
+    
+    .stat {
+      .stat-value {
+        font-size: 1.5rem;
+      }
+      
+      .stat-label {
+        font-size: 0.6rem;
+      }
+    }
+  }
+  
+  .learn-progress {
+    margin: 1.5rem auto;
+    
+    .progress-label {
+      font-size: 0.65rem;
+    }
+    
+    .progress-bar {
+      height: 6px;
+    }
+  }
+}
+
+// Small mobile (480px and below)
+@media (max-width: 480px) {
+  .learn-page {
+    padding: 0.5rem;
+    padding-top: calc(60px + env(safe-area-inset-top, 0px));
+  }
+  
+  .learn-header {
+    margin-bottom: 0.75rem;
+    
+    .back-btn {
+      top: calc(65px + env(safe-area-inset-top, 0px));
+      padding: 0.3rem 0.5rem;
+      font-size: 0.6rem;
+      
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+    
+    h1 {
+      font-size: 1.35rem;
+      letter-spacing: 1.5px;
+    }
+    
+    .learn-date {
+      font-size: 0.65rem;
+    }
+  }
+  
+  .learn-tabs {
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .learn-tab {
+    width: 52px;
+    height: 40px;
+    padding: 0.4rem;
+    
+    span {
+      font-size: 0.5rem;
+      letter-spacing: 0.3px;
+    }
+    
+    .tab-icon {
+      font-size: 1rem;
+    }
+  }
+  
+  .learn-content {
+    padding: 0;
+  }
+  
+  .learn-card {
     padding: 1rem;
     
-    .stat-item .stat-value {
-      font-size: 1.5rem;
+    // Even smaller cut corners
+    clip-path: polygon(
+      8px 0, 100% 0, 100% calc(100% - 8px),
+      calc(100% - 8px) 100%, 0 100%, 0 8px
+    );
+    
+    &::after {
+      clip-path: polygon(
+        6px 0, 100% 0, 100% calc(100% - 6px),
+        calc(100% - 6px) 100%, 0 100%, 0 6px
+      );
+    }
+    
+    .card-term {
+      font-size: 1.2rem;
+    }
+    
+    .card-pronunciation {
+      font-size: 0.8rem;
+    }
+    
+    .card-definition {
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    
+    .card-section {
+      h3 {
+        font-size: 0.6rem;
+      }
+      
+      p {
+        font-size: 0.8rem;
+      }
+    }
+    
+    .card-code {
+      padding: 0.5rem;
+      font-size: 0.7rem;
+    }
+    
+    .card-gotcha p {
+      font-size: 0.8rem;
+    }
+  }
+  
+  .learn-stats {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    gap: 1rem;
+    
+    .stat {
+      .stat-value {
+        font-size: 1.25rem;
+      }
+      
+      .stat-label {
+        font-size: 0.55rem;
+      }
     }
   }
 }
