@@ -566,6 +566,18 @@
   width: 100%;
 }
 
+/* Ensure composer-actions is positioned correctly in full-page view */
+.full-page-composer-fixed .comment-input-wrapper .composer-actions {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  left: auto; /* Ensure left is not set */
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  z-index: 10;
+}
+
 .full-page-composer-fixed .comment-input {
   min-height: 32px;
   max-height: 60px;
@@ -642,6 +654,15 @@
   
   .full-page-composer-fixed .comment-input-wrapper {
     width: 100%;
+    position: relative;
+  }
+  
+  .full-page-composer-fixed .comment-input-wrapper .composer-actions {
+    position: absolute;
+    right: 12px !important; /* Force right positioning on mobile */
+    left: auto !important;
+    bottom: 10px;
+    gap: var(--space-sm);
   }
   
   .full-page-composer-fixed .comment-input {
@@ -652,6 +673,7 @@
   
   .composer-actions {
     right: 12px; /* More space from edge on mobile */
+    left: auto;
     bottom: 10px;
     gap: var(--space-sm);
   }
