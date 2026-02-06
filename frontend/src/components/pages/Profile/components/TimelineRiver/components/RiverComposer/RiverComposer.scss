@@ -180,3 +180,48 @@
     }
   }
 }
+/* ============================================
+   MOBILE / PWA FIXES
+   Ensure buttons are accessible on small screens
+   ============================================ */
+
+@media (max-width: 600px) {
+  .expanded-composer-overlay {
+    padding: var(--space-sm);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  
+  .expanded-composer-modal {
+    max-width: 100%;
+    border-radius: 16px;
+    max-height: calc(100vh - 40px - env(safe-area-inset-bottom, 0px));
+  }
+  
+  .expanded-composer-header {
+    padding: 12px 16px;
+    
+    h3 {
+      font-size: 16px;
+    }
+  }
+  
+  .expanded-composer-body {
+    padding: 16px;
+    
+    .composer-textarea {
+      font-size: 16px; /* Prevent iOS zoom */
+      min-height: 120px;
+    }
+  }
+  
+  .expanded-composer-footer {
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  
+  .submit-btn {
+    min-width: 44px;
+    min-height: 44px; /* Better touch target */
+    padding: 10px 16px;
+  }
+}

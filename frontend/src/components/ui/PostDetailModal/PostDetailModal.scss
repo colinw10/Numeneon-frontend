@@ -661,5 +661,37 @@
   
   .post-detail-comments {
     padding: var(--space-md);
+    padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom, 0px));
+  }
+  
+  .post-detail-composer {
+    gap: var(--space-xs);
+  }
+  
+  .post-detail-composer-avatar {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+  
+  .post-detail-composer-input-wrapper {
+    padding: 10px 12px;
+    min-width: 0;
+    flex: 1;
+  }
+  
+  .post-detail-composer-input {
+    font-size: 16px; /* Prevent iOS zoom */
+    min-height: 24px;
+  }
+  
+  .post-detail-composer-submit {
+    padding: 8px;
+    min-width: 36px;
+    flex-shrink: 0;
   }
 }
+
+@media (max-width: 400px) {
+  .post-detail-composer-avatar {
+    display: none; /* Hide avatar on very small screens to give more room */

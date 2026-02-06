@@ -1382,6 +1382,57 @@ html:not([data-theme="light"]) {
 }
 
 /* ============================================
+   MOBILE / PWA FIXES FOR FULL PAGE COMPOSER
+   Ensure buttons are visible and accessible
+   ============================================ */
+
+@media (max-width: 600px) {
+  .full-page-composer-fixed {
+    padding: var(--space-md);
+    padding-right: calc(var(--space-md) + env(safe-area-inset-right, 0px));
+    padding-left: calc(var(--space-md) + env(safe-area-inset-left, 0px));
+    padding-bottom: calc(var(--space-md) + env(safe-area-inset-bottom, 0px));
+  }
+  
+  .full-page-composer-fixed .comment-input-wrapper {
+    width: 100%;
+  }
+  
+  .full-page-composer-fixed .comment-input {
+    padding-right: 90px; /* More space for buttons on mobile */
+    font-size: 16px; /* Prevent iOS zoom */
+    min-height: 44px; /* Better touch target */
+  }
+  
+  .composer-actions {
+    right: 12px; /* More space from edge on mobile */
+    bottom: 10px;
+    gap: var(--space-sm);
+  }
+  
+  .composer-actions .comment-submit-btn,
+  .composer-actions .comment-media-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px; /* Prevent shrinking */
+  }
+  
+  .comment-media-btn {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .full-page-composer-fixed .comment-input {
+    padding-right: 95px; /* Even more space on very small screens */
+  }
+  
+  .composer-actions {
+    right: 8px;
+  }
+}
+
+/* ============================================
    LIGHT MODE OVERRIDES FOR FULL PAGE COMPOSER
    ============================================ */
 
