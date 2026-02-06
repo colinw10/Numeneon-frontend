@@ -495,30 +495,30 @@ function PostCard({
               </div>
 
               {/* Composer */}
-              <div className="comment-input-wrapper">
-                <textarea
-                  className="comment-input"
-                  placeholder="Share your thoughts..."
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  rows={3}
-                  autoFocus
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      if (commentText.trim()) {
-                        onReplySubmit(post.id, commentText);
-                        setCommentText('');
+              <div className="full-page-composer-row">
+                <div className="comment-input-wrapper">
+                  <textarea
+                    className="comment-input"
+                    placeholder="Share your thoughts..."
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    rows={3}
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        if (commentText.trim()) {
+                          onReplySubmit(post.id, commentText);
+                          setCommentText('');
+                        }
                       }
-                    }
-                    if (e.key === 'Escape') {
-                      setIsComposerFullPage(false);
-                    }
-                  }}
-                />
-                
-                {/* Action buttons inside textarea */}
-                <div className="composer-actions">
+                      if (e.key === 'Escape') {
+                        setIsComposerFullPage(false);
+                      }
+                    }}
+                  />
+                  
+                  {/* Media button inside input */}
                   <button 
                     className="comment-media-btn"
                     title="Add media"
@@ -526,20 +526,21 @@ function PostCard({
                   >
                     <ImageIcon size={18} stroke="rgba(220, 8, 188, 0.5)" strokeWidth="1.5" />
                   </button>
-                  
-                  <button 
-                    className="comment-submit-btn"
-                    disabled={!commentText.trim() || isSaving}
-                    onClick={async () => {
-                      if (commentText.trim()) {
-                        await onReplySubmit(post.id, commentText);
-                        setCommentText('');
-                      }
-                    }}
-                  >
-                    <ChevronRightIcon size={20} stroke="rgba(26, 231, 132, 0.5)" strokeWidth="2" />
-                  </button>
                 </div>
+                
+                {/* Send button outside, to the right */}
+                <button 
+                  className="comment-submit-btn"
+                  disabled={!commentText.trim() || isSaving}
+                  onClick={async () => {
+                    if (commentText.trim()) {
+                      await onReplySubmit(post.id, commentText);
+                      setCommentText('');
+                    }
+                  }}
+                >
+                  <ChevronRightIcon size={24} stroke="rgba(26, 231, 132, 0.8)" strokeWidth="2.5" />
+                </button>
               </div>
             </div>
           </div>
