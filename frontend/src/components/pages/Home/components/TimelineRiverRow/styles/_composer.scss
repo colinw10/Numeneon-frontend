@@ -732,52 +732,59 @@
   
   /* Mobile: Composer row with input + send button side by side */
   .full-page-composer-row {
-    display: flex;
-    align-items: flex-end;
-    gap: var(--space-sm);
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-end !important;
+    gap: var(--space-sm) !important;
     width: 100%;
+    position: static !important;
   }
   
   .full-page-composer-row .comment-input-wrapper {
-    flex: 1;
-    position: relative;
+    flex: 1 !important;
+    position: relative !important;
     min-width: 0;
   }
   
   .full-page-composer-row .comment-input {
-    padding-right: 50px; /* Space for media button only */
-    font-size: 16px;
-    min-height: 44px;
+    padding-right: 50px !important; /* Space for media button only */
+    font-size: 16px !important;
+    min-height: 44px !important;
   }
   
+  /* Media button stays inside input */
   .full-page-composer-row .comment-media-btn {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
+    position: absolute !important;
+    right: 8px !important;
+    left: auto !important;
+    bottom: 8px !important;
+    top: auto !important;
     width: 32px;
     height: 32px;
     padding: 6px;
   }
   
+  /* Send button OUTSIDE input, to the right - NOT absolute positioned */
   .full-page-composer-row > .comment-submit-btn {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(26, 231, 132, 0.15);
-    border: 1px solid rgba(26, 231, 132, 0.3);
-    border-radius: 12px;
-    color: rgba(26, 231, 132, 0.9);
+    position: static !important;
+    flex-shrink: 0 !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(26, 231, 132, 0.15) !important;
+    border: 1px solid rgba(26, 231, 132, 0.3) !important;
+    border-radius: 12px !important;
+    color: rgba(26, 231, 132, 0.9) !important;
     cursor: pointer;
     transition: all 0.2s ease;
   }
   
   .full-page-composer-row > .comment-submit-btn:hover:not(:disabled) {
-    background: rgba(26, 231, 132, 0.25);
-    border-color: rgba(26, 231, 132, 0.5);
+    background: rgba(26, 231, 132, 0.25) !important;
+    border-color: rgba(26, 231, 132, 0.5) !important;
     transform: scale(1.05);
   }
   
