@@ -493,7 +493,7 @@
   background: rgba(0, 0, 0, 0.6);
   border: none;
   border-right: 1px solid rgba(140, 100, 240, 0.2);
-  color: var(--text-muted);
+  color: #ffffff !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -501,16 +501,17 @@
   transition: all 0.2s ease;
   pointer-events: auto; /* But buttons themselves are clickable */
   
-  &:hover {
-    transform: none;
-  }
-  
   &.media-btn {
     border-color: rgba(220, 8, 188, 0.3);
+    color: #dc08bc;
+    
+    svg {
+      color: #dc08bc;
+      stroke: #dc08bc;
+    }
     
     &:hover {
       background: rgba(220, 8, 188, 0.2);
-      color: #dc08bc;
       box-shadow: inset 0 0 20px rgba(220, 8, 188, 0.2);
     }
   }
@@ -518,10 +519,15 @@
   &.milestone-btn {
     border-color: rgba(255, 215, 0, 0.3);
     margin-left: -4px;
+    color: #ffd700;
+    
+    svg {
+      color: #ffd700;
+      stroke: #ffd700;
+    }
     
     &:hover {
       background: rgba(255, 215, 0, 0.2);
-      color: #ffd700;
       box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.2);
     }
   }

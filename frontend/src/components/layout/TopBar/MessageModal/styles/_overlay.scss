@@ -18,6 +18,13 @@
   padding-left: 55px;
 }
 
+/* PWA standalone mode - account for status bar */
+@media all and (display-mode: standalone) {
+  .message-modal-overlay {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
 @media (max-width: 768px) {
   .message-modal-overlay {
     padding-left: 50px;

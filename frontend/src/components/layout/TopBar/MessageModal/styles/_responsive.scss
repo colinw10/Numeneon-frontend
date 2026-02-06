@@ -156,6 +156,8 @@
     max-width: 100vw;
     max-height: 100vh;
     border-radius: 0;
+    /* PWA safe area - account for status bar */
+    padding-top: env(safe-area-inset-top, 0px);
   }
   
   /* Hide main header on mobile - each view has its own header */
