@@ -1,34 +1,34 @@
-// 🔵 PABLO - MySpace Service
-// mySpaceService.js - API calls for MySpace profile and music data
+// 🔵 PABLO - StudioSpace Service
+// studioSpaceService.js - API calls for StudioSpace profile and music data
 
 import apiClient from "./apiClient";
 
 /**
- * Get a user's MySpace profile data (including playlist)
+ * Get a user's StudioSpace profile data (including playlist)
  * @param {string} username - The username to fetch
- * @returns {Promise} MySpace profile data
+ * @returns {Promise} StudioSpace profile data
  */
-export const getMySpaceProfile = async (username) => {
+export const getStudioSpaceProfile = async (username) => {
   try {
-    const response = await apiClient.get(`/myspace/${username}/`);
+    const response = await apiClient.get(`/studiospace/${username}/`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching MySpace profile:", error);
+    console.error("Error fetching StudioSpace profile:", error);
     throw error;
   }
 };
 
 /**
- * Update own MySpace profile settings
+ * Update own StudioSpace profile settings
  * @param {object} data - Profile data to update
  * @returns {Promise} Updated profile data
  */
-export const updateMySpaceProfile = async (data) => {
+export const updateStudioSpaceProfile = async (data) => {
   try {
-    const response = await apiClient.put("/myspace/", data);
+    const response = await apiClient.put("/studiospace/", data);
     return response.data;
   } catch (error) {
-    console.error("Error updating MySpace profile:", error);
+    console.error("Error updating StudioSpace profile:", error);
     throw error;
   }
 };
@@ -40,7 +40,7 @@ export const updateMySpaceProfile = async (data) => {
  */
 export const addSongToPlaylist = async (song) => {
   try {
-    const response = await apiClient.post("/myspace/playlist/", song);
+    const response = await apiClient.post("/studiospace/playlist/", song);
     return response.data;
   } catch (error) {
     console.error("Error adding song:", error);
@@ -55,7 +55,7 @@ export const addSongToPlaylist = async (song) => {
  */
 export const removeSongFromPlaylist = async (songId) => {
   try {
-    const response = await apiClient.delete(`/myspace/playlist/${songId}/`);
+    const response = await apiClient.delete(`/studiospace/playlist/${songId}/`);
     return response.data;
   } catch (error) {
     console.error("Error removing song:", error);
@@ -70,7 +70,7 @@ export const removeSongFromPlaylist = async (songId) => {
  */
 export const reorderPlaylist = async (songIds) => {
   try {
-    const response = await apiClient.put("/myspace/playlist/reorder/", {
+    const response = await apiClient.put("/studiospace/playlist/reorder/", {
       song_ids: songIds,
     });
     return response.data;
@@ -98,8 +98,8 @@ export const searchSongs = async (query) => {
 };
 
 export default {
-  getMySpaceProfile,
-  updateMySpaceProfile,
+  getStudioSpaceProfile,
+  updateStudioSpaceProfile,
   addSongToPlaylist,
   removeSongFromPlaylist,
   reorderPlaylist,

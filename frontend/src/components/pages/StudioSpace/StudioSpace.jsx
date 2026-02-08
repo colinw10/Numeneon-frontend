@@ -1,14 +1,14 @@
 // 🔵 PABLO - UI/Styling
-// MySpace.jsx - Nostalgic MySpace-style profile page
+// StudioSpace.jsx - Nostalgic MySpace-style profile page renamed to StudioSpace
 // Accessed via the throwback button on ProfileCard
 // REBEL VIBES: lorelei-neutral avatars, Doto font, no emojis, sharp edges
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './MySpace.scss';
+import './StudioSpace.scss';
 import { useAuth, useFriends } from '@contexts';
 import { ChevronLeftIcon } from '@assets/icons';
-import { getMySpaceProfile, updateMySpaceProfile } from '@services/mySpaceService';
+import { getStudioSpaceProfile, updateStudioSpaceProfile } from '@services/studioSpaceService';
 
 // Subcomponents
 import { MusicPlayer, Top8Friends, ThemePicker, ProfileSection } from './components';
@@ -151,13 +151,13 @@ const getSavedPreferences = (username) => {
 // Get friend avatar from TOP8_AVATARS config
 const getFriendAvatar = (index) => TOP8_AVATARS[index] || REBEL_AVATARS[0];
 
-function MySpace() {
+function StudioSpace() {
   const { username } = useParams();
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
   const { friends } = useFriends();
   
-  // Determine if viewing own MySpace or someone else's
+  // Determine if viewing own StudioSpace or someone else's
   // These will recalculate on every render when username changes
   const isOwnSpace = !username || username === currentUser?.username;
   const displayUsername = username || currentUser?.username;
@@ -184,7 +184,7 @@ function MySpace() {
     
     (async () => {
       try {
-        const data = await getMySpaceProfile(targetUsername);
+        const data = await getStudioSpaceProfile(targetUsername);
         if (!cancelled) {
           // Merge data, but keep default playlist if API returns empty
           const mergedData = { ...DEFAULT_MYSPACE_DATA, ...data };
@@ -219,7 +219,7 @@ function MySpace() {
     if (!isOwnSpace) return;
     
     try {
-      await updateMySpaceProfile(mySpaceData);
+      await updateStudioSpaceProfile(mySpaceData);
     } catch {
       // API save failed, using localStorage fallback (but don't save playlist - needs API)
       const dataToSave = { ...mySpaceData };
@@ -276,25 +276,25 @@ function MySpace() {
   
   return (
     <div 
-      className={`myspace-page theme-${mySpaceData.theme} ${animatedClass}`}
+      className={`studiospace-page theme-${mySpaceData.theme} ${animatedClass}`}
       style={wallpaperStyle}
     >
-      <header className="myspace-header">
+      <header className="studiospace-header">
         <button className="back-btn" onClick={handleBack}>
           <ChevronLeftIcon size={20} />
           <span>numeneon</span>
         </button>
-        <h1 className="myspace-title">
-          {displayUsername}'s space
+        <h1 className="studiospace-title">
+          {displayUsername}'s studio
         </h1>
         <div className="header-actions">
-          {/* Show "my space" button when viewing someone else's */}
+          {/* Show "my studio" button when viewing someone else's */}
           {!isOwnSpace && (
             <button 
-              className="my-space-btn"
-              onClick={() => navigate('/myspace')}
+              className="my-studio-btn"
+              onClick={() => navigate('/studiospace')}
             >
-              my space
+              my studio
             </button>
           )}
           {isOwnSpace && (
@@ -309,7 +309,7 @@ function MySpace() {
       </header>
       
       {/* Main Content */}
-      <main className="myspace-content">
+      <main className="studiospace-content">
         {/* Left Column - Profile Info */}
         <ProfileSection
           avatarSrc={avatarSrc}
@@ -352,13 +352,13 @@ function MySpace() {
       </main>
       
       {/* Footer */}
-      <footer className="myspace-footer">
+      <footer className="studiospace-footer">
         <marquee scrollamount="2">
-          thanks 4 visiting my space -- add me on numeneon -- xoxo
+          thanks 4 visiting my studio -- add me on numeneon -- xoxo
         </marquee>
       </footer>
     </div>
   );
 }
 
-export default MySpace;
+export default StudioSpace;

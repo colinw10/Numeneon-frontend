@@ -164,7 +164,7 @@ function About() {
           </p>
         </div>
 
-        <div className="grid-item myspace-basement feature-highlight">
+        <div className="grid-item mystudio-basement feature-highlight">
           <span className="item-number">
             <GuitarIcon size={18} className="guitar-icon" />
           </span>
@@ -179,7 +179,7 @@ function About() {
             building has a basement.
           </p>
           <p>
-            The MySpace throwback page is that basement. A private studio where your Top 8 
+            MyStudio is that basement. A private studio where your Top 8 
             friends hang out. Custom themes. Embedded music players. Sparkle cursors and 
             marquee text. All the chaotic self-expression that made early social media 
             actually personal.

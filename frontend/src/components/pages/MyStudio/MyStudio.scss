@@ -1,4 +1,4 @@
-// 🔵 PABLO - MySpace Main Styles
+// 🔵 PABLO - MyStudio Main Styles
 // Base layout, themes, header, footer only
 // Component styles are in their own files
 
@@ -6,7 +6,7 @@
 @use './_light-mode';
 
 // Force stable scrollbar to prevent width shifts
-html:has(.myspace-page) {
+html:has(.mystudio-page) {
   overflow-y: scroll;
 }
 
@@ -14,7 +14,7 @@ html:has(.myspace-page) {
 // THEME VARIABLES
 // ============================================
 
-.myspace-page {
+.mystudio-page {
   --ms-accent: #0066cc;
   --ms-text: #ffffff;
   --ms-text-muted: #aaaaaa;
@@ -22,14 +22,14 @@ html:has(.myspace-page) {
 }
 
 // Classic Blue
-.myspace-page.theme-classic {
+.mystudio-page.theme-classic {
   --ms-bg: linear-gradient(180deg, #0d7dece4 0%, #03000e3a 100%);
   --ms-accent: #00d4ff;
   --ms-glow: rgba(0, 212, 255, 0.3);
 }
 
 // Emo Dark
-.myspace-page.theme-emo {
+.mystudio-page.theme-emo {
   --ms-bg: linear-gradient(180deg, #0a0505 0%, #050202 100%);
   --ms-accent: #8b0000;
   --ms-text-muted: #4a4a4a;
@@ -37,21 +37,21 @@ html:has(.myspace-page) {
 }
 
 // Scene Queen
-.myspace-page.theme-scene {
+.mystudio-page.theme-scene {
   --ms-bg: linear-gradient(135deg, #0a050a 0%, #050a05 50%, #0a050a 100%);
   --ms-accent: #ff69b4;
   --ms-glow: rgba(255, 105, 180, 0.3);
 }
 
 // Starry Night
-.myspace-page.theme-starry {
+.mystudio-page.theme-starry {
   --ms-bg: linear-gradient(180deg, #050515 0%, #000008 100%);
   --ms-accent: #9370db;
   --ms-glow: rgba(147, 112, 219, 0.3);
 }
 
 // Glitter Gold
-.myspace-page.theme-glitter {
+.mystudio-page.theme-glitter {
   --ms-bg: linear-gradient(180deg, #0f0a00 0%, #080500 100%);
   --ms-accent: #ffd700;
   --ms-text-muted: #aa8800;
@@ -62,7 +62,7 @@ html:has(.myspace-page) {
 // BASE PAGE STYLES
 // ============================================
 
-.myspace-page {
+.mystudio-page {
   min-height: 100vh;
   width: 100%;
   max-width: 100vw;
@@ -116,7 +116,7 @@ html:has(.myspace-page) {
 // HEADER
 // ============================================
 
-.myspace-header {
+.mystudio-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -174,7 +174,7 @@ html:has(.myspace-page) {
   }
 }
 
-.myspace-title {
+.mystudio-title {
   font-family: 'Doto', monospace;
   font-size: 34px;
   font-weight: 800;
@@ -205,7 +205,7 @@ html:has(.myspace-page) {
   }
 }
 
-.my-space-btn {
+.my-studio-btn {
   padding: 12px 28px;
   @include holographic-black;
   border: 1px solid #ff69b4;
@@ -255,7 +255,7 @@ html:has(.myspace-page) {
 // MAIN CONTENT LAYOUT
 // ============================================
 
-.myspace-content {
+.mystudio-content {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 24px;
@@ -305,7 +305,7 @@ html:has(.myspace-page) {
 // FOOTER
 // ============================================
 
-.myspace-footer {
+.mystudio-footer {
   @include holographic-black;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 16px 24px;
@@ -325,8 +325,8 @@ html:has(.myspace-page) {
 // SCENE THEME EXTRAS
 // ============================================
 
-.myspace-page.theme-scene {
-  .myspace-avatar,
+.mystudio-page.theme-scene {
+  .mystudio-avatar,
   .friend-avatar {
     border-color: #ff69b4;
     box-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
@@ -338,7 +338,7 @@ html:has(.myspace-page) {
 // ============================================
 
 // Floating Orbs - glowing circles that drift around
-.myspace-page.animated-orbs {
+.mystudio-page.animated-orbs {
   position: relative;
   overflow: hidden;
   
@@ -386,7 +386,7 @@ html:has(.myspace-page) {
 }
 
 // Starfield - twinkling stars
-.myspace-page.animated-starfield {
+.mystudio-page.animated-starfield {
   position: relative;
   overflow: hidden;
   
@@ -422,7 +422,7 @@ html:has(.myspace-page) {
 }
 
 // Bubbles - rising circles
-.myspace-page.animated-bubbles {
+.mystudio-page.animated-bubbles {
   position: relative;
   overflow: hidden;
   
@@ -470,7 +470,7 @@ html:has(.myspace-page) {
 }
 
 // Fireflies - glowing dots that float around
-.myspace-page.animated-fireflies {
+.mystudio-page.animated-fireflies {
   position: relative;
   overflow: hidden;
   
@@ -516,7 +516,7 @@ html:has(.myspace-page) {
 }
 
 // Neon Rain - falling vertical lines
-.myspace-page.animated-neon-rain {
+.mystudio-page.animated-neon-rain {
   position: relative;
   overflow: hidden;
   
@@ -551,11 +551,11 @@ html:has(.myspace-page) {
 }
 
 // Make sure content stays above animations
-.myspace-page.animated-orbs,
-.myspace-page.animated-starfield,
-.myspace-page.animated-bubbles,
-.myspace-page.animated-fireflies,
-.myspace-page.animated-neon-rain {
+.mystudio-page.animated-orbs,
+.mystudio-page.animated-starfield,
+.mystudio-page.animated-bubbles,
+.mystudio-page.animated-fireflies,
+.mystudio-page.animated-neon-rain {
   > * {
     position: relative;
     z-index: 1;

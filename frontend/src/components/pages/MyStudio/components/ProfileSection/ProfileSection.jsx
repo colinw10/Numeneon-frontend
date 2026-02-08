@@ -31,7 +31,7 @@ function ProfileSection({
         <img 
           src={avatarSrc}
           alt={displayUsername}
-          className="myspace-avatar"
+          className="mystudio-avatar"
         />
       </div>
       

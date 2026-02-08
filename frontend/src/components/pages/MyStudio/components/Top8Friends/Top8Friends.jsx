@@ -15,7 +15,7 @@ function Top8Friends({ topFriends, getFriendAvatar }) {
             <div 
               key={index} 
               className={`friend-slot ${friend ? 'filled' : 'empty'}`}
-              onClick={() => friend && navigate(`/myspace/${friend.username}`)}
+              onClick={() => friend && navigate(`/mystudio/${friend.username}`)}
             >
               {friend ? (
                 <>

@@ -60,17 +60,20 @@ See [docs/features/RiverTimeline.md](./docs/features/RiverTimeline.md) for the f
 
 ## ✨ Key Features
 
-| Feature                  | Description                                                          |
-| ------------------------ | -------------------------------------------------------------------- |
-| **River Timeline**       | Three-column feed with epoch-based grouping and carousel navigation  |
-| **Profile Flip Card**    | Dual-sided card — profile info on front, analytics dashboard on back |
-| **Engagement Analytics** | Wave chart + GitHub-style activity heatmap                           |
-| **Direct Messaging**     | Real-time DMs with conversation list                                 |
-| **User Navigation**      | Click any avatar/username to view their profile                      |
-| **Card User Headers**    | Every card shows who posted it (avatar + username inside)            |
-| **Mobile Category Tabs** | Tab-based navigation for mobile (Thoughts/Media/Milestones)          |
-| **Search Modal**         | Search users and posts globally                                      |
-| **Theme Toggle**         | Dark mode (cyberpunk) / Light mode (clean)                           |
+| Feature                  | Description                                                           |
+| ------------------------ | --------------------------------------------------------------------- |
+| **River Timeline**       | Three-column feed with epoch-based grouping and carousel navigation   |
+| **Profile Flip Card**    | Dual-sided card — profile info on front, analytics dashboard on back  |
+| **Engagement Analytics** | Wave chart + GitHub-style activity heatmap                            |
+| **Direct Messaging**     | Real-time DMs with conversation list                                  |
+| **User Navigation**      | Click any avatar/username to view their profile                       |
+| **Card User Headers**    | Every card shows who posted it (avatar + username inside)             |
+| **Mobile Category Tabs** | Tab-based navigation for mobile (Thoughts/Media/Milestones)           |
+| **Search Modal**         | Search users and posts globally                                       |
+| **Theme Toggle**         | Dark mode (cyberpunk) / Light mode (platinum brushed aluminum)        |
+| **MyStudio**             | Nostalgic throwback profile with music player, Top 8 Friends, themes  |
+| **Daily Learning**       | Study tool: Big O, loops, methods, tech jargon, vocabulary, mythology |
+| **Post Composer**        | Create posts with category selection (Thoughts/Media/Milestones)      |
 
 ### 🔌 Stretch Feature: WebSockets
 
@@ -81,6 +84,28 @@ As a stretch goal, the team implemented **real-time notifications** using Django
 - **Live messaging** — Messages arrive without polling
 
 See [docs/features/WebSocketsStretchGoal.md](./docs/features/WebSocketsStretchGoal.md) for implementation details.
+
+### 🎵 MyStudio (Throwback Feature)
+
+A nostalgic tribute to early social media profiles:
+
+- **Music Player** — Custom stereo with CodePen-style volume knob, playlist management
+- **Top 8 Friends** — Classic friend grid with ranked slots
+- **Theme Picker** — Customize your profile colors and aesthetic
+- **Profile Section** — Personal info, current mood, and song
+
+### 📚 Daily Learning
+
+Built-in study tool for developers at `/learn`:
+
+| Category    | Content                                     |
+| ----------- | ------------------------------------------- |
+| Tech Jargon | Industry terminology and concepts           |
+| Big O       | Algorithm complexity analysis               |
+| Loops       | Loop patterns and use cases                 |
+| Methods     | JavaScript/Python method reference          |
+| Vocabulary  | Programming vocabulary                      |
+| Mythology   | Greek/Roman mythology (memory palace theme) |
 
 ---
 
@@ -129,9 +154,11 @@ numeneon/
 ├── frontend/               # React + Vite
 │   └── src/
 │       ├── components/
-│       │   ├── layout/     # TopBar, SideNav, MessageModal
-│       │   └── pages/      # Home, Profile, Login, etc.
-│       ├── contexts/       # Auth, Posts, Friends, Messages, Theme
+│       │   ├── layout/     # TopBar, SideNav
+│       │   ├── pages/      # Home, Profile, MyStudio, Learn, etc.
+│       │   └── ui/         # AuthLoader, ThemeToggle, Modals
+│       ├── contexts/       # Auth, Posts, Friends, Messages, Theme, WebSocket
+│       ├── data/           # Daily learning content (JSON)
 │       ├── services/       # API client
 │       └── styles/         # Global SCSS design system
 │
@@ -249,4 +276,3 @@ This project represents a true team effort. Key achievements include:
 ---
 
 _"In the neon glow, every post tells a story."_
-

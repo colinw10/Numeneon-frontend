@@ -12,7 +12,7 @@ function QuickSettings({ editModalOpen, setEditModalOpen }) {
   const { user } = useAuth();
   
   const handleThrowback = () => {
-    navigate(`/myspace/${user?.username || ''}`);
+    navigate(`/mystudio/${user?.username || ''}`);
   };
   
   return (
@@ -49,7 +49,7 @@ function QuickSettings({ editModalOpen, setEditModalOpen }) {
               title="Enter the time machine"
             >
               <MusicIcon size={18} className="neon-icon" />
-              <span>MySpace</span>
+              <span>MyStudio</span>
             </button>
           </div>
         </>

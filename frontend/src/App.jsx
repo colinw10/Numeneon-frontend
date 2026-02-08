@@ -13,7 +13,7 @@ import Home from './components/pages/Home';
 import Login from './components/pages/Login';
 import SignUp from './components/pages/Signup';
 import Profile from './components/pages/Profile';
-import MySpace from './components/pages/MySpace';
+import MyStudio from './components/pages/MyStudio';
 import About from './components/pages/About';
 import Friends from './components/pages/Friends';
 import Learn from './components/pages/Learn';
@@ -56,8 +56,8 @@ function AppContent() {
           <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
           <Route path="/profile/:username" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
-          <Route path="/myspace" element={<ProtectedRoute><MySpace/></ProtectedRoute>}/>
-          <Route path="/myspace/:username" element={<ProtectedRoute><MySpace/></ProtectedRoute>}/>
+          <Route path="/mystudio" element={<ProtectedRoute><MyStudio/></ProtectedRoute>}/>
+          <Route path="/mystudio/:username" element={<ProtectedRoute><MyStudio/></ProtectedRoute>}/>
           <Route path="/about" element={<ProtectedRoute><About/></ProtectedRoute>}/>
           <Route path="/friends" element={<ProtectedRoute><Friends/></ProtectedRoute>}/>
           <Route path="/learn" element={<ProtectedRoute><Learn/></ProtectedRoute>}/>

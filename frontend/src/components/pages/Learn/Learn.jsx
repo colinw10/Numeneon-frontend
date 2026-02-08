@@ -12,7 +12,7 @@ function Learn() {
   
   // Get tab from URL or default to techJargon
   const tabFromUrl = searchParams.get('tab');
-  const validTabs = ['techJargon', 'bigO', 'loop', 'method', 'vocabulary'];
+  const validTabs = ['techJargon', 'bigO', 'loop', 'method', 'vocabulary', 'mythology'];
   const initialTab = validTabs.includes(tabFromUrl) ? tabFromUrl : 'techJargon';
   
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -60,6 +60,7 @@ function Learn() {
       case 'loop': return today.loop;
       case 'method': return today.method;
       case 'vocabulary': return today.vocabulary;
+      case 'mythology': return today.mythology;
       default: return today.techJargon;
     }
   };
