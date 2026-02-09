@@ -73,7 +73,10 @@ See [docs/features/RiverTimeline.md](./docs/features/RiverTimeline.md) for the f
 | **Theme Toggle**         | Dark mode (cyberpunk) / Light mode (platinum brushed aluminum)        |
 | **MyStudio**             | Nostalgic throwback profile with music player, Top 8 Friends, themes  |
 | **Daily Learning**       | Study tool: Big O, loops, methods, tech jargon, vocabulary, mythology |
+| **Bilingual Support**    | English/Spanish toggle for Daily Learning (embedded translations)     |
 | **Post Composer**        | Create posts with category selection (Thoughts/Media/Milestones)      |
+| **Media Lightbox**       | Full-screen image/video viewer for media posts                        |
+| **Post Detail Modal**    | Expanded view of any post with full interactions                      |
 
 ### 🔌 Stretch Feature: WebSockets
 
@@ -104,8 +107,41 @@ Built-in study tool for developers at `/learn`:
 | Big O       | Algorithm complexity analysis               |
 | Loops       | Loop patterns and use cases                 |
 | Methods     | JavaScript/Python method reference          |
-| Vocabulary  | Programming vocabulary                      |
+| Vocabulary  | SAT/GRE vocabulary (948 words)              |
 | Mythology   | Greek/Roman mythology (memory palace theme) |
+
+**Features:**
+
+- **Bilingual Support** — Toggle between English and Spanish (preference saved to localStorage)
+- **Mark as Known** — Track learning progress across sessions
+- **Daily Rotation** — New content each day based on date
+- **Deep Linking** — Navigate directly to categories via URL params (e.g., `/learn?tab=bigO`)
+
+### 🌐 Translation Architecture
+
+Daily Learning supports **embedded Spanish translations** — no external API calls required:
+
+```javascript
+// Each JSON item has inline translations
+{
+  "term": "Big O Notation",
+  "definition": "Mathematical notation...",
+  "definition_es": "Notación matemática...",   // ← embedded
+  "example": "O(n) - linear time",
+  "example_es": "O(n) - tiempo lineal"         // ← embedded
+}
+```
+
+**Translation Fields by Category:**
+| Category | Translated Fields |
+| ----------- | ---------------------------------------------- |
+| Tech Jargon | `term_es`, `definition_es`, `example_es`, `sentence_es` |
+| Big O | `term_es`, `definition_es`, `example_es`, `realWorld_es` |
+| Loops | `definition_es`, `bestFor_es`, `gotcha_es` |
+| Methods | `definition_es`, `gotcha_es` |
+| Mythology | `culture_es`, `definition_es`, `myth_es`, `symbol_es` |
+
+The helper function `getTranslatedItem()` reads these `_es` fields when Spanish is selected.
 
 ---
 
@@ -155,10 +191,11 @@ numeneon/
 │   └── src/
 │       ├── components/
 │       │   ├── layout/     # TopBar, SideNav
-│       │   ├── pages/      # Home, Profile, MyStudio, Learn, etc.
+│       │   ├── pages/      # Home, Profile, MyStudio, Learn, Friends, etc.
 │       │   └── ui/         # AuthLoader, ThemeToggle, Modals
-│       ├── contexts/       # Auth, Posts, Friends, Messages, Theme, WebSocket
-│       ├── data/           # Daily learning content (JSON)
+│       ├── contexts/       # Auth, Posts, Friends, Messages, Theme, WebSocket, Notification, Search
+│       ├── data/           # Daily learning content (JSON with embedded translations)
+│       ├── hooks/          # Custom React hooks
 │       ├── services/       # API client
 │       └── styles/         # Global SCSS design system
 │
