@@ -125,4 +125,6 @@ export {
   PostTriangleIcon,
   GuitarIcon,
   SparkleStarIcon,
+  ScrollIcon,
+  LanguageSwitchIcon,
 } from "./misc";

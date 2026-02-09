@@ -7,6 +7,7 @@ import loops from "./loops.json";
 import methods from "./methods.json";
 import vocabulary from "./vocabulary.json";
 import mythology from "./mythology.json";
+import { TRANSLATIONS, getTranslatedItem, getUILabel, getCategoryName } from "./translations";
 
 // Get today's items based on day of year (everyone sees the same word each day)
 const getDayOfYear = () => {
@@ -36,6 +37,9 @@ export const getTodayLearning = () => ({
 
 // Export raw data for the full /learn page
 export { techJargon, bigO, loops, methods, vocabulary, mythology };
+
+// Export translations
+export { TRANSLATIONS, getTranslatedItem, getUILabel, getCategoryName };
 
 // Category metadata
 export const CATEGORIES = [

@@ -1,8 +1,8 @@
 // Learn.jsx - Full daily learning page with detailed explanations
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getTodayLearning, CATEGORIES } from '@data/dailyLearning';
-import { ChevronLeftIcon } from '@assets/icons';
+import { getTodayLearning, CATEGORIES, getTranslatedItem, getUILabel, getCategoryName } from '@data/dailyLearning';
+import { ChevronLeftIcon, ScrollIcon, LanguageSwitchIcon } from '@assets/icons';
 import './Learn.scss';
 
 function Learn() {
@@ -16,6 +16,23 @@ function Learn() {
   const initialTab = validTabs.includes(tabFromUrl) ? tabFromUrl : 'techJargon';
   
   const [activeTab, setActiveTab] = useState(initialTab);
+
+  // Language state - persisted to localStorage
+  const getStoredLanguage = () => {
+    try {
+      return localStorage.getItem('learnLanguage') || 'en';
+    } catch {
+      return 'en';
+    }
+  };
+  
+  const [language, setLanguage] = useState(getStoredLanguage);
+
+  const toggleLanguage = () => {
+    const newLang = language === 'en' ? 'es' : 'en';
+    setLanguage(newLang);
+    localStorage.setItem('learnLanguage', newLang);
+  };
   
   // Update tab if URL changes
   useEffect(() => {
@@ -54,19 +71,28 @@ function Learn() {
 
   // Get current item based on active tab
   const getCurrentItem = () => {
+    let item;
     switch (activeTab) {
-      case 'techJargon': return today.techJargon;
-      case 'bigO': return today.bigO;
-      case 'loop': return today.loop;
-      case 'method': return today.method;
-      case 'vocabulary': return today.vocabulary;
-      case 'mythology': return today.mythology;
-      default: return today.techJargon;
+      case 'techJargon': item = today.techJargon; break;
+      case 'bigO': item = today.bigO; break;
+      case 'loop': item = today.loop; break;
+      case 'method': item = today.method; break;
+      case 'vocabulary': item = today.vocabulary; break;
+      case 'mythology': item = today.mythology; break;
+      default: item = today.techJargon;
     }
+    // Apply translations
+    return getTranslatedItem(item, activeTab, language);
   };
 
   const currentItem = getCurrentItem();
   const currentCategory = CATEGORIES.find(c => c.id === activeTab);
+
+  // Get localized date
+  const getLocalizedDate = () => {
+    const locale = language === 'es' ? 'es-ES' : 'en-US';
+    return new Date().toLocaleDateString(locale, { weekday: 'long', month: 'long', day: 'numeric' });
+  };
 
   return (
     <div className="learn-page">
@@ -74,10 +100,18 @@ function Learn() {
         <button className="back-btn" onClick={() => navigate(-1)}>
           <ChevronLeftIcon size={20} />
         </button>
-        <h1>Daily Learning</h1>
-        <span className="learn-date">
-          {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-        </span>
+        <h1>{getUILabel('dailyLearning', language)}</h1>
+        <div className="header-controls">
+          <span className="learn-date">{getLocalizedDate()}</span>
+          <button 
+            className="language-toggle" 
+            onClick={toggleLanguage}
+            title={language === 'en' ? 'Switch to Spanish' : 'Cambiar a Inglés'}
+          >
+            <LanguageSwitchIcon size={18} />
+            <span className="lang-label">{language === 'en' ? 'EN' : 'ES'}</span>
+          </button>
+        </div>
       </header>
 
       {/* Category Tabs */}
@@ -88,7 +122,7 @@ function Learn() {
             className={`learn-tab ${activeTab === cat.id ? 'active' : ''}`}
             onClick={() => setActiveTab(cat.id)}
           >
-            <span>{cat.name}</span>
+            <span>{getCategoryName(cat.id, language)}</span>
           </button>
         ))}
       </nav>
@@ -99,7 +133,7 @@ function Learn() {
           {/* Card Header */}
           <div className="card-header">
             <span className="card-category">
-              {currentCategory?.name}
+              {getCategoryName(activeTab, language)}
             </span>
             <button
               className={`know-btn ${isKnown(activeTab, currentItem.id) ? 'known' : ''}`}
@@ -109,7 +143,7 @@ function Learn() {
                   : markAsKnown(activeTab, currentItem.id)
               }
             >
-              {isKnown(activeTab, currentItem.id) ? '✓ Known' : 'Mark as Known'}
+              {isKnown(activeTab, currentItem.id) ? getUILabel('known', language) : getUILabel('markAsKnown', language)}
             </button>
           </div>
 
@@ -127,22 +161,46 @@ function Learn() {
           {/* Etymology (vocabulary) */}
           {currentItem.etymology && (
             <div className="card-section card-etymology">
-              <h3>📜 Etymology</h3>
+              <h3><ScrollIcon size={14} className="etymology-icon" /> {getUILabel('etymology', language)}</h3>
               <p>{currentItem.etymology}</p>
+            </div>
+          )}
+
+          {/* Culture (mythology) */}
+          {currentItem.culture && (
+            <div className="card-section">
+              <h3>{getUILabel('culture', language)}</h3>
+              <p>{currentItem.culture}</p>
+            </div>
+          )}
+
+          {/* Symbol (mythology) */}
+          {currentItem.symbol && (
+            <div className="card-section">
+              <h3>{getUILabel('symbol', language)}</h3>
+              <p>{currentItem.symbol}</p>
+            </div>
+          )}
+
+          {/* Myth (mythology) */}
+          {currentItem.myth && (
+            <div className="card-section">
+              <h3>{getUILabel('myth', language)}</h3>
+              <p>{currentItem.myth}</p>
             </div>
           )}
 
           {/* Example/Sentence */}
           {currentItem.example && (
             <div className="card-section">
-              <h3>Example</h3>
+              <h3>{getUILabel('example', language)}</h3>
               <p>{currentItem.example}</p>
             </div>
           )}
 
           {currentItem.sentence && (
             <div className="card-section">
-              <h3>In a Sentence</h3>
+              <h3>{getUILabel('inASentence', language)}</h3>
               <p className="card-sentence">"{currentItem.sentence}"</p>
             </div>
           )}
@@ -150,7 +208,7 @@ function Learn() {
           {/* Code Example */}
           {currentItem.code && (
             <div className="card-section">
-              <h3>Code Example</h3>
+              <h3>{getUILabel('codeExample', language)}</h3>
               <pre className="card-code"><code>{currentItem.code}</code></pre>
             </div>
           )}
@@ -158,7 +216,7 @@ function Learn() {
           {/* Best For (loops) */}
           {currentItem.bestFor && (
             <div className="card-section">
-              <h3>Best For</h3>
+              <h3>{getUILabel('bestFor', language)}</h3>
               <p>{currentItem.bestFor}</p>
             </div>
           )}
@@ -166,7 +224,7 @@ function Learn() {
           {/* Gotcha */}
           {currentItem.gotcha && (
             <div className="card-section card-gotcha">
-              <h3>⚠️ Watch Out</h3>
+              <h3>⚠️ {getUILabel('gotcha', language)}</h3>
               <p>{currentItem.gotcha}</p>
             </div>
           )}
@@ -174,7 +232,7 @@ function Learn() {
           {/* Real World (Big O) */}
           {currentItem.realWorld && (
             <div className="card-section">
-              <h3>Real World Analogy</h3>
+              <h3>{getUILabel('realWorld', language)}</h3>
               <p>{currentItem.realWorld}</p>
             </div>
           )}
@@ -182,7 +240,7 @@ function Learn() {
           {/* Synonyms (vocabulary) */}
           {currentItem.synonyms && (
             <div className="card-section">
-              <h3>Synonyms</h3>
+              <h3>{getUILabel('synonyms', language)}</h3>
               <div className="card-synonyms">
                 {currentItem.synonyms.map((syn, i) => (
                   <span key={i} className="synonym-tag">{syn}</span>
@@ -201,11 +259,11 @@ function Learn() {
         <div className="learn-stats">
           <div className="stat">
             <span className="stat-value">{Object.keys(knownItems).length}</span>
-            <span className="stat-label">Words Learned</span>
+            <span className="stat-label">{language === 'es' ? 'Palabras Aprendidas' : 'Words Learned'}</span>
           </div>
           <div className="stat">
             <span className="stat-value">{CATEGORIES.reduce((acc, c) => acc + c.data.length, 0)}</span>
-            <span className="stat-label">Total Terms</span>
+            <span className="stat-label">{language === 'es' ? 'Términos Totales' : 'Total Terms'}</span>
           </div>
         </div>
       </main>
