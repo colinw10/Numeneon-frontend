@@ -2,7 +2,8 @@
 // TimelineRiverFeed.jsx - Main timeline feed with 3-column river layout
 //
 // ROW-CHUNKING: Posts are chunked into rows of max 12 per category.
-// When a user posts 15 thoughts in a day, they get 2 rows: [3 newest] then [12 older].
+// When a category overflows (e.g., 13 thoughts), the overflow goes to a NEW row.
+// Categories that haven't overflowed stay together in the original row.
 
 import { groupPostsByUser, sortGroupedPosts } from '@components/pages/Home/utils/groupPosts';
 import TimelineRiverRow from '../TimelineRiverRow';
@@ -56,12 +57,13 @@ const chunkPostsIntoRows = (posts) => {
  * Split a user's grouped data into multiple rows if ANY category exceeds 12 posts.
  * Returns an array of rowData objects, each with max 12 posts per category.
  * 
- * KEY DESIGN: When ANY category hits 12+, a new row is created for ALL categories.
- * This keeps the timeline synchronized - Row 0 always = newest posts across ALL types.
+ * KEY DESIGN: When ANY category hits 12+, a new row is created for overflow.
+ * Categories that HAVEN'T overflowed stay in the LAST row (aligned with original content).
+ * This keeps the timeline coherent - new posts go to new rows, original content stays together.
  * 
- * Example: 15 thoughts, 3 media, 1 milestone
- *   Row 0 (newest): thoughts[0-2], media[0-2], milestones[0]  ← all newest
- *   Row 1 (older):  thoughts[3-14], empty, empty              ← overflow from thoughts
+ * Example: 13 thoughts, 5 media, 3 milestones
+ *   Row 0 (newest): thoughts[0]    , [],       []             ← ONLY the overflow
+ *   Row 1 (older):  thoughts[1-12], media[all], milestones[all] ← original content together
  */
 const splitGroupIntoRows = (groupData) => {
   const { user, thoughts = [], media = [], milestones = [] } = groupData;
@@ -84,12 +86,24 @@ const splitGroupIntoRows = (groupData) => {
   const rowCount = Math.ceil(maxCategoryLength / CAROUSEL_LIMIT);
   
   // Helper: chunk a single category's posts aligned to global row structure
-  // Row 0 gets the "remainder" (newest), subsequent rows get 12 each
+  // Categories that OVERFLOW: Row 0 = remainder (newest), subsequent rows = 12 each
+  // Categories that DON'T overflow: All posts go to LAST row (aligned with original content)
   const chunkAligned = (posts, totalRows) => {
     if (!posts || posts.length === 0) {
       return Array(totalRows).fill([]);
     }
     
+    // KEY FIX: Categories that haven't overflowed should align with the LAST row
+    // (the "original" row where posts were before any overflow happened)
+    // This keeps the original content together and only overflow creates new rows
+    if (posts.length <= CAROUSEL_LIMIT) {
+      // Pad empty rows at the START, put all posts in the LAST row
+      const chunks = Array(totalRows - 1).fill([]);
+      chunks.push(posts); // All posts in last row
+      return chunks;
+    }
+    
+    // OVERFLOW case: chunk normally (remainder/newest in Row 0, then 12 each)
     const chunks = [];
     const remainder = posts.length % CAROUSEL_LIMIT;
     
