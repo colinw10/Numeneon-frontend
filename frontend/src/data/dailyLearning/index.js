@@ -7,7 +7,12 @@ import loops from "./loops.json";
 import methods from "./methods.json";
 import vocabulary from "./vocabulary.json";
 import mythology from "./mythology.json";
-import { TRANSLATIONS, getTranslatedItem, getUILabel, getCategoryName } from "./translations";
+import {
+  TRANSLATIONS,
+  getTranslatedItem,
+  getUILabel,
+  getCategoryName,
+} from "./translations";
 
 // Get today's items based on day of year (everyone sees the same word each day)
 const getDayOfYear = () => {
@@ -18,10 +23,20 @@ const getDayOfYear = () => {
   return Math.floor(diff / oneDay);
 };
 
-// Get item for today from a category (cycles through the list)
+// Seeded random - produces consistent "random" number for same seed
+// Same day = same word for all users, but order feels random
+const seededRandom = (seed) => {
+  const x = Math.sin(seed * 9999) * 10000;
+  return x - Math.floor(x);
+};
+
+// Get item for today from a category using seeded randomization
+// Ensures variety even with large word lists - doesn't just go 1,2,3...
 export const getTodayItem = (category) => {
   const dayOfYear = getDayOfYear();
-  const index = dayOfYear % category.length;
+  // Use category length as part of seed so different categories get different words
+  const seed = dayOfYear + category.length * 1000;
+  const index = Math.floor(seededRandom(seed) * category.length);
   return category[index];
 };
 
