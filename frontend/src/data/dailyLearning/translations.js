@@ -43,20 +43,20 @@ export const TRANSLATIONS = {
   // Category names
   categories: {
     en: {
-      techJargon: "Tech Jargon",
+      techJargon: "Tech",
       bigO: "Big O",
-      loop: "Loops",
-      method: "Methods",
-      vocabulary: "Vocabulary",
-      mythology: "Mythology",
+      loop: "Loop",
+      method: "Method",
+      vocabulary: "Vocab",
+      mythology: "Myth",
     },
     es: {
-      techJargon: "Jerga Técnica",
+      techJargon: "Técnica",
       bigO: "Big O",
       loop: "Bucles",
       method: "Métodos",
-      vocabulary: "Vocabulario",
-      mythology: "Mitología",
+      vocabulary: "Vocab",
+      mythology: "Mito",
     },
   },
 
@@ -799,9 +799,49 @@ export const TRANSLATIONS = {
 };
 
 // Helper function to get translated content
+// Supports both embedded _es fields and legacy TRANSLATIONS lookup
 export function getTranslatedItem(item, category, language) {
   if (language === "en") return item;
 
+  // Check for embedded Spanish translations first (new format)
+  const translatedItem = { ...item };
+  let hasEmbeddedTranslations = false;
+
+  // Fields that can have _es versions
+  const translatableFields = [
+    "definition",
+    "sentence",
+    "gotcha",
+    "etymology",
+    "myth",
+    "symbol",
+    "bestFor",
+    "example",
+    "realWorld",
+    "partOfSpeech",
+    "term",
+    "culture",
+  ];
+
+  for (const field of translatableFields) {
+    const esField = `${field}_es`;
+    if (item[esField]) {
+      translatedItem[field] = item[esField];
+      hasEmbeddedTranslations = true;
+    }
+  }
+
+  // Handle synonyms_es array
+  if (item.synonyms_es) {
+    translatedItem.synonyms = item.synonyms_es;
+    hasEmbeddedTranslations = true;
+  }
+
+  if (hasEmbeddedTranslations) {
+    return translatedItem;
+  }
+
+  // Fall back to legacy TRANSLATIONS lookup
   const translations = TRANSLATIONS[category]?.[item.id]?.es;
   if (!translations) return item;
 
