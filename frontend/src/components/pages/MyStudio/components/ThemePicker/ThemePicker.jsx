@@ -12,6 +12,7 @@ import triad31 from '@assets/wallpapers/triad-3-1.png';
 
 import peacockWarp from '@assets/wallpapers/PEACOCK-warp.jpg';
 import triasPattern from '@assets/wallpapers/trias-pattern.png';
+import colorsVertical from '@assets/wallpapers/colors-vertical.png';
 
 const THEME_OPTIONS = [
   { id: 'classic', name: 'Classic', preview: '#003366' },
@@ -33,6 +34,7 @@ const WALLPAPER_OPTIONS = [
   { id: 'triad31', name: 'triad 3-1', src: triad31 },
   { id: 'triasPattern', name: 'trias pattern', src: triasPattern },
   { id: 'peacockWarp', name: 'peacock warp', src: peacockWarp },
+  { id: 'colorsVertical', name: 'colors vertical', src: colorsVertical },
   // CSS gradient wallpapers
   { id: 'cyberpunk', name: 'cyberpunk', css: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)' },
   { id: 'neonCity', name: 'neon city', css: 'linear-gradient(180deg, #0a0015 0%, #1a0030 30%, #ff00ff20 70%, #00ffff10 100%)' },
