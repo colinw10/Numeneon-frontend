@@ -60,23 +60,23 @@ See [docs/features/RiverTimeline.md](./docs/features/RiverTimeline.md) for the f
 
 ## ✨ Key Features
 
-| Feature                  | Description                                                           |
-| ------------------------ | --------------------------------------------------------------------- |
-| **River Timeline**       | Three-column feed with epoch-based grouping and carousel navigation   |
-| **Profile Flip Card**    | Dual-sided card — profile info on front, analytics dashboard on back  |
-| **Engagement Analytics** | Wave chart + GitHub-style activity heatmap                            |
-| **Direct Messaging**     | Real-time DMs with conversation list                                  |
-| **User Navigation**      | Click any avatar/username to view their profile                       |
-| **Card User Headers**    | Every card shows who posted it (avatar + username inside)             |
-| **Mobile Category Tabs** | Tab-based navigation for mobile (Thoughts/Media/Milestones)           |
-| **Search Modal**         | Search users and posts globally                                       |
-| **Theme Toggle**         | Dark mode (cyberpunk) / Light mode (platinum brushed aluminum)        |
-| **MyStudio**             | Nostalgic throwback profile with music player, Top 8 Friends, themes  |
-| **Daily Learning**       | Study tool: Big O, loops, methods, tech jargon, vocabulary, mythology |
-| **Bilingual Support**    | English/Spanish toggle for Daily Learning (embedded translations)     |
-| **Post Composer**        | Create posts with category selection (Thoughts/Media/Milestones)      |
-| **Media Lightbox**       | Full-screen image/video viewer for media posts                        |
-| **Post Detail Modal**    | Expanded view of any post with full interactions                      |
+| Feature                  | Description                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| **River Timeline**       | Three-column feed with epoch-based grouping and carousel navigation               |
+| **Profile Flip Card**    | Dual-sided card — profile info on front, analytics dashboard on back              |
+| **Engagement Analytics** | Wave chart + GitHub-style activity heatmap                                        |
+| **Direct Messaging**     | Real-time DMs with conversation list                                              |
+| **User Navigation**      | Click any avatar/username to view their profile                                   |
+| **Card User Headers**    | Every card shows who posted it (avatar + username inside)                         |
+| **Mobile Category Tabs** | Tab-based navigation for mobile (Thoughts/Media/Milestones)                       |
+| **Search Modal**         | Search users and posts globally                                                   |
+| **Theme Toggle**         | Dark mode (cyberpunk) / Light mode (platinum brushed aluminum)                    |
+| **MyStudio**             | Nostalgic throwback profile with music player, Top 8 Friends, themes              |
+| **Daily Learning**       | Study tool: Big O, loops, methods, tech jargon, 948 SAT/Pulitzer words, mythology |
+| **Bilingual Support**    | Full English/Spanish translations for all 6 learning categories                   |
+| **Post Composer**        | Create posts with category selection (Thoughts/Media/Milestones)                  |
+| **Media Lightbox**       | Full-screen image/video viewer for media posts                                    |
+| **Post Detail Modal**    | Expanded view of any post with full interactions                                  |
 
 ### 🔌 Stretch Feature: WebSockets
 
@@ -101,18 +101,18 @@ A nostalgic tribute to early social media profiles:
 
 Built-in study tool for developers at `/learn`:
 
-| Category    | Content                                     |
-| ----------- | ------------------------------------------- |
-| Tech Jargon | Industry terminology and concepts           |
-| Big O       | Algorithm complexity analysis               |
-| Loops       | Loop patterns and use cases                 |
-| Methods     | JavaScript/Python method reference          |
-| Vocabulary  | SAT/GRE vocabulary (948 words)              |
-| Mythology   | Greek/Roman mythology (memory palace theme) |
+| Category    | Content                                                         |
+| ----------- | --------------------------------------------------------------- |
+| Tech Jargon | Industry terminology and concepts                               |
+| Big O       | Algorithm complexity analysis                                   |
+| Loops       | Loop patterns and use cases                                     |
+| Methods     | JavaScript/Python method reference                              |
+| Vocabulary  | 948 SAT/GRE + Pulitzer-winning literary words (EN/ES bilingual) |
+| Mythology   | Greek/Roman mythology (memory palace theme)                     |
 
 **Features:**
 
-- **Bilingual Support** — Toggle between English and Spanish (preference saved to localStorage)
+- **Bilingual Support** — Toggle between English and Spanish for all categories (preference saved to localStorage)
 - **Mark as Known** — Track learning progress across sessions
 - **Daily Rotation** — New content each day based on date
 - **Deep Linking** — Navigate directly to categories via URL params (e.g., `/learn?tab=bigO`)
@@ -139,7 +139,14 @@ Daily Learning supports **embedded Spanish translations** — no external API ca
 | Big O | `term_es`, `definition_es`, `example_es`, `realWorld_es` |
 | Loops | `definition_es`, `bestFor_es`, `gotcha_es` |
 | Methods | `definition_es`, `gotcha_es` |
+| Vocabulary | `definition_es`, `partOfSpeech_es`, `etymology_es` |
 | Mythology | `culture_es`, `definition_es`, `myth_es`, `symbol_es` |
+
+All 948 vocabulary words (SAT/GRE + Pulitzer-winning literary works) have complete Spanish translations. Sources include:
+
+- **SAT/GRE prep** — Core academic vocabulary
+- **Pulitzer Prize winners** — _The Good Earth_, _All the Light We Cannot See_, Michael Chabon's works
+- **Literary precision** — Words like _cathected_, _gelid_, _laconic_, _felicitous_, _bricoleur_, _staccato_
 
 The helper function `getTranslatedItem()` reads these `_es` fields when Spanish is selected.
 
