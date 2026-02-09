@@ -124,6 +124,14 @@ function Learn() {
           {/* Definition */}
           <p className="card-definition">{currentItem.definition}</p>
 
+          {/* Etymology (vocabulary) */}
+          {currentItem.etymology && (
+            <div className="card-section card-etymology">
+              <h3>📜 Etymology</h3>
+              <p>{currentItem.etymology}</p>
+            </div>
+          )}
+
           {/* Example/Sentence */}
           {currentItem.example && (
             <div className="card-section">

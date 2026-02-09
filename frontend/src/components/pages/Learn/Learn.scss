@@ -371,6 +371,27 @@
     }
   }
   
+  .card-etymology {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(79, 70, 229, 0.08));
+    padding: 1rem;
+    margin-top: 1.5rem;
+    border-left: 3px solid #a78bfa;
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    
+    h3 {
+      color: #a78bfa;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      color: rgba(200, 180, 255, 0.95);
+      font-style: italic;
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+  }
+  
   .card-synonyms {
     display: flex;
     flex-wrap: wrap;
@@ -657,6 +678,19 @@
       }
     }
     
+    .card-etymology {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(79, 70, 229, 0.05));
+      border-left-color: #7c3aed;
+      
+      h3 {
+        color: #7c3aed;
+      }
+      
+      p {
+        color: #5b21b6;
+      }
+    }
+    
     .card-synonyms {
       .synonym-tag {
         background: rgba(124, 58, 237, 0.15);
@@ -837,6 +871,15 @@
       }
     }
     
+    .card-etymology {
+      padding: 0.75rem;
+      margin-top: 1rem;
+      
+      p {
+        font-size: 0.8rem;
+      }
+    }
+    
     .synonym-tag {
       font-size: 0.6rem;
       padding: 0.2rem 0.5rem;
@@ -980,6 +1023,10 @@
     
     .card-gotcha p {
       font-size: 0.8rem;
+    }
+    
+    .card-etymology p {
+      font-size: 0.75rem;
     }
   }
   

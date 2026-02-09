@@ -5,6 +5,7 @@
     "pronunciation": "ih-FEM-er-ul",
     "partOfSpeech": "adjective",
     "definition": "Lasting for a very short time; transitory",
+    "etymology": "From Greek 'ephēmeros' (ἐφήμερος), meaning 'lasting only a day' — from 'epi' (on) + 'hēmera' (day). Originally used to describe insects that live for only one day.",
     "sentence": "Social media stories are ephemeral by design, disappearing after 24 hours.",
     "synonyms": ["fleeting", "transient", "momentary"]
   },
@@ -14,6 +15,7 @@
     "pronunciation": "yoo-BIK-wih-tus",
     "partOfSpeech": "adjective",
     "definition": "Present, appearing, or found everywhere",
+    "etymology": "From Latin 'ubique' meaning 'everywhere' — from 'ubi' (where) + '-que' (and, also). Related to theological concept of God's omnipresence.",
     "sentence": "Smartphones have become ubiquitous in modern society.",
     "synonyms": ["omnipresent", "pervasive", "universal"]
   },
@@ -23,6 +25,7 @@
     "pronunciation": "es-oh-TAIR-ik",
     "partOfSpeech": "adjective",
     "definition": "Intended for or understood by only a small group with specialized knowledge",
+    "etymology": "From Greek 'esōterikos' (ἐσωτερικός), meaning 'inner' or 'within' — from 'esō' (within). Originally referred to Aristotle's more difficult works meant only for inner circle students.",
     "sentence": "The professor's lecture on quantum mechanics was too esoteric for the general audience.",
     "synonyms": ["arcane", "obscure", "abstruse"]
   },
@@ -32,6 +35,7 @@
     "pronunciation": "prag-MAT-ik",
     "partOfSpeech": "adjective",
     "definition": "Dealing with things sensibly and realistically based on practical considerations",
+    "etymology": "From Greek 'pragmatikos' (πραγματικός), meaning 'fit for business' — from 'pragma' (deed, act), from 'prassein' (to do). Related to 'praxis' (practice).",
     "sentence": "We need a pragmatic solution that works within our budget constraints.",
     "synonyms": ["practical", "realistic", "sensible"]
   },
@@ -41,6 +45,7 @@
     "pronunciation": "EL-oh-kwent",
     "partOfSpeech": "adjective",
     "definition": "Fluent, persuasive, and expressive in speech or writing",
+    "etymology": "From Latin 'eloquens', present participle of 'eloqui' (to speak out) — from 'ex-' (out) + 'loqui' (to speak). Same root as 'loquacious' and 'soliloquy'.",
     "sentence": "Her eloquent defense of free speech moved the entire courtroom.",
     "synonyms": ["articulate", "expressive", "persuasive"]
   },
@@ -50,6 +55,7 @@
     "pronunciation": "per-NISH-us",
     "partOfSpeech": "adjective",
     "definition": "Having a harmful effect, especially in a gradual or subtle way",
+    "etymology": "From Latin 'perniciosus', from 'pernicies' (destruction) — from 'per-' (completely) + 'nex/necis' (death, killing). Same root as 'internecine'.",
     "sentence": "The pernicious spread of misinformation undermines public trust in institutions.",
     "synonyms": ["harmful", "destructive", "detrimental"]
   },
@@ -59,6 +65,7 @@
     "pronunciation": "uh-MEEL-yuh-rayt",
     "partOfSpeech": "verb",
     "definition": "To make something bad or unsatisfactory better",
+    "etymology": "From Latin 'ameliorare', from 'ad-' (to) + 'melior' (better). Related to French 'améliorer'. The root 'melior' also gives us 'meliorate'.",
     "sentence": "The new policies aim to ameliorate the housing crisis in urban areas.",
     "synonyms": ["improve", "enhance", "alleviate"]
   },
@@ -68,6 +75,7 @@
     "pronunciation": "OB-fuh-skayt",
     "partOfSpeech": "verb",
     "definition": "To make obscure, unclear, or unintelligible",
+    "etymology": "From Latin 'obfuscare', from 'ob-' (over) + 'fuscare' (to darken), from 'fuscus' (dark). Literally means 'to darken over' or 'to cloud'.",
     "sentence": "Politicians often obfuscate their true intentions with vague language.",
     "synonyms": ["confuse", "obscure", "muddle"]
   },
@@ -77,6 +85,7 @@
     "pronunciation": "ih-LOO-sih-dayt",
     "partOfSpeech": "verb",
     "definition": "To make something clear; to explain",
+    "etymology": "From Latin 'elucidare', from 'e-' (out) + 'lucidus' (clear, bright), from 'lux' (light). Literally 'to bring light out'. Related to 'lucid' and 'translucent'.",
     "sentence": "The diagram helps elucidate the complex relationship between the components.",
     "synonyms": ["clarify", "explain", "illuminate"]
   },
@@ -86,6 +95,7 @@
     "pronunciation": "per-FUNK-tor-ee",
     "partOfSpeech": "adjective",
     "definition": "Carried out with minimal effort or reflection; mechanical",
+    "etymology": "From Latin 'perfunctorius', from 'perfungi' (to get through with) — from 'per-' (through) + 'fungi' (to perform). Implies doing just enough to 'get through' a task.",
     "sentence": "His perfunctory apology did nothing to repair the damaged relationship.",
     "synonyms": ["cursory", "superficial", "halfhearted"]
   },
@@ -95,6 +105,7 @@
     "pronunciation": "KOH-jent",
     "partOfSpeech": "adjective",
     "definition": "Clear, logical, and convincing",
+    "etymology": "From Latin 'cogent-', present participle of 'cogere' (to compel) — from 'co-' (together) + 'agere' (to drive). An argument so forceful it 'drives together' agreement.",
     "sentence": "She presented a cogent argument that swayed the skeptical investors.",
     "synonyms": ["compelling", "persuasive", "convincing"]
   },
@@ -104,6 +115,7 @@
     "pronunciation": "SIK-oh-fant",
     "partOfSpeech": "noun",
     "definition": "A person who acts obsequiously to gain advantage; a flatterer",
+    "etymology": "From Greek 'sykophantēs' (συκοφάντης), literally 'fig-shower' — from 'sykon' (fig) + 'phainein' (to show). Originally meant an informer in ancient Athens, possibly one who reported illegal fig exports.",
     "sentence": "The CEO surrounded himself with sycophants who never challenged his decisions.",
     "synonyms": ["flatterer", "toady", "yes-man"]
   },
@@ -113,6 +125,7 @@
     "pronunciation": "rih-KAL-sih-trunt",
     "partOfSpeech": "adjective",
     "definition": "Stubbornly resistant to authority or control",
+    "etymology": "From Latin 'recalcitrare' (to kick back) — from 're-' (back) + 'calcitrare' (to kick), from 'calx' (heel). Like a horse kicking back against its rider.",
     "sentence": "The recalcitrant employee refused to follow the new safety protocols.",
     "synonyms": ["defiant", "obstinate", "uncooperative"]
   },
@@ -122,6 +135,7 @@
     "pronunciation": "fa-STID-ee-us",
     "partOfSpeech": "adjective",
     "definition": "Very attentive to detail; concerned with accuracy and precision",
+    "etymology": "From Latin 'fastidiosus' (disdainful, squeamish), from 'fastidium' (loathing, disgust) — possibly from 'fastus' (arrogance) + 'taedium' (weariness). Originally implied excessive pickiness.",
     "sentence": "Her fastidious code reviews caught bugs that others missed.",
     "synonyms": ["meticulous", "particular", "scrupulous"]
   },
@@ -131,6 +145,7 @@
     "pronunciation": "luh-KON-ik",
     "partOfSpeech": "adjective",
     "definition": "Using very few words; brief and to the point",
+    "etymology": "From Greek 'Lakōnikos' (Λακωνικός), meaning 'of Laconia' (Sparta). Spartans were famous for their terse speech. When Philip II threatened 'If I invade, I will destroy you,' Sparta replied: 'If.'",
     "sentence": "His laconic reply of 'no' ended the debate instantly.",
     "synonyms": ["terse", "concise", "succinct"]
   },
@@ -140,6 +155,7 @@
     "pronunciation": "os-ten-TAY-shus",
     "partOfSpeech": "adjective",
     "definition": "Characterized by vulgar or pretentious display; designed to impress",
+    "etymology": "From Latin 'ostentare' (to display), frequentative of 'ostendere' (to show) — from 'ob-' (before) + 'tendere' (to stretch). Implies stretching out something for all to see.",
     "sentence": "The ostentatious mansion seemed out of place in the modest neighborhood.",
     "synonyms": ["showy", "flashy", "pretentious"]
   },
@@ -149,6 +165,7 @@
     "pronunciation": "vy-KAIR-ee-us",
     "partOfSpeech": "adjective",
     "definition": "Experienced through imagined participation in another's experience",
+    "etymology": "From Latin 'vicarius' (substitute, deputy), from 'vicis' (change, alternation). Same root gives us 'vicar' (one who acts in place of another) and 'vice-' prefix.",
     "sentence": "He lived vicariously through his children's athletic achievements.",
     "synonyms": ["indirect", "secondhand", "surrogate"]
   },
@@ -158,6 +175,7 @@
     "pronunciation": "TAS-it",
     "partOfSpeech": "adjective",
     "definition": "Understood or implied without being stated explicitly",
+    "etymology": "From Latin 'tacitus' (silent), past participle of 'tacere' (to be silent). Related to 'taciturn' (habitually silent) and the name 'Tacitus' (the Roman historian).",
     "sentence": "There was a tacit agreement among the team to never discuss the failed project.",
     "synonyms": ["implicit", "unspoken", "understood"]
   },
@@ -167,6 +185,7 @@
     "pronunciation": "soo-PER-floo-us",
     "partOfSpeech": "adjective",
     "definition": "Unnecessary; more than what is needed",
+    "etymology": "From Latin 'superfluus', from 'superfluere' (to overflow) — from 'super-' (over) + 'fluere' (to flow). Literally means 'flowing over' the necessary amount.",
     "sentence": "The editor removed superfluous adjectives to tighten the prose.",
     "synonyms": ["excessive", "redundant", "surplus"]
   },
@@ -176,6 +195,7 @@
     "pronunciation": "JUK-stuh-pohz",
     "partOfSpeech": "verb",
     "definition": "To place side by side for comparison or contrast",
+    "etymology": "From Latin 'juxta' (near, beside) + French 'poser' (to place), from Latin 'ponere'. A relatively modern word (19th century), combining Latin and French roots.",
     "sentence": "The documentary juxtaposes scenes of wealth and poverty to highlight inequality.",
     "synonyms": ["contrast", "compare", "set side by side"]
   },
@@ -185,6 +205,7 @@
     "pronunciation": "ver-BOHS",
     "partOfSpeech": "adjective",
     "definition": "Using more words than necessary; wordy",
+    "etymology": "From Latin 'verbosus', from 'verbum' (word). Same root as 'verb', 'verbal', and 'verbatim'. The '-ose' suffix indicates fullness or abundance (like 'grandiose').",
     "sentence": "His verbose writing style made the simple concept confusing.",
     "synonyms": ["wordy", "long-winded", "prolix"]
   },
@@ -194,6 +215,7 @@
     "pronunciation": "LOO-sid",
     "partOfSpeech": "adjective",
     "definition": "Expressed clearly; easy to understand",
+    "etymology": "From Latin 'lucidus' (bright, clear), from 'lux' (light). Same root as 'elucidate', 'translucent', and 'Lucifer' (light-bearer). Clarity of thought is likened to brightness.",
     "sentence": "Her lucid explanation made the complex algorithm accessible to beginners.",
     "synonyms": ["clear", "intelligible", "comprehensible"]
   },
@@ -203,6 +225,7 @@
     "pronunciation": "teh-NAY-shus",
     "partOfSpeech": "adjective",
     "definition": "Holding firmly to something; persistent",
+    "etymology": "From Latin 'tenax' (holding fast), from 'tenere' (to hold). Same root as 'tenant' (one who holds property), 'tenure', and 'tenable'. Implies a grip that won't let go.",
     "sentence": "Her tenacious debugging finally uncovered the elusive race condition.",
     "synonyms": ["persistent", "determined", "resolute"]
   },
@@ -212,6 +235,7 @@
     "pronunciation": "AK-yoo-men",
     "partOfSpeech": "noun",
     "definition": "The ability to make good judgments and quick decisions",
+    "etymology": "From Latin 'acumen' (a point, sharpness), from 'acuere' (to sharpen). Same root as 'acute', 'acupuncture', and 'acuity'. Mental sharpness is likened to a fine point.",
     "sentence": "Her business acumen helped the startup navigate multiple funding rounds.",
     "synonyms": ["shrewdness", "insight", "sagacity"]
   },
@@ -221,6 +245,7 @@
     "pronunciation": "peh-DAN-tik",
     "partOfSpeech": "adjective",
     "definition": "Excessively concerned with minor details or rules; showing off learning",
+    "etymology": "From Italian 'pedante' (teacher, schoolmaster), possibly from Greek 'paideuein' (to teach), from 'pais' (child). Originally meant a teacher, later gained negative connotation of excessive formality.",
     "sentence": "His pedantic insistence on Oxford commas annoyed his colleagues.",
     "synonyms": ["nitpicking", "academic", "dogmatic"]
   },
@@ -230,6 +255,7 @@
     "pronunciation": "ih-KWIV-oh-kayt",
     "partOfSpeech": "verb",
     "definition": "To use ambiguous language to conceal the truth or avoid commitment",
+    "etymology": "From Latin 'aequivocus', from 'aequus' (equal) + 'vox' (voice). Literally 'equal voice' — saying things that could be taken equally either way. Related to 'equivocal'.",
     "sentence": "The politician equivocated when asked about her stance on the controversial bill.",
     "synonyms": ["hedge", "evade", "prevaricate"]
   },
@@ -239,6 +265,7 @@
     "pronunciation": "ig-ZAS-er-bayt",
     "partOfSpeech": "verb",
     "definition": "To make a problem, bad situation, or feeling worse",
+    "etymology": "From Latin 'exacerbare', from 'ex-' (thoroughly) + 'acerbus' (harsh, bitter). Related to 'acerbic' (sharply bitter). Originally meant to irritate or embitter.",
     "sentence": "Adding more features will only exacerbate the technical debt problem.",
     "synonyms": ["worsen", "aggravate", "intensify"]
   },
@@ -248,6 +275,7 @@
     "pronunciation": "ak-wee-ES",
     "partOfSpeech": "verb",
     "definition": "To accept something reluctantly but without protest",
+    "etymology": "From Latin 'acquiescere' (to find rest in) — from 'ad-' (to) + 'quiescere' (to rest), from 'quies' (rest, quiet). Implies accepting something to achieve peace. Related to 'quiet'.",
     "sentence": "After much debate, the team acquiesced to the client's design requests.",
     "synonyms": ["consent", "comply", "yield"]
   },
@@ -257,6 +285,7 @@
     "pronunciation": "in-TRAN-sih-jent",
     "partOfSpeech": "adjective",
     "definition": "Unwilling to change one's views or agree; uncompromising",
+    "etymology": "From Spanish 'los intransigentes', name of an extreme Spanish political party (1873) — from Latin 'in-' (not) + 'transigere' (to come to an agreement), from 'trans-' (through) + 'agere' (to drive).",
     "sentence": "The intransigent stakeholder refused to budge on the deadline despite the team's concerns.",
     "synonyms": ["stubborn", "inflexible", "unyielding"]
   },
@@ -266,6 +295,7 @@
     "pronunciation": "PRESH-ent",
     "partOfSpeech": "adjective",
     "definition": "Having knowledge of events before they take place",
+    "etymology": "From Latin 'praescient-', from 'praescire' (to know beforehand) — from 'prae-' (before) + 'scire' (to know). Same root as 'science', 'conscious', and 'omniscient'.",
     "sentence": "Her prescient investment in renewable energy paid off decades later.",
     "synonyms": ["prophetic", "foresighted", "visionary"]
   }
