@@ -10,6 +10,77 @@ const STATIC_ASSETS = [
   "/icons/icon-512x512.svg",
 ];
 
+// ==================== PUSH NOTIFICATIONS & BADGING ====================
+
+// Handle push notifications (from server)
+self.addEventListener("push", (event) => {
+  const data = event.data?.json() || {};
+  const title = data.title || "NUMENEON";
+  const options = {
+    body: data.body || "You have a new notification",
+    icon: "/icons/icon-192x192.svg",
+    badge: "/icons/icon-72x72.svg",
+    tag: data.tag || "numeneon-notification",
+    data: data.url || "/",
+    vibrate: [100, 50, 100],
+  };
+
+  event.waitUntil(
+    Promise.all([
+      self.registration.showNotification(title, options),
+      // Update badge count
+      updateBadge(data.unreadCount),
+    ]),
+  );
+});
+
+// Handle notification click
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  event.waitUntil(
+    clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clientList) => {
+        // If app is already open, focus it
+        for (const client of clientList) {
+          if (client.url.includes(self.location.origin) && "focus" in client) {
+            return client.focus();
+          }
+        }
+        // Otherwise open new window
+        if (clients.openWindow) {
+          return clients.openWindow(event.notification.data || "/");
+        }
+      }),
+  );
+});
+
+// Update app badge count
+async function updateBadge(count) {
+  if ("setAppBadge" in navigator) {
+    try {
+      if (count > 0) {
+        await navigator.setAppBadge(count);
+      } else {
+        await navigator.clearAppBadge();
+      }
+    } catch (err) {
+      console.log("Badge update failed:", err);
+    }
+  }
+}
+
+// Listen for messages from the main app to update badge
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "UPDATE_BADGE") {
+    updateBadge(event.data.count);
+  }
+  if (event.data?.type === "CLEAR_BADGE") {
+    updateBadge(0);
+  }
+});
+
 // Install event - cache static assets
 self.addEventListener("install", (event) => {
   event.waitUntil(

@@ -1,6 +1,11 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { useWebSocket } from './WebSocketContext';
+import { 
+  requestPushSubscription, 
+  checkPushSubscription, 
+  removePushSubscription 
+} from '../services/pushService';
 
 const NotificationContext = createContext(null);
 
@@ -8,6 +13,8 @@ export const NotificationProvider = ({ children }) => {
   const { user } = useAuth();
   const { subscribe } = useWebSocket();
   const [notifications, setNotifications] = useState([]);
+  const [pushEnabled, setPushEnabled] = useState(false);
+  const [pushLoading, setPushLoading] = useState(false);
   
   // Load notifications from local storage on mount
   useEffect(() => {
@@ -27,9 +34,9 @@ export const NotificationProvider = ({ children }) => {
   }, [notifications]);
 
   // Define addNotification BEFORE it's used in the WebSocket effect
-  const addNotification = (notification) => {
+  const addNotification = useCallback((notification) => {
     setNotifications(prev => [notification, ...prev]);
-  };
+  }, []);
 
   // Subscribe to WebSocket events
   useEffect(() => {
@@ -143,13 +150,72 @@ export const NotificationProvider = ({ children }) => {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  // Update app icon badge when unread count changes (PWA Badging API)
+  useEffect(() => {
+    if ('setAppBadge' in navigator) {
+      if (unreadCount > 0) {
+        navigator.setAppBadge(unreadCount).catch(err => {
+          console.log('Badge API not supported:', err);
+        });
+      } else {
+        navigator.clearAppBadge().catch(err => {
+          console.log('Badge API not supported:', err);
+        });
+      }
+    }
+  }, [unreadCount]);
+
+  // Check existing push subscription on mount
+  useEffect(() => {
+    const checkExisting = async () => {
+      const subscription = await checkPushSubscription();
+      setPushEnabled(!!subscription);
+    };
+    checkExisting();
+  }, []);
+
+  // Enable push notifications
+  const enablePushNotifications = useCallback(async () => {
+    setPushLoading(true);
+    try {
+      const subscription = await requestPushSubscription();
+      setPushEnabled(!!subscription);
+      return !!subscription;
+    } catch (error) {
+      console.error('Failed to enable push:', error);
+      return false;
+    } finally {
+      setPushLoading(false);
+    }
+  }, []);
+
+  // Disable push notifications
+  const disablePushNotifications = useCallback(async () => {
+    setPushLoading(true);
+    try {
+      await removePushSubscription();
+      setPushEnabled(false);
+      return true;
+    } catch (error) {
+      console.error('Failed to disable push:', error);
+      return false;
+    } finally {
+      setPushLoading(false);
+    }
+  }, []);
+
   return (
     <NotificationContext.Provider value={{ 
       notifications, 
       unreadCount, 
       markAsRead,
       removeNotification,
-      clearNotifications 
+      clearNotifications,
+      // Push notification controls
+      pushEnabled,
+      pushLoading,
+      enablePushNotifications,
+      disablePushNotifications,
     }}>
       {children}
     </NotificationContext.Provider>
