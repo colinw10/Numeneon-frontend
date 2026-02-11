@@ -282,58 +282,6 @@ function StoryViewer({ isOpen, onClose, initialUserIndex = 0, storyGroups }) {
       borderRadius: '12px',
       backdropFilter: 'blur(8px)',
     },
-    // Footer with reply input + reactions
-    footer: {
-      padding: '12px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      background: 'rgba(0,0,0,0.4)',
-      backdropFilter: 'blur(10px)',
-    },
-    replyForm: {
-      flex: 1,
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-    },
-    replyInput: {
-      flex: 1,
-      background: 'rgba(255,255,255,0.1)',
-      border: '1px solid rgba(255,255,255,0.15)',
-      borderRadius: '20px',
-      padding: '10px 16px',
-      color: '#fff',
-      fontSize: '14px',
-      outline: 'none',
-      transition: 'border-color 0.2s, background 0.2s',
-    },
-    sendBtn: {
-      background: 'var(--cyan)',
-      border: 'none',
-      borderRadius: '50%',
-      width: '36px',
-      height: '36px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      color: '#000',
-      transition: 'transform 0.2s, box-shadow 0.2s',
-    },
-    reactionBtn: {
-      background: 'rgba(255,255,255,0.1)',
-      border: '1px solid rgba(255,255,255,0.15)',
-      borderRadius: '50%',
-      width: '40px',
-      height: '40px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      color: '#fff',
-      transition: 'all 0.2s',
-    },
     // Nav buttons (desktop)
     navBtn: {
       position: 'absolute',
@@ -479,57 +427,43 @@ function StoryViewer({ isOpen, onClose, initialUserIndex = 0, storyGroups }) {
 
         {/* Footer - Reply input + reactions (only for others' stories) */}
         {!isOwnStory && (
-          <div style={styles.footer}>
-            <form style={styles.replyForm} onSubmit={handleReply}>
-              <input
-                ref={replyInputRef}
-                type="text"
-                placeholder={`Reply to ${storyUser.username}...`}
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                onFocus={handleReplyFocus}
-                onBlur={handleReplyBlur}
-                style={styles.replyInput}
-              />
-              {replyText.trim() && (
-                <button 
-                  type="submit"
-                  style={styles.sendBtn}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.1)';
-                    e.currentTarget.style.boxShadow = '0 0 16px var(--cyan)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                >
-                  <SendIcon size={18} />
-                </button>
-              )}
+          <div className="story-reply-footer">
+            <form className="story-reply-form" onSubmit={handleReply}>
+              <div className="story-reply-input-wrapper">
+                {/* Reaction buttons inline */}
+                <div className="story-reply-actions">
+                  <button 
+                    type="button"
+                    className={`story-reaction-btn heart-btn ${currentStory.user_reaction === 'heart' ? 'active' : ''}`}
+                    onClick={() => handleReaction('heart')}
+                  >
+                    <HeartDynamicIcon size={20} filled={currentStory.user_reaction === 'heart'} />
+                  </button>
+                  <button 
+                    type="button"
+                    className={`story-reaction-btn bolt-btn ${currentStory.user_reaction === 'thunder' ? 'active' : ''}`}
+                    onClick={() => handleReaction('thunder')}
+                  >
+                    <BoltDynamicIcon size={20} filled={currentStory.user_reaction === 'thunder'} />
+                  </button>
+                </div>
+                <input
+                  ref={replyInputRef}
+                  type="text"
+                  className="story-reply-input"
+                  placeholder={`Reply to ${storyUser.username}...`}
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  onFocus={handleReplyFocus}
+                  onBlur={handleReplyBlur}
+                />
+                {replyText.trim() && (
+                  <span className="story-send-icon" onClick={handleReply}>
+                    <SendIcon size={16} />
+                  </span>
+                )}
+              </div>
             </form>
-
-            {/* Reaction buttons */}
-            <button 
-              style={{
-                ...styles.reactionBtn,
-                borderColor: currentStory.user_reaction === 'heart' ? 'var(--cyan)' : undefined,
-                background: currentStory.user_reaction === 'heart' ? 'rgba(79,255,255,0.2)' : undefined,
-              }}
-              onClick={() => handleReaction('heart')}
-            >
-              <HeartDynamicIcon size={20} filled={currentStory.user_reaction === 'heart'} />
-            </button>
-            <button 
-              style={{
-                ...styles.reactionBtn,
-                borderColor: currentStory.user_reaction === 'thunder' ? 'var(--accent)' : undefined,
-                background: currentStory.user_reaction === 'thunder' ? 'rgba(26,231,132,0.2)' : undefined,
-              }}
-              onClick={() => handleReaction('thunder')}
-            >
-              <BoltDynamicIcon size={20} filled={currentStory.user_reaction === 'thunder'} />
-            </button>
           </div>
         )}
       </div>

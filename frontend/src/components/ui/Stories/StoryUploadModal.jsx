@@ -109,7 +109,7 @@ function StoryUploadModal({ isOpen, onClose }) {
       <div 
         className="composer-modal-content" 
         onClick={(e) => e.stopPropagation()}
-        style={{ maxWidth: '340px', marginLeft: '-30px' }}
+        style={{ maxWidth: '340px', marginLeft: '-30px', marginTop: '60px' }}
       >
         {/* Header */}
         <div className="composer-modal-header">

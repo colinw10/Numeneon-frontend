@@ -38,7 +38,27 @@ export const StoriesProvider = ({ children }) => {
       const data = await storiesService.getAll();
       // Handle both array response and { stories: [...] } response
       const storiesArray = Array.isArray(data) ? data : (data?.stories || []);
-      setStories(storiesArray);
+      
+      // Backend returns flat array of stories, each with .user object
+      // Transform into grouped format: [{ user_id, user, stories: [...] }, ...]
+      const grouped = storiesArray.reduce((acc, story) => {
+        const userId = story.user?.id || story.user_id;
+        if (!userId) return acc;
+        
+        const existing = acc.find(g => g.user_id === userId);
+        if (existing) {
+          existing.stories.push(story);
+        } else {
+          acc.push({
+            user_id: userId,
+            user: story.user,
+            stories: [story]
+          });
+        }
+        return acc;
+      }, []);
+      
+      setStories(grouped);
     } catch (err) {
       setError(err.message || 'Failed to fetch stories');
       console.error('Failed to fetch stories:', err);

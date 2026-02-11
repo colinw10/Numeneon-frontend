@@ -16,8 +16,14 @@ function Home() {
   // Get real data from contexts
   const { posts, createPost, deletePost, updatePost } = usePosts();
   const { friends } = useFriends();
-  const { myStories, friendStories } = useStories();
+  const { myStories, friendStories, isStoryViewed } = useStories();
   const { user } = useAuth();
+
+  // Helper: check if a story group has any unviewed stories
+  const hasUnviewedStories = (storiesArray) => {
+    if (!storiesArray?.length) return false;
+    return storiesArray.some(story => !isStoryViewed(story.id));
+  };
     
    // 🔵 STATE 1: Controls if the big composer modal is open/closed
   const [showComposer, setShowComposer] = useState(false);
@@ -115,16 +121,17 @@ function Home() {
       id: user?.id,
       name: user?.username || 'You',
       avatar: getInitials(user),
-      hasStory: true,
+      hasStory: hasUnviewedStories(myStories), // Ring only if unviewed
       isYours: true,
-      profilePicture: user?.profile_picture,
+      // Use profile_picture from stories API as fallback (backend returns it with story.user)
+      profilePicture: user?.profile_picture || myStories[0]?.user?.profile_picture,
     }] : []),
     // Map friend story groups to story cards
     ...friendStories.map(group => ({
       id: group.user_id,
       name: group.user?.username || 'User',
       avatar: getInitials(group.user),
-      hasStory: group.stories?.length > 0,
+      hasStory: hasUnviewedStories(group.stories), // Ring only if unviewed
       profilePicture: group.user?.profile_picture,
     }))
   ];
