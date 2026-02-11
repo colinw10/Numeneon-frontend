@@ -10,6 +10,7 @@ import { SearchProvider } from "./contexts/SearchContext";
 import { WebSocketProvider } from "./contexts/WebSocketContext";
 import { MessageProvider } from "./contexts/MessageContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
+import { StoriesProvider } from "./contexts/StoriesContext";
 
 // Register Service Worker for PWA
 if ('serviceWorker' in navigator) {
@@ -30,13 +31,15 @@ createRoot(document.getElementById('root')).render(
       <WebSocketProvider>    {/* Needs token, provides WS connection */}
         <NotificationProvider> {/* Uses WebSocket */}
           <PostsProvider>
-            <FriendsProvider>  {/* Uses WebSocket */}
-              <MessageProvider> {/* Uses WebSocket */}
-                <SearchProvider>
-                  <App />
-                </SearchProvider>
-              </MessageProvider>
-            </FriendsProvider>
+            <StoriesProvider>  {/* Stories feature */}
+              <FriendsProvider>  {/* Uses WebSocket */}
+                <MessageProvider> {/* Uses WebSocket */}
+                  <SearchProvider>
+                    <App />
+                  </SearchProvider>
+                </MessageProvider>
+              </FriendsProvider>
+            </StoriesProvider>
           </PostsProvider>
         </NotificationProvider>
       </WebSocketProvider>

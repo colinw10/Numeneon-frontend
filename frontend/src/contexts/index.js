@@ -13,3 +13,4 @@ export { FriendsProvider, useFriends } from "./FriendsContext";
 export { SearchProvider, useSearch } from "./SearchContext";
 export { SideNavProvider, useSideNav } from "./SideNavContext";
 export { NotificationProvider, useNotifications } from "./NotificationContext";
+export { StoriesProvider, useStories } from "./StoriesContext";

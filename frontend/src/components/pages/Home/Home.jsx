@@ -5,19 +5,26 @@ import { useState } from 'react';
 import './Home.scss';
 import TimelineRiverFeed from './components/TimelineRiverFeed';
 import ComposerModal from '@Profile/components/ComposerModal/ComposerModal';
-import { usePosts, useFriends } from '@contexts';
+import { usePosts, useFriends, useStories } from '@contexts';
 import { UserIcon, PostTriangleIcon, ImageIcon, FlagIcon } from '@assets/icons';
 // 🛠️ Import shared helpers instead of duplicating them!
 import { getInitials } from '@utils/helpers';
 import DailyLearning from '@layout/TopBar/DailyLearning';
+import { StoryUploadModal, StoryViewer } from '@ui/Stories';
 
 function Home() {
   // Get real data from contexts
   const { posts, createPost, deletePost, updatePost } = usePosts();
   const { friends } = useFriends();
+  const { friendStories } = useStories();
     
    // 🔵 STATE 1: Controls if the big composer modal is open/closed
   const [showComposer, setShowComposer] = useState(false);
+  
+  // Story modals state
+  const [showStoryUpload, setShowStoryUpload] = useState(false);
+  const [showStoryViewer, setShowStoryViewer] = useState(false);
+  const [storyViewerIndex, setStoryViewerIndex] = useState(0);
   const [composerType, setComposerType] = useState('thought'); // 'thought', 'media', or 'milestone'
 
   // STATE: Inline composer text
@@ -172,6 +179,18 @@ function Home() {
               className={`story-card ${story.isYours ? 'your-story' : ''}`}
               onMouseMove={handleStoryMouseMove}
               onMouseLeave={handleStoryMouseLeave}
+              onClick={() => {
+                if (story.isYours) {
+                  setShowStoryUpload(true);
+                } else if (friendStories.length > 0) {
+                  // Find the index in friendStories that matches this story
+                  const storyIndex = friendStories.findIndex(s => s.user_id === story.id);
+                  if (storyIndex >= 0) {
+                    setStoryViewerIndex(storyIndex);
+                    setShowStoryViewer(true);
+                  }
+                }
+              }}
             >
               <div className={`story-avatar ${story.hasStory ? 'has-story' : ''} avatar-color-${index % 3}`}>
                 {story.isYours ? (
@@ -221,6 +240,18 @@ function Home() {
         setComposerType={setComposerType}
         initialContent={composerText}
         onOpen={() => setComposerText('')}
+      />
+
+      {/* 🟢 Section 5: Story Modals */}
+      <StoryUploadModal 
+        isOpen={showStoryUpload} 
+        onClose={() => setShowStoryUpload(false)} 
+      />
+      <StoryViewer 
+        isOpen={showStoryViewer}
+        onClose={() => setShowStoryViewer(false)}
+        initialUserIndex={storyViewerIndex}
+        storyGroups={friendStories}
       />
     </div>
   );
