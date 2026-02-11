@@ -56,6 +56,16 @@ The frontend transforms raw data into the River flow in 4 explicit steps:
 
 See [docs/features/RiverTimeline.md](./docs/features/RiverTimeline.md) for the full technical specification.
 
+## ⚖️ Copyright & Usage
+
+© 2026 Pablo Cordero, Colin Weir, Crystal Ruiz, Natalia Pricop, and Tito. All Rights Reserved.
+
+NUMENEON is a proprietary capstone project developed during General Assembly's Software Engineering Immersive program. The River Timeline architecture, UI implementations, and codebase are protected by copyright law and may not be copied, modified, distributed, or used without explicit written permission from all contributors.
+
+This repository is shared for portfolio demonstration purposes only.
+
+For inquiries about collaboration or licensing, please contact the contributors directly.
+
 ---
 
 ## ✨ Key Features
@@ -154,13 +164,11 @@ The helper function `getTranslatedItem()` reads these `_es` fields when Spanish 
 
 ## 🚀 Quick Start
 
+## 🚀 Development Setup
+
+**Note:** This repository is shared for portfolio demonstration purposes. The code and architecture are proprietary.
+
 ### Prerequisites
-
-- Python 3.10+
-- Node.js 18+
-
-### Backend
-
 ```bash
 cd backend
 python -m venv venv
@@ -316,6 +324,7 @@ This project represents a true team effort. Key achievements include:
 - **Activity Analytics** — Wave chart and GitHub-style heatmap visualizations
 - **Cyberpunk Design System** — Cohesive glassmorphic UI with neon aesthetics
 - **Full-stack Integration** — Seamless Django REST + React architecture
+.
 
 ---
 
