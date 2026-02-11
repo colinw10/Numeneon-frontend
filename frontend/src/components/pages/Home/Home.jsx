@@ -5,7 +5,7 @@ import { useState } from 'react';
 import './Home.scss';
 import TimelineRiverFeed from './components/TimelineRiverFeed';
 import ComposerModal from '@Profile/components/ComposerModal/ComposerModal';
-import { usePosts, useFriends, useStories } from '@contexts';
+import { usePosts, useFriends, useStories, useAuth } from '@contexts';
 import { UserIcon, PostTriangleIcon, ImageIcon, FlagIcon } from '@assets/icons';
 // 🛠️ Import shared helpers instead of duplicating them!
 import { getInitials } from '@utils/helpers';
@@ -16,7 +16,8 @@ function Home() {
   // Get real data from contexts
   const { posts, createPost, deletePost, updatePost } = usePosts();
   const { friends } = useFriends();
-  const { friendStories } = useStories();
+  const { myStories, friendStories } = useStories();
+  const { user } = useAuth();
     
    // 🔵 STATE 1: Controls if the big composer modal is open/closed
   const [showComposer, setShowComposer] = useState(false);
@@ -102,18 +103,29 @@ function Home() {
 
   // 🛠️ getInitials is now imported from @/utils/helpers
 
-  // Build stories from friends (real data) - always use username
+  // Build stories from real data:
+  // 1) Always show "+" card to add new story
+  // 2) Show your username card if you have stories  
+  // 3) Show friends with stories
   const stories = [
-    { id: 0, name: "Your Story", avatar: "YS", hasStory: false, isYours: true },
-    // Test cards to demo hasStory animation
-    { id: 'test1', name: "Alex", avatar: "A", hasStory: true },
-    { id: 'test2', name: "Jordan", avatar: "J", hasStory: false },
-    { id: 'test3', name: "Sam", avatar: "S", hasStory: true },
-    ...friends.map(friend => ({
-      id: friend.id,
-      name: friend.username,
-      avatar: getInitials(friend), // Now uses shared helper
+    // Always show + card to add stories
+    { id: 'add', name: "Add Story", avatar: "+", hasStory: false, isYours: true, isAddCard: true },
+    // Your story card (only if you have stories)
+    ...(myStories.length > 0 ? [{
+      id: user?.id,
+      name: user?.username || 'You',
+      avatar: getInitials(user),
       hasStory: true,
+      isYours: true,
+      profilePicture: user?.profile_picture,
+    }] : []),
+    // Map friend story groups to story cards
+    ...friendStories.map(group => ({
+      id: group.user_id,
+      name: group.user?.username || 'User',
+      avatar: getInitials(group.user),
+      hasStory: group.stories?.length > 0,
+      profilePicture: group.user?.profile_picture,
     }))
   ];
 
@@ -176,29 +188,39 @@ function Home() {
           {stories.map((story, index) => ( // 🔵 Loop through stories array
             <div 
               key={story.id} 
-              className={`story-card ${story.isYours ? 'your-story' : ''}`}
+              className={`story-card ${story.isAddCard ? 'add-story' : ''} ${story.isYours && !story.isAddCard ? 'your-story' : ''}`}
               onMouseMove={handleStoryMouseMove}
               onMouseLeave={handleStoryMouseLeave}
               onClick={() => {
-                if (story.isYours) {
+                if (story.isAddCard) {
+                  // + card always opens upload modal
                   setShowStoryUpload(true);
+                } else if (story.isYours) {
+                  // Your story card - view your stories
+                  setStoryViewerIndex(0); // User's stories are always first
+                  setShowStoryViewer(true);
                 } else if (friendStories.length > 0) {
                   // Find the index in friendStories that matches this story
-                  const storyIndex = friendStories.findIndex(s => s.user_id === story.id);
-                  if (storyIndex >= 0) {
-                    setStoryViewerIndex(storyIndex);
+                  const friendIndex = friendStories.findIndex(s => s.user_id === story.id);
+                  if (friendIndex >= 0) {
+                    // Offset by 1 if user has their own stories (they're at index 0)
+                    const viewerIndex = myStories.length > 0 ? friendIndex + 1 : friendIndex;
+                    setStoryViewerIndex(viewerIndex);
                     setShowStoryViewer(true);
                   }
                 }
               }}
             >
               <div className={`story-avatar ${story.hasStory ? 'has-story' : ''} avatar-color-${index % 3}`}>
-                {story.isYours ? (
-                  // Your Story - show + icon
+                {story.isAddCard ? (
+                  // Add Story card - show + icon
                   <div className="add-story-icon">+</div>
+                ) : story.profilePicture ? (
+                  // Has profile picture - show it
+                  <img src={story.profilePicture} alt={story.name} className="story-avatar-img" />
                 ) : (
-                  // Other stories - show person icon
-                  <UserIcon size={28} />
+                  // No profile picture - show initials or icon
+                  <span className="story-initials">{story.avatar || <UserIcon size={28} />}</span>
                 )}
               </div>
               <div className="story-name">{story.name}</div>
@@ -251,7 +273,12 @@ function Home() {
         isOpen={showStoryViewer}
         onClose={() => setShowStoryViewer(false)}
         initialUserIndex={storyViewerIndex}
-        storyGroups={friendStories}
+        storyGroups={
+          // Combine user's stories (first) with friend stories
+          myStories.length > 0 
+            ? [{ user_id: user?.id, user: user, stories: myStories }, ...friendStories]
+            : friendStories
+        }
       />
     </div>
   );

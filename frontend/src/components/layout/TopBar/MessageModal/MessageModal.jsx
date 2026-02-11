@@ -432,11 +432,33 @@ function MessageModal({ onClose }) {
                     const isSent = msg.sender === 'me' || msg.sender?.id !== selectedUserId;
                     const messageContent = msg.content || msg.text || '';
                     const messageTime = msg.created_at || msg.timestamp;
+                    const hasStoryReply = msg.story && msg.story.id;
                     
                     return (
                       <div key={msg.id} className={`message-row ${isSent ? 'sent' : 'received'}`}>
                         <span className="message-time">{formatMessageTime(messageTime)}</span>
                         <div className={`chat-message ${isSent ? 'sent' : 'received'}`}>
+                          {/* Story reply thumbnail */}
+                          {hasStoryReply && (
+                            <div className="story-reply-preview">
+                              {msg.story.is_expired ? (
+                                <div className="story-expired">
+                                  <span>Story no longer available</span>
+                                </div>
+                              ) : (
+                                <>
+                                  <img 
+                                    src={msg.story.media_url} 
+                                    alt="Story" 
+                                    className="story-reply-thumb"
+                                  />
+                                  <span className="story-reply-label">
+                                    {isSent ? 'Replied to their story' : 'Replied to your story'}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          )}
                           <p>{messageContent}</p>
                         </div>
                       </div>

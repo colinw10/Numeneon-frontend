@@ -113,7 +113,7 @@ function StoryUploadModal({ isOpen, onClose }) {
       >
         {/* Header */}
         <div className="composer-modal-header">
-          <h2 className="composer-modal-title">Add to Your Story</h2>
+          <h2 className="composer-modal-title">Add Story</h2>
           <button className="close-btn-glow" onClick={handleClose}>
             <CloseIcon size={20} />
           </button>

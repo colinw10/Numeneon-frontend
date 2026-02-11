@@ -47,11 +47,16 @@ const messagesService = {
   //   - created_at = now
   // Backend: MessageViewSet.create() via MessageSerializer
   // ─────────────────────────────────────────────────────────────────────────
-  sendMessage: async (receiverId, content) => {
-    const response = await apiClient.post("/messages/", {
+  sendMessage: async (receiverId, content, replyToStory = null) => {
+    const payload = {
       receiver_id: receiverId,
       content,
-    });
+    };
+    // Attach story reference if replying to a story
+    if (replyToStory) {
+      payload.reply_to_story = replyToStory;
+    }
+    const response = await apiClient.post("/messages/", payload);
     return response.data;
   },
   // ─────────────────────────────────────────────────────────────────────────

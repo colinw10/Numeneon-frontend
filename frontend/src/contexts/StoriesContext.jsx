@@ -9,16 +9,24 @@ export const StoriesProvider = ({ children }) => {
   const [stories, setStories] = useState([]);        // All stories grouped by user
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [viewedStoryIds, setViewedStoryIds] = useState(() => {
-    // Load viewed stories from localStorage
-    const saved = localStorage.getItem('viewedStories');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [viewedStoryIds, setViewedStoryIds] = useState([]);
 
-  // Save viewed stories to localStorage
+  // Load viewed stories from localStorage when user changes (user-specific key)
   useEffect(() => {
-    localStorage.setItem('viewedStories', JSON.stringify(viewedStoryIds));
-  }, [viewedStoryIds]);
+    if (user?.id) {
+      const saved = localStorage.getItem(`viewedStories_${user.id}`);
+      setViewedStoryIds(saved ? JSON.parse(saved) : []);
+    } else {
+      setViewedStoryIds([]);
+    }
+  }, [user?.id]);
+
+  // Save viewed stories to localStorage (user-specific key)
+  useEffect(() => {
+    if (user?.id && viewedStoryIds.length > 0) {
+      localStorage.setItem(`viewedStories_${user.id}`, JSON.stringify(viewedStoryIds));
+    }
+  }, [viewedStoryIds, user?.id]);
 
   // Fetch all stories on mount
   const fetchStories = useCallback(async () => {
@@ -28,10 +36,13 @@ export const StoriesProvider = ({ children }) => {
     setError(null);
     try {
       const data = await storiesService.getAll();
-      setStories(data);
+      // Handle both array response and { stories: [...] } response
+      const storiesArray = Array.isArray(data) ? data : (data?.stories || []);
+      setStories(storiesArray);
     } catch (err) {
       setError(err.message || 'Failed to fetch stories');
       console.error('Failed to fetch stories:', err);
+      setStories([]); // Reset to empty array on error
     } finally {
       setLoading(false);
     }
@@ -117,11 +128,15 @@ export const StoriesProvider = ({ children }) => {
     return viewedStoryIds.includes(storyId);
   }, [viewedStoryIds]);
 
-  // Get current user's stories
-  const myStories = stories.find(s => s.user_id === user?.id)?.stories || [];
+  // Get current user's stories (safe array access)
+  const myStories = Array.isArray(stories) 
+    ? (stories.find(s => s.user_id === user?.id)?.stories || [])
+    : [];
 
   // Get friends' stories (excluding current user)
-  const friendStories = stories.filter(s => s.user_id !== user?.id);
+  const friendStories = Array.isArray(stories) 
+    ? stories.filter(s => s.user_id !== user?.id)
+    : [];
 
   return (
     <StoriesContext.Provider value={{

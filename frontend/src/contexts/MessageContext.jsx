@@ -267,7 +267,8 @@ export function MessageProvider({ children }) {
   };
 
   // POST /api/messages/ - Send a message
-  const sendMessage = async (text) => {
+  // replyToStory: optional story ID when replying to a story
+  const sendMessage = async (text, replyToStory = null) => {
     if (!text.trim() || !selectedUserId) return { success: false };
 
     // Create optimistic message to show immediately
@@ -284,6 +285,7 @@ export function MessageProvider({ children }) {
       created_at: new Date().toISOString(),
       is_read: true,
       _pending: true, // Flag to show sending state
+      story: replyToStory ? { id: replyToStory, is_expired: false } : null, // Optimistic story ref
     };
 
     // 1. Immediately add to UI (optimistic update)
@@ -293,7 +295,8 @@ export function MessageProvider({ children }) {
       // 2. Send to backend
       const newMessage = await messagesService.sendMessage(
         selectedUserId,
-        text.trim()
+        text.trim(),
+        replyToStory
       );
 
       // 3. Replace temp message with real one from server

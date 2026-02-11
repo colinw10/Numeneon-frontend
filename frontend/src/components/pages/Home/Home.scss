@@ -235,6 +235,22 @@
   filter: drop-shadow(0 0 6px rgba(79, 255, 255, 0.6));
 }
 
+/* Avatar image for users with profile pictures */
+.story-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Initials display for users without profile pictures */
+.story-initials {
+  color: var(--cyan);
+  font-weight: 700;
+  font-size: var(--font-size-body);
+  text-transform: uppercase;
+}
+
 /* Animated color trail border for users with stories */
 .story-avatar.has-story {
   --angle: 0deg;

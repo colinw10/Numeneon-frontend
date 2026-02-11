@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useStories } from '@contexts/StoriesContext';
 import { useAuth } from '@contexts/AuthContext';
+import messagesService from '@services/messagesService';
 import {
   CloseIcon,
   HeartDynamicIcon,
   BoltDynamicIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  SendIcon,
 } from '@assets/icons';
 import { getInitials } from '@utils/helpers';
 // Reuse existing styles
@@ -21,8 +23,10 @@ function StoryViewer({ isOpen, onClose, initialUserIndex = 0, storyGroups }) {
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [replyText, setReplyText] = useState('');
   const progressInterval = useRef(null);
   const touchStartX = useRef(0);
+  const replyInputRef = useRef(null);
 
   const STORY_DURATION = 5000; // 5 seconds per story
 
@@ -131,24 +135,75 @@ function StoryViewer({ isOpen, onClose, initialUserIndex = 0, storyGroups }) {
     await reactToStory(currentStory.id, type);
   };
 
+  // Handle reply - sends DM to story owner with story context
+  const handleReply = async (e) => {
+    e.preventDefault();
+    if (!replyText.trim() || !storyUser || !currentStory) return;
+    
+    try {
+      // Send message directly with story reference
+      await messagesService.sendMessage(
+        storyUser.id,
+        replyText.trim(),
+        currentStory.id // reply_to_story
+      );
+      setReplyText('');
+      // Optionally open DM to show the conversation
+      // await openMessages(storyUser);
+      // onClose();
+    } catch (err) {
+      console.error('Failed to send story reply:', err);
+    }
+  };
+
+  // Pause progress when typing
+  const handleReplyFocus = () => setIsPaused(true);
+  const handleReplyBlur = () => setIsPaused(false);
+
   if (!isOpen || !currentGroup || !currentStory) return null;
 
   const storyUser = currentGroup.user;
+  const isOwnStory = storyUser.id === user?.id;
 
-  // Inline styles for viewer-specific elements (reusing CSS variables)
-  const viewerStyles = {
-    container: {
+  // Phone-frame layout styles
+  const styles = {
+    // Backdrop with blur
+    backdrop: {
       position: 'fixed',
       inset: 0,
-      background: '#000',
+      background: 'rgba(0, 0, 0, 0.9)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 9999,
+      padding: '20px',
+    },
+    // Phone frame container
+    phoneFrame: {
+      position: 'relative',
+      width: '100%',
+      maxWidth: '400px',
+      height: '100%',
+      maxHeight: '85vh',
+      aspectRatio: '9 / 16',
+      background: 'linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%)',
+      borderRadius: '24px',
+      overflow: 'hidden',
+      boxShadow: `
+        0 0 0 1px rgba(79, 255, 255, 0.2),
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(79, 255, 255, 0.1)
+      `,
       display: 'flex',
       flexDirection: 'column',
-      zIndex: 9999,
     },
+    // Progress bars at top
     progressContainer: {
       display: 'flex',
       gap: '4px',
-      padding: '12px 12px 8px',
+      padding: '12px 12px 0',
       position: 'absolute',
       top: 0,
       left: 0,
@@ -158,24 +213,23 @@ function StoryViewer({ isOpen, onClose, initialUserIndex = 0, storyGroups }) {
     progressBar: {
       flex: 1,
       height: '3px',
-      background: 'rgba(255,255,255,0.3)',
+      background: 'rgba(255,255,255,0.25)',
       borderRadius: '2px',
       overflow: 'hidden',
     },
     progressFill: {
       height: '100%',
       background: 'var(--cyan)',
+      boxShadow: '0 0 8px var(--cyan)',
       transition: 'width 0.05s linear',
     },
+    // Header with user info
     header: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '8px 12px',
-      position: 'absolute',
-      top: '24px',
-      left: 0,
-      right: 0,
+      padding: '20px 12px 8px',
+      position: 'relative',
       zIndex: 10,
     },
     userInfo: {
@@ -183,188 +237,302 @@ function StoryViewer({ isOpen, onClose, initialUserIndex = 0, storyGroups }) {
       alignItems: 'center',
       gap: '10px',
     },
+    avatar: {
+      width: '36px',
+      height: '36px',
+      borderRadius: '50%',
+      objectFit: 'cover',
+      border: '2px solid var(--cyan)',
+    },
     username: {
       color: '#fff',
       fontWeight: 600,
-      fontSize: 'var(--font-size-body)',
+      fontSize: '14px',
     },
     time: {
-      color: 'rgba(255,255,255,0.6)',
-      fontSize: 'var(--font-size-sm)',
+      color: 'rgba(255,255,255,0.5)',
+      fontSize: '12px',
       marginLeft: '8px',
     },
+    // Media content area
     content: {
       flex: 1,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      position: 'relative',
       overflow: 'hidden',
     },
     media: {
-      maxWidth: '100%',
-      maxHeight: '100%',
-      objectFit: 'contain',
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
     },
     caption: {
       position: 'absolute',
-      bottom: '100px',
+      bottom: '16px',
       left: '16px',
       right: '16px',
       color: '#fff',
       textAlign: 'center',
-      fontSize: 'var(--font-size-body)',
-      textShadow: '0 2px 8px rgba(0,0,0,0.8)',
-      padding: '12px',
-      background: 'rgba(0,0,0,0.4)',
-      borderRadius: '8px',
+      fontSize: '14px',
+      textShadow: '0 2px 8px rgba(0,0,0,0.9)',
+      padding: '10px 14px',
+      background: 'rgba(0,0,0,0.5)',
+      borderRadius: '12px',
+      backdropFilter: 'blur(8px)',
     },
+    // Footer with reply input + reactions
+    footer: {
+      padding: '12px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '10px',
+      background: 'rgba(0,0,0,0.4)',
+      backdropFilter: 'blur(10px)',
+    },
+    replyForm: {
+      flex: 1,
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+    },
+    replyInput: {
+      flex: 1,
+      background: 'rgba(255,255,255,0.1)',
+      border: '1px solid rgba(255,255,255,0.15)',
+      borderRadius: '20px',
+      padding: '10px 16px',
+      color: '#fff',
+      fontSize: '14px',
+      outline: 'none',
+      transition: 'border-color 0.2s, background 0.2s',
+    },
+    sendBtn: {
+      background: 'var(--cyan)',
+      border: 'none',
+      borderRadius: '50%',
+      width: '36px',
+      height: '36px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      color: '#000',
+      transition: 'transform 0.2s, box-shadow 0.2s',
+    },
+    reactionBtn: {
+      background: 'rgba(255,255,255,0.1)',
+      border: '1px solid rgba(255,255,255,0.15)',
+      borderRadius: '50%',
+      width: '40px',
+      height: '40px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      color: '#fff',
+      transition: 'all 0.2s',
+    },
+    // Nav buttons (desktop)
     navBtn: {
       position: 'absolute',
       top: '50%',
       transform: 'translateY(-50%)',
-      background: 'rgba(0,0,0,0.5)',
-      border: 'none',
+      background: 'rgba(0,0,0,0.6)',
+      border: '1px solid rgba(255,255,255,0.1)',
       color: '#fff',
-      padding: '12px',
+      padding: '10px',
       cursor: 'pointer',
       borderRadius: '50%',
       display: 'flex',
       opacity: 0.7,
-      transition: 'opacity 0.2s',
+      transition: 'opacity 0.2s, background 0.2s',
+      zIndex: 20,
     },
-    reactions: {
+    closeBtn: {
       position: 'absolute',
-      bottom: '24px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      display: 'flex',
-      gap: '24px',
-    },
-    reactionBtn: {
+      top: '20px',
+      right: '20px',
       background: 'rgba(0,0,0,0.6)',
-      border: '1px solid rgba(255,255,255,0.2)',
-      borderRadius: '50%',
-      padding: '12px',
-      cursor: 'pointer',
+      border: '1px solid rgba(255,255,255,0.1)',
       color: '#fff',
+      padding: '8px',
+      cursor: 'pointer',
+      borderRadius: '50%',
       display: 'flex',
-      transition: 'all 0.2s',
+      zIndex: 30,
+      transition: 'background 0.2s',
     },
   };
 
   return (
-    <div style={viewerStyles.container}>
-      {/* Progress bars */}
-      <div style={viewerStyles.progressContainer}>
-        {currentGroup.stories.map((story, idx) => (
-          <div key={story.id} style={viewerStyles.progressBar}>
-            <div 
-              style={{ 
-                ...viewerStyles.progressFill,
-                width: idx < currentStoryIndex ? '100%' : 
-                       idx === currentStoryIndex ? `${progress}%` : '0%'
-              }}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Header */}
-      <div style={viewerStyles.header}>
-        <div style={viewerStyles.userInfo}>
-          <div className="story-avatar" style={{ width: '40px', height: '40px' }}>
-            {storyUser.profile_picture ? (
-              <img src={storyUser.profile_picture} alt={storyUser.username} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
-            ) : (
-              <span className="story-initial-1">{getInitials(storyUser)}</span>
-            )}
-          </div>
-          <div>
-            <span style={viewerStyles.username}>{storyUser.username}</span>
-            <span style={viewerStyles.time}>
-              {new Date(currentStory.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </span>
-          </div>
-        </div>
-        <button 
-          className="close-btn-glow" 
-          onClick={(e) => { e.stopPropagation(); onClose(); }}
-        >
-          <CloseIcon size={24} />
-        </button>
-      </div>
-
-      {/* Story content - tap to navigate */}
-      <div 
-        style={viewerStyles.content}
-        onClick={handleTap}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={() => setIsPaused(true)}
-        onMouseUp={() => setIsPaused(false)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
-        {currentStory.media_type === 'video' ? (
-          <video 
-            src={currentStory.media_url} 
-            autoPlay 
-            muted 
-            playsInline
-            style={viewerStyles.media}
-            onEnded={goToNextStory}
-          />
-        ) : (
-          <img src={currentStory.media_url} alt="Story" style={viewerStyles.media} />
-        )}
-        
-        {currentStory.caption && (
-          <div style={viewerStyles.caption}>{currentStory.caption}</div>
-        )}
-      </div>
-
-      {/* Navigation arrows (desktop) */}
+    <div style={styles.backdrop} onClick={onClose}>
+      {/* Close button outside frame */}
       <button 
-        style={{ ...viewerStyles.navBtn, left: '12px' }}
+        style={styles.closeBtn}
+        onClick={onClose}
+        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+        onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.6)'}
+      >
+        <CloseIcon size={20} />
+      </button>
+
+      {/* Navigation arrows outside frame (desktop) */}
+      <button 
+        style={{ ...styles.navBtn, left: '20px' }}
         onClick={(e) => { e.stopPropagation(); goToPrevStory(); }}
-        onMouseEnter={(e) => e.target.style.opacity = 1}
-        onMouseLeave={(e) => e.target.style.opacity = 0.7}
+        onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
+        onMouseLeave={(e) => e.currentTarget.style.opacity = 0.7}
       >
-        <ChevronLeftIcon size={28} />
+        <ChevronLeftIcon size={24} />
       </button>
       <button 
-        style={{ ...viewerStyles.navBtn, right: '12px' }}
+        style={{ ...styles.navBtn, right: '20px' }}
         onClick={(e) => { e.stopPropagation(); goToNextStory(); }}
-        onMouseEnter={(e) => e.target.style.opacity = 1}
-        onMouseLeave={(e) => e.target.style.opacity = 0.7}
+        onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
+        onMouseLeave={(e) => e.currentTarget.style.opacity = 0.7}
       >
-        <ChevronRightIcon size={28} />
+        <ChevronRightIcon size={24} />
       </button>
 
-      {/* Reactions - only show if not your own story */}
-      {storyUser.id !== user?.id && (
-        <div style={viewerStyles.reactions}>
-          <button 
-            style={{
-              ...viewerStyles.reactionBtn,
-              borderColor: currentStory.user_reaction === 'heart' ? 'var(--cyan)' : 'rgba(255,255,255,0.2)',
-              background: currentStory.user_reaction === 'heart' ? 'rgba(79,255,255,0.2)' : 'rgba(0,0,0,0.6)',
-            }}
-            onClick={(e) => { e.stopPropagation(); handleReaction('heart'); }}
-          >
-            <HeartDynamicIcon size={28} filled={currentStory.user_reaction === 'heart'} />
-          </button>
-          <button 
-            style={{
-              ...viewerStyles.reactionBtn,
-              borderColor: currentStory.user_reaction === 'thunder' ? 'var(--accent)' : 'rgba(255,255,255,0.2)',
-              background: currentStory.user_reaction === 'thunder' ? 'rgba(26,231,132,0.2)' : 'rgba(0,0,0,0.6)',
-            }}
-            onClick={(e) => { e.stopPropagation(); handleReaction('thunder'); }}
-          >
-            <BoltDynamicIcon size={28} filled={currentStory.user_reaction === 'thunder'} />
-          </button>
+      {/* Phone frame */}
+      <div 
+        style={styles.phoneFrame}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Progress bars */}
+        <div style={styles.progressContainer}>
+          {currentGroup.stories.map((story, idx) => (
+            <div key={story.id} style={styles.progressBar}>
+              <div 
+                style={{ 
+                  ...styles.progressFill,
+                  width: idx < currentStoryIndex ? '100%' : 
+                         idx === currentStoryIndex ? `${progress}%` : '0%'
+                }}
+              />
+            </div>
+          ))}
         </div>
-      )}
+
+        {/* Header */}
+        <div style={styles.header}>
+          <div style={styles.userInfo}>
+            {storyUser.profile_picture ? (
+              <img 
+                src={storyUser.profile_picture} 
+                alt={storyUser.username} 
+                style={styles.avatar} 
+              />
+            ) : (
+              <div 
+                style={{
+                  ...styles.avatar,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'linear-gradient(135deg, var(--cyan), var(--accent))',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                }}
+              >
+                {getInitials(storyUser)}
+              </div>
+            )}
+            <div>
+              <span style={styles.username}>{storyUser.username}</span>
+              <span style={styles.time}>
+                {new Date(currentStory.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Story content - tap to navigate */}
+        <div 
+          style={styles.content}
+          onClick={handleTap}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={() => setIsPaused(true)}
+          onMouseUp={() => setIsPaused(false)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {currentStory.media_type === 'video' ? (
+            <video 
+              src={currentStory.media_url} 
+              autoPlay 
+              muted 
+              playsInline
+              style={styles.media}
+              onEnded={goToNextStory}
+            />
+          ) : (
+            <img src={currentStory.media_url} alt="Story" style={styles.media} />
+          )}
+          
+          {currentStory.caption && (
+            <div style={styles.caption}>{currentStory.caption}</div>
+          )}
+        </div>
+
+        {/* Footer - Reply input + reactions (only for others' stories) */}
+        {!isOwnStory && (
+          <div style={styles.footer}>
+            <form style={styles.replyForm} onSubmit={handleReply}>
+              <input
+                ref={replyInputRef}
+                type="text"
+                placeholder={`Reply to ${storyUser.username}...`}
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                onFocus={handleReplyFocus}
+                onBlur={handleReplyBlur}
+                style={styles.replyInput}
+              />
+              {replyText.trim() && (
+                <button 
+                  type="submit"
+                  style={styles.sendBtn}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.1)';
+                    e.currentTarget.style.boxShadow = '0 0 16px var(--cyan)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <SendIcon size={18} />
+                </button>
+              )}
+            </form>
+
+            {/* Reaction buttons */}
+            <button 
+              style={{
+                ...styles.reactionBtn,
+                borderColor: currentStory.user_reaction === 'heart' ? 'var(--cyan)' : undefined,
+                background: currentStory.user_reaction === 'heart' ? 'rgba(79,255,255,0.2)' : undefined,
+              }}
+              onClick={() => handleReaction('heart')}
+            >
+              <HeartDynamicIcon size={20} filled={currentStory.user_reaction === 'heart'} />
+            </button>
+            <button 
+              style={{
+                ...styles.reactionBtn,
+                borderColor: currentStory.user_reaction === 'thunder' ? 'var(--accent)' : undefined,
+                background: currentStory.user_reaction === 'thunder' ? 'rgba(26,231,132,0.2)' : undefined,
+              }}
+              onClick={() => handleReaction('thunder')}
+            >
+              <BoltDynamicIcon size={20} filled={currentStory.user_reaction === 'thunder'} />
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
