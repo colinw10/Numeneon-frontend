@@ -79,6 +79,9 @@ function Profile() {
       getUserByUsername(profileUsername)
         .then(userData => {
           if (isMounted) {
+            console.log('🔍 Fetched user data:', userData);
+            console.log('🔍 profile_picture:', userData?.profile_picture);
+            console.log('🔍 profile?.avatar:', userData?.profile?.avatar);
             setFetchedUser(userData);
           }
         })

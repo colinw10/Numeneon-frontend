@@ -25,6 +25,11 @@ import AvatarUploadModal from '../AvatarUploadModal';
 const colorVariants = ['magenta', 'cyan', 'aqua', 'purple', 'blue'];
 
 function ProfileCardFront({ setIsFlipped, posts, user, isOwnProfile = true }) {
+  // DEBUG: Log user data to see what we're receiving
+  console.log('🎴 ProfileCardFront user:', user);
+  console.log('🎴 user.profile_picture:', user?.profile_picture);
+  console.log('🎴 user.profile?.avatar:', user?.profile?.avatar);
+  
   // Track which letters have been hovered (for "hover all" replay)
   const hoveredRef = useRef(new Set());
   const isAnimatingRef = useRef(false);
