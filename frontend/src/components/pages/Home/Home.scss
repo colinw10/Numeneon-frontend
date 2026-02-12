@@ -254,7 +254,7 @@
 /* Animated color trail border for users with stories */
 .story-avatar.has-story {
   --angle: 0deg;
-  border: 2px solid transparent;
+  border: 2.5px solid transparent;
   background: 
     linear-gradient(145deg, rgba(15, 20, 30, 0.95), rgba(8, 12, 20, 0.98)) padding-box,
     conic-gradient(
@@ -270,7 +270,7 @@
       #1a73e7 300deg,
       #1ae784 360deg
     ) border-box;
-  animation: borderColorTrail 6.6s linear infinite;
+  animation: borderColorTrail 4s linear infinite;
   box-shadow: 
     0 0 8px rgba(26, 231, 132, 0.2),
     0 0 12px rgba(26, 115, 231, 0.1);
