@@ -71,11 +71,16 @@ function Profile() {
   // Determine if viewing own profile or someone else's
   const isOwnProfile = !profileUsername || profileUsername === currentUser?.username;
   
+  // DEBUG: Log at component level
+  console.log('🏠 Profile.jsx rendering - profileUsername:', profileUsername, 'isOwnProfile:', isOwnProfile);
+  
   // Fetch user data when viewing someone else's profile
   useEffect(() => {
+    console.log('🔄 Profile useEffect running - isOwnProfile:', isOwnProfile, 'profileUsername:', profileUsername);
     let isMounted = true;
     
     if (!isOwnProfile && profileUsername) {
+      console.log('📡 Calling getUserByUsername for:', profileUsername);
       getUserByUsername(profileUsername)
         .then(userData => {
           if (isMounted) {
@@ -86,7 +91,7 @@ function Profile() {
           }
         })
         .catch(err => {
-          console.error('Failed to fetch user profile:', err);
+          console.error('❌ Failed to fetch user profile:', err);
         });
     }
     
