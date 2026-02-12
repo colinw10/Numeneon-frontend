@@ -135,7 +135,14 @@ function ThreadView({
               <div className="reply-card">
                 <div className="reply-header">
                   <div className="reply-avatar">
-                    <UserIcon size={14} />
+                    {reply.author?.profile_picture ? (
+                      <img 
+                        src={reply.author.profile_picture} 
+                        alt={reply.author?.username || 'User'} 
+                      />
+                    ) : (
+                      <UserIcon size={14} />
+                    )}
                   </div>
                   <span className={`reply-author ${authorColorClass}`}>{reply.author?.username || 'User'}</span>
                   <span className="reply-time">{formatRelativeTime(reply.created_at)}</span>

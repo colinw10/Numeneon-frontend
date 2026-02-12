@@ -3,7 +3,8 @@
 import { getDisplayName, getInitials, getPostTime } from "@utils/helpers";
 
 // Group posts by user
-export const groupPostsByUser = (posts) => {
+// Accepts optional currentUser to ensure their profile_picture is used for their posts
+export const groupPostsByUser = (posts, currentUser = null) => {
   const grouped = {}; //"Create the function. Start with an empty object called grouped — this will hold all the user buckets."
 
   //Loop through every post in the array. For each post, do the stuff inside.
@@ -34,7 +35,8 @@ export const groupPostsByUser = (posts) => {
           first_name: authorObj?.first_name || "",
           // if authorObj exists, use first_name, else empty string
           last_name: authorObj?.last_name || "",
-
+          profile_picture: authorObj?.profile_picture || null,
+          // use the author's profile picture if available
           avatar: post.avatar || getInitials(authorObj || post.author),
           // if post has avatar, use it; else generate initials
         },
@@ -59,6 +61,26 @@ export const groupPostsByUser = (posts) => {
       grouped[orderId][type].push(post);
     }
   });
+
+  // After grouping, update current user's profile_picture from auth context
+  // This ensures we use the freshest profile_picture for the logged-in user
+  if (currentUser && currentUser.profile_picture) {
+    // Check by ID (number or string) and by username
+    const currentUserId = currentUser.id;
+    const currentUsername = currentUser.username;
+
+    Object.keys(grouped).forEach((key) => {
+      const userData = grouped[key];
+      // Match by id (handle both number and string comparison)
+      if (
+        String(userData.user.id) === String(currentUserId) ||
+        userData.user.username === currentUsername
+      ) {
+        userData.user.profile_picture = currentUser.profile_picture;
+      }
+    });
+  }
+
   return grouped;
 };
 

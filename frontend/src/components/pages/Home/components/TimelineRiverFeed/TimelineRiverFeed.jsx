@@ -8,6 +8,7 @@
 import { groupPostsByUser, sortGroupedPosts } from '@components/pages/Home/utils/groupPosts';
 import TimelineRiverRow from '../TimelineRiverRow';
 import { MessageBubbleIcon, ClockIcon } from '@assets/icons';
+import { useAuth } from '@contexts';
 import './TimelineRiverFeed.scss';
 
 const CAROUSEL_LIMIT = 12;
@@ -163,11 +164,14 @@ function TimelineRiverFeed(props) {
     onUpdatePost,
   } = props;
 
+  // Get current user for profile picture matching
+  const { user: currentUser } = useAuth();
+
   // Memoize grouped and sorted posts for performance
   const groupedAndSortedPosts = useMemo(() => {
-    const grouped = groupPostsByUser(posts);
+    const grouped = groupPostsByUser(posts, currentUser);
     return sortGroupedPosts(grouped);
-  }, [posts]);
+  }, [posts, currentUser]);
 
   // Handle comment toggle (open/close comment box)
   const handleCommentClick = (postId) => {

@@ -132,7 +132,14 @@ const RiverComposer = ({
             <div className="reply-context">
               <div className="reply-context-header">
                 <div className="reply-context-avatar">
-                  <UserIcon size={20} />
+                  {postAuthor?.profile_picture ? (
+                    <img 
+                      src={postAuthor.profile_picture} 
+                      alt={authorName} 
+                    />
+                  ) : (
+                    <UserIcon size={20} />
+                  )}
                 </div>
                 <span className="reply-context-name">{authorName}</span>
                 <span className="reply-context-handle">@{postAuthor.username}</span>
@@ -163,7 +170,14 @@ const RiverComposer = ({
                       <div className="reply-card">
                         <div className="reply-header">
                           <div className="reply-avatar">
-                            <UserIcon size={14} />
+                            {reply.author?.profile_picture ? (
+                              <img 
+                                src={reply.author.profile_picture} 
+                                alt={reply.author?.username || 'User'} 
+                              />
+                            ) : (
+                              <UserIcon size={14} />
+                            )}
                           </div>
                           <span className="reply-author">
                             {reply.author?.username || 'User'}

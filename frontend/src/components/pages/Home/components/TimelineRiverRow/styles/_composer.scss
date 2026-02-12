@@ -363,6 +363,13 @@
   background: linear-gradient(135deg, rgba(26, 115, 231, 0.3), rgba(220, 8, 188, 0.3));
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: var(--text-primary);
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .full-page-content .reply-context-name {

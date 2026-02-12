@@ -180,22 +180,33 @@ function StoryViewer({ isOpen, onClose, initialUserIndex = 0, storyGroups }) {
       zIndex: 9999,
       padding: '20px',
     },
-    // Phone frame container
+    // Phone frame container - holographic metallic look
     phoneFrame: {
       position: 'relative',
       width: '100%',
-      maxWidth: '400px',
+      maxWidth: '480px',
       height: '100%',
       maxHeight: '85vh',
       aspectRatio: '9 / 16',
-      background: 'linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%)',
+      background: `
+        linear-gradient(145deg, rgba(30, 41, 47, 0.7), rgba(0, 0, 0, 0.55)),
+        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
+        linear-gradient(45deg, rgba(26, 115, 231, 0.05), rgba(220, 8, 188, 0.05), rgba(26, 115, 231, 0.05))
+      `,
+      backgroundSize: '100% 100%, 150% 150%, 150% 150%, 200% 200%',
+      backgroundBlendMode: 'overlay, multiply, overlay',
+      backgroundPosition: '0% 50%, 75% 75%, 75% 75%, 50% 50%',
       borderRadius: '24px',
       overflow: 'hidden',
+      border: '1px solid rgba(26, 115, 231, 0.3)',
       boxShadow: `
-        0 0 0 1px rgba(79, 255, 255, 0.2),
-        0 8px 32px rgba(0, 0, 0, 0.5),
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        inset 0 -1px 3px rgba(0, 0, 0, 0.5),
         0 0 60px rgba(79, 255, 255, 0.1)
       `,
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
       display: 'flex',
       flexDirection: 'column',
     },

@@ -177,7 +177,14 @@ function RiverTimelineView({
           {/* Avatar header */}
           <div className="river-card-header">
             <div className="river-avatar">
-              <UserIcon size={20} />
+              {currentPost?.author?.profile_picture ? (
+                <img 
+                  src={currentPost.author.profile_picture} 
+                  alt={currentPost?.author?.username || profileUser?.username || 'Me'} 
+                />
+              ) : (
+                <UserIcon size={20} />
+              )}
             </div>
             <span className="river-author">{currentPost?.author?.username || profileUser?.username || 'Me'}</span>
           </div>
@@ -220,7 +227,14 @@ function RiverTimelineView({
           {/* Avatar header */}
           <div className="river-card-header">
             <div className="river-avatar">
-              <UserIcon size={20} />
+              {currentPost?.author?.profile_picture ? (
+                <img 
+                  src={currentPost.author.profile_picture} 
+                  alt={currentPost?.author?.username || profileUser?.username || 'Me'} 
+                />
+              ) : (
+                <UserIcon size={20} />
+              )}
             </div>
             <span className="river-author">{currentPost?.author?.username || profileUser?.username || 'Me'}</span>
           </div>
@@ -281,7 +295,14 @@ function RiverTimelineView({
           {/* Avatar header */}
           <div className="river-card-header">
             <div className="river-avatar">
-              <UserIcon size={20} />
+              {currentPost?.author?.profile_picture ? (
+                <img 
+                  src={currentPost.author.profile_picture} 
+                  alt={currentPost?.author?.username || profileUser?.username || 'Me'} 
+                />
+              ) : (
+                <UserIcon size={20} />
+              )}
             </div>
             <span className="river-author">{currentPost?.author?.username || profileUser?.username || 'Me'}</span>
           </div>

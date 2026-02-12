@@ -190,8 +190,8 @@ function ProfileCardFront({ setIsFlipped, posts, user, isOwnProfile = true }) {
             </svg>
           </div>
           <div className="profile-avatar">
-            {user?.profile?.avatar ? (
-              <img src={user.profile.avatar} alt={user.username} className="avatar-image" />
+            {(user?.profile?.avatar || user?.profile_picture) ? (
+              <img src={user?.profile?.avatar || user?.profile_picture} alt={user.username} className="avatar-image" />
             ) : (
               <UserIcon size={90} />
             )}

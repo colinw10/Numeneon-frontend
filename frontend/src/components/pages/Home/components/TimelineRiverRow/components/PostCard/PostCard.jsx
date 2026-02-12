@@ -163,7 +163,15 @@ function PostCard({
           onClick={(e) => onUserClick(e, user.id, user.username)}
           title={`View ${user.name}'s profile`}
         >
-          <UserIcon size={24} />
+          {user.profile_picture ? (
+            <img 
+              src={user.profile_picture} 
+              alt={user.name} 
+              className="river-avatar-img"
+            />
+          ) : (
+            <UserIcon size={24} />
+          )}
         </div>
         <div className="river-post-info">
           <div 
@@ -426,7 +434,15 @@ function PostCard({
               <div className="reply-context">
                 <div className="reply-context-header">
                   <div className="reply-context-avatar">
-                    <UserIcon size={20} />
+                    {user.profile_picture ? (
+                      <img 
+                        src={user.profile_picture} 
+                        alt={user.name} 
+                        className="reply-context-avatar-img"
+                      />
+                    ) : (
+                      <UserIcon size={20} />
+                    )}
                   </div>
                   <span className="reply-context-name">{user.name}</span>
                   <span className="reply-context-handle">@{user.username}</span>

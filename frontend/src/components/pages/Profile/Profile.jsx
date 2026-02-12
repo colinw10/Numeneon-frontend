@@ -531,7 +531,14 @@ function Profile() {
                             <div className="reply-context">
                               <div className="reply-context-header">
                                 <div className="reply-context-avatar">
-                                  <UserIcon size={20} />
+                                  {profileUser?.profile_picture ? (
+                                    <img 
+                                      src={profileUser.profile_picture} 
+                                      alt={getDisplayName(profileUser)} 
+                                    />
+                                  ) : (
+                                    <UserIcon size={20} />
+                                  )}
                                 </div>
                                 <span className="reply-context-name">{getDisplayName(profileUser)}</span>
                                 <span className="reply-context-handle">@{profileUser?.username}</span>
