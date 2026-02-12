@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams } from 'react-router-dom';
 // 🔵 PABLO - UI/Styling | 🟡 NATALIA - API Logic
@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import './Profile.scss';
 // 🛠️ Import shared helpers instead of duplicating them!
 import { getDisplayName, getInitials, formatRelativeTime } from '@utils/helpers';
+import { getUserByUsername } from '@services/usersService';
 import {
   UserIcon,
   FriendsIcon,
@@ -64,8 +65,33 @@ function Profile() {
   // Heart animation state for All Posts section
   const [allPostsAnimatingHeartId, setAllPostsAnimatingHeartId] = useState(null);
   
+  // State for fetched user data (when viewing someone else's profile)
+  const [fetchedUser, setFetchedUser] = useState(null);
+  
   // Determine if viewing own profile or someone else's
   const isOwnProfile = !profileUsername || profileUsername === currentUser?.username;
+  
+  // Fetch user data when viewing someone else's profile
+  useEffect(() => {
+    let isMounted = true;
+    
+    if (!isOwnProfile && profileUsername) {
+      getUserByUsername(profileUsername)
+        .then(userData => {
+          if (isMounted) {
+            setFetchedUser(userData);
+          }
+        })
+        .catch(err => {
+          console.error('Failed to fetch user profile:', err);
+        });
+    }
+    
+    return () => {
+      isMounted = false;
+      setFetchedUser(null); // Reset on cleanup
+    };
+  }, [isOwnProfile, profileUsername]);
   
   // Check if the profile user is a friend of the current user
   const isFriend = friends?.some(f => f.username === profileUsername);
@@ -77,6 +103,11 @@ function Profile() {
   const profileUser = useMemo(() => {
     if (isOwnProfile) {
       return currentUser;
+    }
+    
+    // Use fetched user data if available and matches the current profile (most complete data from API)
+    if (fetchedUser && fetchedUser.username === profileUsername) {
+      return fetchedUser;
     }
     
     // Try to find from post authors first (they have the most complete data)
@@ -97,7 +128,7 @@ function Profile() {
       first_name: profileUsername, // Use username as display if we can't find real name
       last_name: '' 
     };
-  }, [isOwnProfile, currentUser, friends, posts, profileUsername]);
+  }, [isOwnProfile, currentUser, fetchedUser, friends, posts, profileUsername]);
   
   // Show loading state while auth is loading
   if (authLoading) {
