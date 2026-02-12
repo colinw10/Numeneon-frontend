@@ -55,25 +55,41 @@ const chunkPostsIntoRows = (posts) => {
 };
 
 /**
- * Split a user's grouped data into multiple rows if ANY category exceeds 12 posts.
- * Returns an array of rowData objects, each with max 12 posts per category.
+ * Split a user's grouped data into multiple rows if ANY category exceeds 12 posts,
+ * OR if some categories hit exactly 12 while others haven't.
  * 
- * KEY DESIGN: When ANY category hits 12+, a new row is created for overflow.
- * Categories that HAVEN'T overflowed stay in the LAST row (aligned with original content).
- * This keeps the timeline coherent - new posts go to new rows, original content stays together.
+ * KEY DESIGN:
+ * - Categories at exactly 12 (maxed) group together in their own row
+ * - Categories below 12 (incomplete) start on a NEW row
+ * - Categories that overflow (13+) split normally across rows
+ * 
+ * Example: 12 thoughts, 12 media, 7 milestones
+ *   Row 0: thoughts[all 12], media[all 12]  ← maxed categories together
+ *   Row 1: milestones[all 7]                ← incomplete starts new row
  * 
  * Example: 13 thoughts, 5 media, 3 milestones
- *   Row 0 (newest): thoughts[0]    , [],       []             ← ONLY the overflow
- *   Row 1 (older):  thoughts[1-12], media[all], milestones[all] ← original content together
+ *   Row 0: thoughts[0]                      ← overflow only
+ *   Row 1: thoughts[1-12], media[all], milestones[all] ← rest together
  */
 const splitGroupIntoRows = (groupData) => {
   const { user, thoughts = [], media = [], milestones = [] } = groupData;
   
+  const categories = [
+    { name: 'thoughts', posts: thoughts },
+    { name: 'media', posts: media },
+    { name: 'milestones', posts: milestones },
+  ];
+  
   // Calculate how many rows we need based on the LARGEST category
   const maxCategoryLength = Math.max(thoughts.length, media.length, milestones.length);
   
-  // If no category exceeds limit, single row
-  if (maxCategoryLength <= CAROUSEL_LIMIT) {
+  // Check if any category is exactly maxed (at 12) while others are incomplete
+  const hasMaxedCategories = categories.some(c => c.posts.length === CAROUSEL_LIMIT);
+  const hasIncompleteCategories = categories.some(c => c.posts.length > 0 && c.posts.length < CAROUSEL_LIMIT);
+  const needsSplitForMaxed = hasMaxedCategories && hasIncompleteCategories && maxCategoryLength <= CAROUSEL_LIMIT;
+  
+  // Simple case: no overflow AND no maxed/incomplete split needed
+  if (maxCategoryLength <= CAROUSEL_LIMIT && !needsSplitForMaxed) {
     return [{
       user,
       thoughts,
@@ -83,7 +99,38 @@ const splitGroupIntoRows = (groupData) => {
     }];
   }
   
-  // Calculate row count based on largest category
+  // SPECIAL CASE: Some categories at exactly 12, others incomplete
+  // Split into: Row 0 = maxed categories, Row 1 = incomplete categories
+  if (needsSplitForMaxed) {
+    const maxedRow = {
+      user,
+      thoughts: thoughts.length === CAROUSEL_LIMIT ? thoughts : [],
+      media: media.length === CAROUSEL_LIMIT ? media : [],
+      milestones: milestones.length === CAROUSEL_LIMIT ? milestones : [],
+      rowIndex: 0,
+    };
+    
+    const incompleteRow = {
+      user,
+      thoughts: thoughts.length > 0 && thoughts.length < CAROUSEL_LIMIT ? thoughts : [],
+      media: media.length > 0 && media.length < CAROUSEL_LIMIT ? media : [],
+      milestones: milestones.length > 0 && milestones.length < CAROUSEL_LIMIT ? milestones : [],
+      rowIndex: 1,
+    };
+    
+    // Only include rows that have content
+    const rows = [];
+    if (maxedRow.thoughts.length || maxedRow.media.length || maxedRow.milestones.length) {
+      rows.push(maxedRow);
+    }
+    if (incompleteRow.thoughts.length || incompleteRow.media.length || incompleteRow.milestones.length) {
+      rows.push({ ...incompleteRow, rowIndex: rows.length });
+    }
+    
+    return rows;
+  }
+  
+  // OVERFLOW CASE: Calculate row count based on largest category
   const rowCount = Math.ceil(maxCategoryLength / CAROUSEL_LIMIT);
   
   // Helper: chunk a single category's posts aligned to global row structure
@@ -94,13 +141,10 @@ const splitGroupIntoRows = (groupData) => {
       return Array(totalRows).fill([]);
     }
     
-    // KEY FIX: Categories that haven't overflowed should align with the LAST row
-    // (the "original" row where posts were before any overflow happened)
-    // This keeps the original content together and only overflow creates new rows
+    // Categories that haven't overflowed go to the LAST row
     if (posts.length <= CAROUSEL_LIMIT) {
-      // Pad empty rows at the START, put all posts in the LAST row
       const chunks = Array(totalRows - 1).fill([]);
-      chunks.push(posts); // All posts in last row
+      chunks.push(posts);
       return chunks;
     }
     
@@ -108,21 +152,17 @@ const splitGroupIntoRows = (groupData) => {
     const chunks = [];
     const remainder = posts.length % CAROUSEL_LIMIT;
     
-    // Row 0: gets remainder (or full 12 if evenly divisible)
     if (remainder > 0) {
       chunks.push(posts.slice(0, remainder));
-      // Remaining rows get 12 each
       for (let i = remainder; i < posts.length; i += CAROUSEL_LIMIT) {
         chunks.push(posts.slice(i, i + CAROUSEL_LIMIT));
       }
     } else {
-      // Evenly divisible - each row gets 12
       for (let i = 0; i < posts.length; i += CAROUSEL_LIMIT) {
         chunks.push(posts.slice(i, i + CAROUSEL_LIMIT));
       }
     }
     
-    // Pad with empty arrays if this category has fewer rows than total
     while (chunks.length < totalRows) {
       chunks.push([]);
     }
