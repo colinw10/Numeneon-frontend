@@ -58,12 +58,6 @@ function PostCard({
   onReplyToComment, // New: Reply to a comment with @mention
   // Comment composer props
   activeCommentPostId,
-  
-  // DEBUG: Log what we receive
-  ...rest
-}) {
-  console.log('📮 PostCard user:', user?.username, 'profile_picture:', user?.profile_picture);
-  console.log('📮 PostCard post.author:', post?.author?.username, 'profile_picture:', post?.author?.profile_picture);
   commentText,
   setCommentText,
   setActiveCommentPostId,
