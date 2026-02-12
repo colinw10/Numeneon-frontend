@@ -32,7 +32,7 @@ export const searchUsers = async (query) => {
  */
 export const getUserByUsername = async (username) => {
   try {
-    const response = await apiClient.get(`/users/${username}/`);
+    const response = await apiClient.get(`/auth/users/${username}/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching user:", error);
