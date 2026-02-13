@@ -31,6 +31,9 @@ function DailyLearning({ variant = 'topbar' }) {
   
   const [knownItems, setKnownItems] = useState(getKnownItems);
   
+  // Check if a category's current item is known
+  const isKnown = (categoryKey, itemId) => knownItems[`${categoryKey}_${itemId}`];
+  
   // Listen for localStorage changes (when Learn page updates)
   useEffect(() => {
     const handleStorage = () => setKnownItems(getKnownItems());
@@ -43,17 +46,18 @@ function DailyLearning({ variant = 'topbar' }) {
     };
   }, []);
   
-  // Check if a category's current item is known
-  const isKnown = (categoryKey, itemId) => knownItems[`${categoryKey}_${itemId}`];
-  
-  // Track which known categories are expanded (user can expand)
-  const [expandedKnown, setExpandedKnown] = useState({});
-  
-  const toggleExpand = (key) => {
-    setExpandedKnown(prev => ({ ...prev, [key]: !prev[key] }));
-  };
+  // Auto-shift to first unlearned category when knownItems changes
+  useEffect(() => {
+    const firstUnlearned = categories.findIndex(cat => !isKnown(cat.key, cat.data.id));
+    if (firstUnlearned !== -1 && isKnown(categories[activeCategory].key, categories[activeCategory].data.id)) {
+      setActiveCategory(firstUnlearned);
+    }
+  }, [knownItems]);
 
   const currentCat = categories[activeCategory];
+  
+  // Track if user has expanded the all-known minimized view
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleContentClick = () => {
     // Navigate to /learn with the current category pre-selected
@@ -62,14 +66,11 @@ function DailyLearning({ variant = 'topbar' }) {
 
   // SIDEBAR VARIANT - Card with letter tabs
   if (variant === 'sidebar') {
-    const currentIsKnown = isKnown(currentCat.key, currentCat.data.id);
-    const isExpanded = expandedKnown[currentCat.key] || false;
-    
     // Check if ALL categories are known
     const allKnown = categories.every(cat => isKnown(cat.key, cat.data.id));
     
     return (
-      <div className={`daily-learning-sidebar ${allKnown ? 'all-known' : ''} ${currentIsKnown && !isExpanded ? 'minimized' : ''}`}>
+      <div className={`daily-learning-sidebar ${allKnown ? 'all-known' : ''} ${allKnown && !isExpanded ? 'minimized' : ''}`}>
         {/* Title + Letter tabs */}
         <div className="dls-left">
           <div className="dls-title">Learn</div>
@@ -97,9 +98,9 @@ function DailyLearning({ variant = 'topbar' }) {
           </div>
         </div>
         
-        {/* Minimized state when current item is known */}
-        {currentIsKnown && !isExpanded ? (
-          <div className="dls-minimized" onClick={() => toggleExpand(currentCat.key)} title="tap to review">
+        {/* Minimized state ONLY when ALL items are known */}
+        {allKnown && !isExpanded ? (
+          <div className="dls-minimized" onClick={() => setIsExpanded(true)} title="tap to review">
             <span className="dls-known-badge">✓</span>
           </div>
         ) : (
@@ -128,13 +129,13 @@ function DailyLearning({ variant = 'topbar' }) {
               <span className="dls-cta">Tap to learn more →</span>
             </div>
             
-            {/* Collapse button when expanded and known */}
-            {currentIsKnown && isExpanded && (
+            {/* Collapse button when expanded and all known */}
+            {allKnown && isExpanded && (
               <button 
                 className="dls-collapse-btn"
                 onClick={(e) => {
                   e.stopPropagation();
-                  toggleExpand(currentCat.key);
+                  setIsExpanded(false);
                 }}
               >
                 Collapse
