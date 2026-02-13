@@ -789,7 +789,7 @@
     clip-path: none;
     border-radius: 12px;
     border: 1px solid rgba(0, 255, 255, 0.3);
-    overflow: hidden;
+    overflow: visible;
     
     &::before {
       clip-path: none;
@@ -828,7 +828,7 @@
     min-width: 60px;
   }
   
-  /* Keep tabs horizontal on mobile - left aligned */
+  /* Keep tabs horizontal on mobile - centered */
   .dls-tabs {
     display: flex;
     flex-direction: row;
@@ -836,7 +836,7 @@
     gap: 0.25rem;
     margin-bottom: 0;
     flex: 1;
-    justify-content: flex-start;
+    justify-content: center;
     flex-shrink: 0;
   }
   
@@ -858,16 +858,19 @@
   .dls-content {
     flex: 1;
     padding: 0;
+    overflow: visible;
   }
   
   .dls-term {
     font-size: 0.85rem;
     margin-bottom: 0.2rem;
+    color: #fff;
   }
   
   .dls-definition {
     font-size: 0.65rem;
-    -webkit-line-clamp: 2; /* 2 lines max on mobile */
+    color: #aaa;
+    display: block;
   }
   
   .dls-footer {
