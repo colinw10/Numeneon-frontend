@@ -1,7 +1,8 @@
 // DailyLearning.jsx - Quick learning widget for TopBar or sidebar
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTodayLearning, CATEGORIES } from '@data/dailyLearning';
+import SyntaxHighlight from '@utils/syntaxHighlight';
 import './DailyLearning.scss';
 
 function DailyLearning({ variant = 'topbar' }) {
@@ -19,6 +20,39 @@ function DailyLearning({ variant = 'topbar' }) {
     { key: 'mythology', icon: 'Ψ', label: 'Myth', data: today.mythology, color: '#fbbf24' },
   ];
 
+  // Track known items from localStorage
+  const getKnownItems = () => {
+    try {
+      return JSON.parse(localStorage.getItem('knownLearning') || '{}');
+    } catch {
+      return {};
+    }
+  };
+  
+  const [knownItems, setKnownItems] = useState(getKnownItems);
+  
+  // Listen for localStorage changes (when Learn page updates)
+  useEffect(() => {
+    const handleStorage = () => setKnownItems(getKnownItems());
+    window.addEventListener('storage', handleStorage);
+    // Also check periodically for same-tab updates
+    const interval = setInterval(() => setKnownItems(getKnownItems()), 1000);
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+      clearInterval(interval);
+    };
+  }, []);
+  
+  // Check if a category's current item is known
+  const isKnown = (categoryKey, itemId) => knownItems[`${categoryKey}_${itemId}`];
+  
+  // Track which known categories are expanded (user can expand)
+  const [expandedKnown, setExpandedKnown] = useState({});
+  
+  const toggleExpand = (key) => {
+    setExpandedKnown(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   const currentCat = categories[activeCategory];
 
   const handleContentClick = () => {
@@ -28,55 +62,87 @@ function DailyLearning({ variant = 'topbar' }) {
 
   // SIDEBAR VARIANT - Card with letter tabs
   if (variant === 'sidebar') {
+    const currentIsKnown = isKnown(currentCat.key, currentCat.data.id);
+    const isExpanded = expandedKnown[currentCat.key] || false;
+    
+    // Check if ALL categories are known
+    const allKnown = categories.every(cat => isKnown(cat.key, cat.data.id));
+    
     return (
-      <div className="daily-learning-sidebar">
+      <div className={`daily-learning-sidebar ${allKnown ? 'all-known' : ''} ${currentIsKnown && !isExpanded ? 'minimized' : ''}`}>
         {/* Title + Letter tabs */}
         <div className="dls-left">
           <div className="dls-title">Learn</div>
           <div className="dls-tabs">
-            {categories.map((cat, idx) => (
-              <button
-                key={cat.key}
-                className={`dls-tab ${activeCategory === idx ? 'active' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveCategory(idx);
-                }}
-                title={cat.label}
-                style={{ 
-                  color: cat.color,
-                  borderColor: activeCategory === idx ? cat.color : 'transparent'
-                }}
-              >
-                {cat.icon}
-              </button>
-            ))}
+            {categories.map((cat, idx) => {
+              const catIsKnown = isKnown(cat.key, cat.data.id);
+              return (
+                <button
+                  key={cat.key}
+                  className={`dls-tab ${activeCategory === idx ? 'active' : ''} ${catIsKnown ? 'known' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveCategory(idx);
+                  }}
+                  title={catIsKnown ? `${cat.label} ✓` : cat.label}
+                  style={{ 
+                    color: catIsKnown ? 'rgba(74, 222, 128, 0.8)' : cat.color,
+                    borderColor: activeCategory === idx ? (catIsKnown ? '#4ade80' : cat.color) : 'transparent'
+                  }}
+                >
+                  {catIsKnown ? '✓' : cat.icon}
+                </button>
+              );
+            })}
           </div>
         </div>
         
-        {/* Content - clickable to go to /learn */}
-        <div className="dls-content" onClick={handleContentClick}>
-          <div className="dls-term">{currentCat.data.term}</div>
-          <div className="dls-definition">{currentCat.data.definition}</div>
-          
-          {/* Show extra fields if available */}
-          {currentCat.data.code && (
-            <pre className="dls-code">{currentCat.data.code}</pre>
-          )}
-          {currentCat.data.gotcha && (
-            <div className="dls-gotcha">⚠️ {currentCat.data.gotcha}</div>
-          )}
-          {currentCat.data.example && (
-            <div className="dls-example">{currentCat.data.example}</div>
-          )}
-          {currentCat.data.myth && (
-            <div className="dls-myth">{currentCat.data.myth}</div>
-          )}
-        </div>
+        {/* Minimized state when current item is known */}
+        {currentIsKnown && !isExpanded ? (
+          <div className="dls-minimized" onClick={() => toggleExpand(currentCat.key)}>
+            <span className="dls-known-badge">✓ Known</span>
+            <span className="dls-expand-hint">tap to review</span>
+          </div>
+        ) : (
+          <>
+            {/* Content - clickable to go to /learn */}
+            <div className="dls-content" onClick={handleContentClick}>
+              <div className="dls-term">{currentCat.data.term}</div>
+              <div className="dls-definition">{currentCat.data.definition}</div>
+              
+              {/* Show extra fields if available */}
+              {currentCat.data.code && (
+                <SyntaxHighlight code={currentCat.data.code} className="dls-code" />
+              )}
+              {currentCat.data.gotcha && (
+                <div className="dls-gotcha">⚠️ {currentCat.data.gotcha}</div>
+              )}
+              {currentCat.data.example && (
+                <div className="dls-example">{currentCat.data.example}</div>
+              )}
+              {currentCat.data.myth && (
+                <div className="dls-myth">{currentCat.data.myth}</div>
+              )}
+            </div>
 
-        <div className="dls-footer" onClick={handleContentClick}>
-          <span className="dls-cta">Tap to learn more →</span>
-        </div>
+            <div className="dls-footer" onClick={handleContentClick}>
+              <span className="dls-cta">Tap to learn more →</span>
+            </div>
+            
+            {/* Collapse button when expanded and known */}
+            {currentIsKnown && isExpanded && (
+              <button 
+                className="dls-collapse-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleExpand(currentCat.key);
+                }}
+              >
+                Collapse
+              </button>
+            )}
+          </>
+        )}
       </div>
     );
   }

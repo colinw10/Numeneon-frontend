@@ -112,6 +112,9 @@ function Landing() {
           </>
         )}
       </div>
+      <button className="btn-about" onClick={() => navigate('/about')}>
+        about
+      </button>
     </div>
   );
 }

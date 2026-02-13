@@ -840,6 +840,30 @@
   animation-delay: 4.3s;        // Slightly after login button
 }
 
+/* About page link - simple text link */
+.btn-about {
+  background: none;
+  border: none;
+  padding: 0.5rem 0;
+  margin-top: 1.5rem;
+  font-family: var(--font-main);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  opacity: 0;
+  animation: buttonFadeIn 5s linear forwards;
+  animation-delay: 4.5s;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  
+  &:hover {
+    color: rgba(0, 0, 0, 0.9);
+    text-decoration: underline;
+  }
+}
+
 .btn-enter {
   animation-delay: 4s;
   background: rgba(0, 0, 0, 0.2);

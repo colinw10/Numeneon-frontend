@@ -58,9 +58,12 @@ function AppContent() {
           <Route path="/profile/:username" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
           <Route path="/mystudio" element={<ProtectedRoute><MyStudio/></ProtectedRoute>}/>
           <Route path="/mystudio/:username" element={<ProtectedRoute><MyStudio/></ProtectedRoute>}/>
-          <Route path="/about" element={<ProtectedRoute><About/></ProtectedRoute>}/>
           <Route path="/friends" element={<ProtectedRoute><Friends/></ProtectedRoute>}/>
           <Route path="/learn" element={<ProtectedRoute><Learn/></ProtectedRoute>}/>
+          
+          {/* Public route - accessible without authentication */}
+          <Route path="/about" element={<About/>}/>
+          
           {/* 404 Catch-all - must be last */}
           <Route path="*" element={<NotFound/>}/>
         </Routes>

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getTodayLearning, CATEGORIES, getTranslatedItem, getUILabel, getCategoryName } from '@data/dailyLearning';
 import { ChevronLeftIcon, ScrollIcon, LanguageSwitchIcon } from '@assets/icons';
+import SyntaxHighlight from '@utils/syntaxHighlight';
 import './Learn.scss';
 
 function Learn() {
@@ -209,7 +210,7 @@ function Learn() {
           {currentItem.code && (
             <div className="card-section">
               <h3>{getUILabel('codeExample', language)}</h3>
-              <pre className="card-code"><code>{currentItem.code}</code></pre>
+              <SyntaxHighlight code={currentItem.code} className="card-code" />
             </div>
           )}
 

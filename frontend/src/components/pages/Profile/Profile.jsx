@@ -335,6 +335,8 @@ function Profile() {
           setComposerType={setComposerType}
           targetProfileId={!isOwnProfile && isFriend ? profileUser?.id : null}
           targetDisplayName={!isOwnProfile ? getDisplayName(profileUser) : null}
+          initialContent={composerText}
+          onOpen={() => setComposerText('')}
         />
       )}
 

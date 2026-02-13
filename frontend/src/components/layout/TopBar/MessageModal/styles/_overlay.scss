@@ -41,6 +41,7 @@
 .message-modal {
   width: 90vw;
   height: 85vh;
+  height: 85dvh; /* Dynamic viewport height - accounts for browser chrome */
   max-width: 1200px;
   background: var(--bg-card-solid);
   border: 1px solid var(--border-default);
@@ -58,6 +59,7 @@
 .message-modal.fullscreen {
   width: 100vw;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
   max-width: none;
   border-radius: 0;
   border: none;

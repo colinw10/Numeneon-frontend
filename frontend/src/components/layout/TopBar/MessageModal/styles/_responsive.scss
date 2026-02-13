@@ -221,6 +221,17 @@
     padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem)) !important;
   }
   
+  /* Browser mode only - add extra bottom padding for keyboard + browser chrome */
+  @media (display-mode: browser) {
+    .chat-composer {
+      padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 40px)) !important;
+    }
+    
+    .message-modal {
+      height: 100dvh;
+    }
+  }
+  
   /* Simple back arrow button on mobile */
   .chat-back-btn {
     display: flex;
@@ -354,5 +365,12 @@
   /* Composer - add safe area for Android/Samsung keyboards */
   .chat-composer {
     padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem)) !important;
+  }
+  
+  /* Browser mode only - extra space for smaller screens */
+  @media (display-mode: browser) {
+    .chat-composer {
+      padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 50px)) !important;
+    }
   }
 }

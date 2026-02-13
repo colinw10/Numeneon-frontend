@@ -190,6 +190,19 @@
     content: "Loading...";
     color: rgba(79, 255, 255, 0.5);
   }
+  
+  /* Clickable username - navigates to profile */
+  &.clickable {
+    cursor: pointer;
+    transition: all 0.25s ease;
+    
+    &:hover {
+      color: #7fffff !important;
+      text-shadow:
+        0 0 12px rgba(79, 255, 255, 0.8),
+        0 0 24px rgba(0, 212, 255, 0.5);
+    }
+  }
 }
 
 /* Chat Messages Container */

@@ -8,6 +8,7 @@
 // 4. Shows real messages from context state
 
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MinimizeIcon, MaximizeIcon, CloseIcon, ChevronLeftIcon, ChevronRightIcon, MessageBubbleIcon, PlusIcon } from '@assets/icons';
 import { useMessages } from '@contexts/MessageContext';
 import usersService from '@services/usersService';
@@ -49,6 +50,8 @@ const getInitials = (name) => {
 };
 
 function MessageModal({ onClose }) {
+  const navigate = useNavigate();
+  
   // 🔵 Get state and actions from context
   const { 
     conversations, 
@@ -81,6 +84,17 @@ function MessageModal({ onClose }) {
   // 🔵 Ref for scrolling to bottom of messages
   const messagesEndRef = useRef(null);
   
+  // 🔵 Ref for composer - used for scroll-into-view on focus (browser keyboard fix)
+  const composerRef = useRef(null);
+  
+  // 🔵 Handle textarea focus - scroll composer into view for browser keyboard
+  const handleTextareaFocus = () => {
+    // Delay to wait for keyboard animation
+    setTimeout(() => {
+      composerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 300);
+  };
+  
   // 🔵 Switch to chat view when a conversation is selected (from profile/nav)
   useEffect(() => {
     if (selectedConversation && selectedUserId) {
@@ -90,8 +104,12 @@ function MessageModal({ onClose }) {
   
   // 🔵 Scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [selectedConversation?.messages]);
+    // Small delay to ensure DOM has updated with new message
+    const timer = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [selectedMessages]);
   
   // 🔵 Calculate charge level (0-4) based on message length
   // This creates the "charging up" visual effect on the send button
@@ -418,7 +436,16 @@ function MessageModal({ onClose }) {
                   >
                     <ChevronLeftIcon size={20} />
                   </button>
-                  <span className="chat-username">{chatDisplayName}</span>
+                  <span 
+                    className="chat-username clickable"
+                    onClick={() => {
+                      onClose();
+                      navigate(`/profile/${user.username}`);
+                    }}
+                    title="Click to view profile"
+                  >
+                    {chatDisplayName}
+                  </span>
                   {/* Mobile close button */}
                   <button className="chat-close-btn" onClick={onClose}>
                     <CloseIcon size={20} />
@@ -477,7 +504,7 @@ function MessageModal({ onClose }) {
                 </div>
                 
                 {/* Composer */}
-                <div className="chat-composer">
+                <div className="chat-composer" ref={composerRef}>
                   <textarea 
                     id="chat-message-input"
                     name="chat-message"
@@ -487,6 +514,7 @@ function MessageModal({ onClose }) {
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
                     onKeyDown={handleKeyDown}
+                    onFocus={handleTextareaFocus}
                   />
                   <button 
                     className={`chat-send-btn charge-${getChargeLevel()}`}

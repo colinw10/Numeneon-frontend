@@ -376,13 +376,47 @@
     padding: 1rem;
     font-family: 'Monaco', 'Consolas', monospace;
     font-size: 0.9rem;
-    color: var(--cyan);
     overflow-x: auto;
     clip-path: polygon(5px 0, 100% 0, 100% 100%, 0 100%, 0 5px);
     
     code {
       display: block;
       white-space: pre;
+    }
+    
+    /* Syntax highlighting - calming ADD-friendly colors */
+    .syntax-keyword {
+      color: #d4a574; /* Warm gold */
+      font-weight: 600;
+    }
+    
+    .syntax-string {
+      color: #7ec8e3; /* Baby blue */
+    }
+    
+    .syntax-comment {
+      color: #e57373; /* Soft crimson for output */
+      font-style: italic;
+      display: block;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px dashed rgba(229, 115, 115, 0.3);
+    }
+    
+    .syntax-number {
+      color: #c9a8ff; /* Soft purple */
+    }
+    
+    .syntax-function {
+      color: #81c784; /* Soft green */
+    }
+    
+    .syntax-operator {
+      color: #b0bec5; /* Muted gray */
+    }
+    
+    .syntax-identifier {
+      color: #e0e0e0; /* Light gray */
     }
   }
   
@@ -702,11 +736,41 @@
     }
     
     .card-code {
-      background: rgba(0, 0, 0, 0.04);
+      background: rgba(245, 245, 245, 0.95);
       border-color: rgba(0, 0, 0, 0.1);
       
       code {
         color: #1f2937;
+      }
+      
+      /* Light mode syntax highlighting - adjusted for readability */
+      .syntax-keyword {
+        color: #b5651d; /* Darker amber */
+      }
+      
+      .syntax-string {
+        color: #0277bd; /* Darker blue */
+      }
+      
+      .syntax-comment {
+        color: #c62828; /* Darker crimson */
+        border-top-color: rgba(198, 40, 40, 0.3);
+      }
+      
+      .syntax-number {
+        color: #7c4dff; /* Darker purple */
+      }
+      
+      .syntax-function {
+        color: #2e7d32; /* Darker green */
+      }
+      
+      .syntax-operator {
+        color: #546e7a; /* Darker gray */
+      }
+      
+      .syntax-identifier {
+        color: #37474f; /* Dark gray */
       }
     }
     

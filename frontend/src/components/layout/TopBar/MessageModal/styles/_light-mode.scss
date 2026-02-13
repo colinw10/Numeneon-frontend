@@ -21,12 +21,43 @@
   }
 
   .message-modal-title {
-    /* Same gradient fade as river-author in TimelineRiver */
-    background: linear-gradient(180deg, #000000 22%, rgba(120, 120, 120, 0.6) 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
+    /* Black for visibility in light mode - override green accent */
+    color: #1a1a2e !important;
+    background: none !important;
+    background-image: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+    background-clip: unset !important;
     text-shadow: none !important;
+  }
+  
+  /* New message button - white plus sign on holographic background */
+  .new-message-btn {
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    
+    svg,
+    svg path,
+    svg line,
+    svg * {
+      color: #ffffff !important;
+      stroke: #ffffff !important;
+      fill: #ffffff !important;
+    }
+    
+    &:hover {
+      color: #ff55dd !important;
+      border-color: rgba(255, 85, 221, 0.5) !important;
+      
+      svg,
+      svg path,
+      svg line,
+      svg * {
+        color: #ff55dd !important;
+        stroke: #ff55dd !important;
+        fill: #ff55dd !important;
+      }
+    }
   }
 
   /* Close button uses global .close-btn-glow light mode styles */
@@ -69,12 +100,19 @@
   }
 
   .chat-username {
-    /* Same gradient fade as river-author in TimelineRiver */
-    background: linear-gradient(180deg, #000000 22%, rgba(120, 120, 120, 0.6) 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
+    /* Solid dark color for legibility */
+    color: #1a1a2e !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+    background-clip: unset !important;
     text-shadow: none !important;
+    
+    /* Clickable hover state */
+    &.clickable:hover {
+      color: var(--blue-primary) !important;
+      -webkit-text-fill-color: var(--blue-primary) !important;
+    }
   }
 
   .conversation-preview {
@@ -115,8 +153,7 @@
     background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent) !important;
   }
 
-  .chat-header-name,
-  .chat-username {
+  .chat-header-name {
     color: #1a1a2e !important;
     text-shadow: none !important;
   }
