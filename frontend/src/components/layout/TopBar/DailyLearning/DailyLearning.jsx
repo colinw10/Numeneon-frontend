@@ -31,6 +31,9 @@ function DailyLearning({ variant = 'topbar' }) {
   
   const [knownItems, setKnownItems] = useState(getKnownItems);
   
+  // Track if user manually selected a tab (prevents auto-shift override)
+  const [userSelected, setUserSelected] = useState(false);
+  
   // Check if a category's current item is known
   const isKnown = (categoryKey, itemId) => knownItems[`${categoryKey}_${itemId}`];
   
@@ -46,8 +49,11 @@ function DailyLearning({ variant = 'topbar' }) {
     };
   }, []);
   
-  // Auto-shift to first unlearned category when knownItems changes
+  // Auto-shift to first unlearned category ONLY when current item just became known
+  // and user hasn't manually selected a tab
   useEffect(() => {
+    if (userSelected) return; // Don't override user's choice
+    
     const firstUnlearned = categories.findIndex(cat => !isKnown(cat.key, cat.data.id));
     if (firstUnlearned !== -1 && isKnown(categories[activeCategory].key, categories[activeCategory].data.id)) {
       setActiveCategory(firstUnlearned);
@@ -83,6 +89,7 @@ function DailyLearning({ variant = 'topbar' }) {
                   className={`dls-tab ${activeCategory === idx ? 'active' : ''} ${catIsKnown ? 'known' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
+                    setUserSelected(true); // User manually clicked, don't auto-shift
                     setActiveCategory(idx);
                   }}
                   title={catIsKnown ? `${cat.label} ✓` : cat.label}
