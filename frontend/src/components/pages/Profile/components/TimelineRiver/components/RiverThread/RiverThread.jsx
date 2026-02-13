@@ -7,12 +7,13 @@
  * - Edit/delete for reply owner
  * - Inline edit form with expand to modal option
  * - Post-type colored author names
+ * - Reply to comments with @mention
  * 
  * 🔗 CONNECTION: Used by TimelineRiver.jsx for thread display
  */
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { UserIcon, EditIcon, TrashIcon, CheckIcon, CloseIcon, MaximizeIcon } from '@assets/icons';
+import { UserIcon, EditIcon, TrashIcon, CheckIcon, CloseIcon, MaximizeIcon, MessageBubbleIcon, ChevronRightIcon } from '@assets/icons';
 
 const RiverThread = ({
   post,
@@ -32,6 +33,7 @@ const RiverThread = ({
   onEditSave,
   onEditCancel,
   onDelete,
+  onReplyToComment, // New: Reply to a comment with @mention
 }) => {
   // Color based on post type
   const authorColorClass = `reply-author--${postType}`;
@@ -40,10 +42,50 @@ const RiverThread = ({
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingReply, setEditingReply] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // State for replying to a comment
+  const [replyingToId, setReplyingToId] = useState(null);
+  const [replyingToUser, setReplyingToUser] = useState(null);
+  const [replyContent, setReplyContent] = useState('');
 
   if (!post) return null;
 
   const replyCount = post.reply_count || 0;
+
+  // Start replying to a comment
+  const handleStartReply = (reply) => {
+    setReplyingToId(reply.id);
+    setReplyingToUser(reply.author);
+    setReplyContent(`@${reply.author?.username || 'user'} `);
+  };
+
+  // Cancel replying
+  const handleCancelReply = () => {
+    setReplyingToId(null);
+    setReplyingToUser(null);
+    setReplyContent('');
+  };
+
+  // Submit reply to comment
+  const handleSubmitReply = async () => {
+    if (!replyContent.trim() || !replyingToUser) return;
+    
+    setIsSaving(true);
+    try {
+      if (onReplyToComment) {
+        await onReplyToComment(post.id, {
+          content: replyContent.trim(),
+          mentioned_user_id: replyingToUser.id,
+          mentioned_username: replyingToUser.username,
+          parent_comment_id: replyingToId
+        });
+      }
+      handleCancelReply();
+    } catch (error) {
+      console.error('Failed to submit reply:', error);
+    }
+    setIsSaving(false);
+  };
 
   // Handle expand to modal
   const handleExpandEdit = (reply) => {
@@ -114,31 +156,47 @@ const RiverThread = ({
                   <span className={`reply-author ${authorColorClass}`}>{reply.author?.username || 'User'}</span>
                   <span className="reply-time">{formatRelativeTime?.(reply.created_at)}</span>
 
-                  {/* Edit/Delete for reply owner */}
-                  {currentUserId && reply.author?.id === currentUserId && (
-                    <div className="reply-actions">
+                  {/* Reply button - available to all logged in users */}
+                  <div className="reply-actions">
+                    {currentUserId && (
                       <button
-                        className="reply-action-btn"
-                        title="Edit"
+                        className="reply-action-btn reply-action-btn--reply"
+                        title={`Reply to ${reply.author?.username || 'user'}`}
                         onClick={(e) => {
                           e.stopPropagation();
-                          onEditStart?.(reply.id, reply.content, post.id);
+                          handleStartReply(reply);
                         }}
                       >
-                        <EditIcon size={14} />
+                        <MessageBubbleIcon size={14} />
                       </button>
-                      <button
-                        className="reply-action-btn reply-action-btn--delete"
-                        title="Delete"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onDelete?.(reply.id, post.id);
-                        }}
-                      >
-                        <TrashIcon size={14} />
-                      </button>
-                    </div>
-                  )}
+                    )}
+                    
+                    {/* Edit/Delete for reply owner */}
+                    {currentUserId && reply.author?.id === currentUserId && (
+                      <>
+                        <button
+                          className="reply-action-btn"
+                          title="Edit"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEditStart?.(reply.id, reply.content, post.id);
+                          }}
+                        >
+                          <EditIcon size={14} />
+                        </button>
+                        <button
+                          className="reply-action-btn reply-action-btn--delete"
+                          title="Delete"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onDelete?.(reply.id, post.id);
+                          }}
+                        >
+                          <TrashIcon size={14} />
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
 
                 {/* Reply content - edit mode or display */}
@@ -187,7 +245,65 @@ const RiverThread = ({
                     </div>
                   </div>
                 ) : (
-                  <p className="reply-content">{reply.content}</p>
+                  <p className="reply-content">
+                    {/* Render @mentions with special styling */}
+                    {reply.content.split(/(@\w+)/g).map((part, index) => {
+                      if (part.startsWith('@')) {
+                        return (
+                          <span key={index} className={`mention-tag mention-tag--${postType}`}>
+                            {part}
+                          </span>
+                        );
+                      }
+                      return part;
+                    })}
+                  </p>
+                )}
+                
+                {/* Reply to comment input */}
+                {replyingToId === reply.id && (
+                  <div className="reply-to-comment-form">
+                    <div className="reply-to-input-wrapper">
+                      <textarea
+                        className="reply-to-input"
+                        value={replyContent}
+                        onChange={(e) => setReplyContent(e.target.value)}
+                        placeholder={`Reply to @${reply.author?.username}...`}
+                        autoFocus
+                        rows={1}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Escape') {
+                            handleCancelReply();
+                          }
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSubmitReply();
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="reply-to-actions">
+                      <button 
+                        className="reply-to-cancel"
+                        onClick={handleCancelReply}
+                        title="Cancel"
+                      >
+                        <CloseIcon size={14} />
+                      </button>
+                      <button 
+                        className="reply-to-submit"
+                        disabled={!replyContent.trim() || isSaving}
+                        onClick={handleSubmitReply}
+                        title="Send reply"
+                      >
+                        {isSaving ? (
+                          <span className="saving-dots">...</span>
+                        ) : (
+                          <ChevronRightIcon size={18} strokeWidth="2.5" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>

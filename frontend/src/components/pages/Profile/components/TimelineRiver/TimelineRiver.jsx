@@ -210,6 +210,9 @@ function TimelineRiver({
 
   // Handler for edit button
   const handleEdit = (post) => {
+    // Clear any existing comment state first
+    setActiveCommentPostId(null);
+    // Then set edit state
     setEditingPostId(post.id);
     setCommentText(post.content);
     setIsEditMode(true);
@@ -281,6 +284,25 @@ function TimelineRiver({
       // Auto-expand thread to show new reply
       setExpandedThreadId(postId);
     }
+  };
+
+  // Handle reply to comment (with @mention)
+  const handleReplyToComment = async (postId, replyData) => {
+    // replyData contains: content, mentioned_user_id, mentioned_username, parent_comment_id
+    const result = await createReply(postId, { 
+      content: replyData.content, 
+      type: 'thoughts'
+    });
+    if (result.success) {
+      // Add new reply to local state - immediate UI update
+      setThreadReplies(prev => ({
+        ...prev,
+        [postId]: [...(prev[postId] || []), result.data]
+      }));
+      setExpandedThreadId(postId);
+      return true;
+    }
+    return false;
   };
 
   // Handle editing a reply
@@ -393,6 +415,7 @@ function TimelineRiver({
             setDeleteModalIsReply(true);
             setEditingReplyParentId(parentId);
           }}
+          onReplyToComment={handleReplyToComment}
         />
       </>
     );

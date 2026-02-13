@@ -312,6 +312,10 @@ function TimelineRiverRow({ rowData, onCommentClick, activeCommentPostId, commen
   
   // Handle edit post - opens dedicated edit modal (separate from comment composer)
   const handleEditPost = (post) => {
+    // Clear any existing comment state first
+    setActiveCommentPostId(null);
+    setIsComposerFullPage(false);
+    // Then set edit state
     setEditingPostId(post.id);
     setEditingPostContent(post.content);
   };

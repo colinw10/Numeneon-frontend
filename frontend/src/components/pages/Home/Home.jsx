@@ -1,7 +1,7 @@
 // 🔵 PABLO - UI/Styling | 🟢 COLIN + 🟠 TITO - API Logic
 // Home.jsx - Timeline river feed page
 
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import './Home.scss';
 import TimelineRiverFeed from './components/TimelineRiverFeed';
 import ComposerModal from '@Profile/components/ComposerModal/ComposerModal';
@@ -14,7 +14,7 @@ import { StoryUploadModal, StoryViewer } from '@ui/Stories';
 
 function Home() {
   // Get real data from contexts
-  const { posts, createPost, deletePost, updatePost } = usePosts();
+  const { posts, createPost, deletePost, updatePost, fetchPosts } = usePosts();
   const { friends } = useFriends();
   const { myStories, friendStories, isStoryViewed } = useStories();
   const { user } = useAuth();
@@ -33,6 +33,56 @@ function Home() {
   const [showStoryViewer, setShowStoryViewer] = useState(false);
   const [storyViewerIndex, setStoryViewerIndex] = useState(0);
   const [composerType, setComposerType] = useState('thought'); // 'thought', 'media', or 'milestone'
+
+  // Pull-to-refresh state
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [pullProgress, setPullProgress] = useState(0);
+  const pullStartY = useRef(0);
+  const isPulling = useRef(false);
+  const PULL_THRESHOLD = 80; // pixels to pull before refresh triggers
+
+  // Pull-to-refresh handlers
+  const handleTouchStart = useCallback((e) => {
+    // Only enable pull-to-refresh when at top of page
+    if (window.scrollY === 0) {
+      pullStartY.current = e.touches[0].clientY;
+      isPulling.current = true;
+    }
+  }, []);
+
+  const handleTouchMove = useCallback((e) => {
+    if (!isPulling.current || isRefreshing) return;
+    
+    const currentY = e.touches[0].clientY;
+    const diff = currentY - pullStartY.current;
+    
+    // Only track downward pulls when at top
+    if (diff > 0 && window.scrollY === 0) {
+      const progress = Math.min(diff / PULL_THRESHOLD, 1);
+      setPullProgress(progress);
+    }
+  }, [isRefreshing]);
+
+  const handleTouchEnd = useCallback(async () => {
+    if (!isPulling.current) return;
+    isPulling.current = false;
+    
+    if (pullProgress >= 1 && !isRefreshing) {
+      setIsRefreshing(true);
+      setPullProgress(1);
+      
+      // Refresh the feed
+      await fetchPosts();
+      
+      // Small delay for visual feedback
+      setTimeout(() => {
+        setIsRefreshing(false);
+        setPullProgress(0);
+      }, 500);
+    } else {
+      setPullProgress(0);
+    }
+  }, [pullProgress, isRefreshing, fetchPosts]);
 
   // STATE: Inline composer text
   const [composerText, setComposerText] = useState('');
@@ -137,7 +187,25 @@ function Home() {
   ];
 
   return (
-    <div className="feed-container">
+    <div 
+      className="feed-container"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Pull-to-refresh indicator */}
+      {(pullProgress > 0 || isRefreshing) && (
+        <div 
+          className={`pull-to-refresh-indicator ${isRefreshing ? 'refreshing' : ''}`}
+          style={{ 
+            opacity: pullProgress,
+            transform: `translateY(${pullProgress * 40}px)`
+          }}
+        >
+          <span className="refresh-icon">↻</span>
+        </div>
+      )}
+      
        {/* 🟢 Section 1: Composer (click to open modal) */}
       <div className="composer-section">
         <div className="composer-avatar">
