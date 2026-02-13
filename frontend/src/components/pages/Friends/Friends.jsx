@@ -1,9 +1,10 @@
 // 🔵 PABLO - UI/Styling | 🟣 CRYSTAL - API Logic  
 // Friends.jsx - Friends list and requests page
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFriends, useMessages } from '@contexts';
+import friendsService from '@services/friendsService';
 import DeleteConfirmModal from '@Home/components/DeleteConfirmModal/DeleteConfirmModal';
 import { MessageBubbleIcon, UnlinkIcon, PlusIcon } from '@assets/icons';
 // 🛠️ Import shared helpers instead of duplicating them!
@@ -38,14 +39,47 @@ function Friends() {
   
   // Get message context for opening DMs
   const { openMessages } = useMessages();
+  const { sendRequest } = useFriends();
 
-  // Suggestions are still mock for now (would need a different API)
-  // Each suggestion gets a theme color based on their id
-  const suggestions = useMemo(() => [
-    { id: 201, name: 'Maya Patel', username: 'mayap', avatar: 'MP', mutualFriends: 5 },
-    { id: 202, name: 'Jake Thompson', username: 'jaket', avatar: 'JT', mutualFriends: 2 },
-    { id: 203, name: 'Emma Wilson', username: 'emmaw', avatar: 'EW', mutualFriends: 8 },
-  ], []);
+  // Suggestions state - fetched from backend
+  const [suggestions, setSuggestions] = useState([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
+  // Fetch suggestions from backend
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      setLoadingSuggestions(true);
+      try {
+        const data = await friendsService.getSuggestions();
+        // Map backend data to component shape
+        const mapped = data.map(user => ({
+          id: user.id,
+          name: getDisplayName(user),
+          username: user.username,
+          avatar: getInitials(user),
+          profile_picture: user.profile?.profile_picture || null,
+          mutualFriends: user.mutual_friends_count || 0,
+        }));
+        setSuggestions(mapped);
+      } catch (error) {
+        console.error('Failed to fetch suggestions:', error);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    };
+    fetchSuggestions();
+  }, [friends]); // Refetch when friends list changes
+
+  // Handle send friend request
+  const handleAddFriend = async (userId) => {
+    const result = await sendRequest(userId);
+    if (result.success) {
+      // Remove from suggestions list
+      setSuggestions(prev => prev.filter(s => s.id !== userId));
+    } else {
+      console.error('Failed to send request:', result.error);
+    }
+  };
 
   // Handle accept friend request
   const handleAccept = async (requestId) => {
@@ -225,22 +259,46 @@ function Friends() {
 
         {activeTab === 'suggestions' && (
           <div className="friends-grid">
-            {suggestions.map((suggestion, index) => (
-              <div key={suggestion.id} className="friend-card card suggestion-card">
-                <div className="scan-line"></div>
-                <div className="friend-avatar">
-                  <span>{suggestion.avatar}</span>
+            {loadingSuggestions ? (
+              <div className="loading-state">Loading suggestions...</div>
+            ) : suggestions.length === 0 ? (
+              <div className="empty-state">No suggestions available</div>
+            ) : (
+              suggestions.map((suggestion, index) => (
+                <div 
+                  key={suggestion.id} 
+                  className="friend-card card suggestion-card"
+                  onClick={() => navigate(`/profile/${suggestion.username}`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="scan-line"></div>
+                  <div className="friend-avatar">
+                    {suggestion.profile_picture ? (
+                      <img src={suggestion.profile_picture} alt={suggestion.username} />
+                    ) : (
+                      <span>{suggestion.avatar}</span>
+                    )}
+                  </div>
+                  <div className="friend-info">
+                    <h3 className="friend-name">{suggestion.name}</h3>
+                    <span className="friend-username">@{suggestion.username}</span>
+                    {suggestion.mutualFriends > 0 && (
+                      <span className="friend-mutual">{suggestion.mutualFriends} mutual friends</span>
+                    )}
+                  </div>
+                  <button 
+                    className="btn-add-friend" 
+                    title="Add Friend"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddFriend(suggestion.id);
+                    }}
+                  >
+                    <PlusIcon size={22} color={themeColors[index % themeColors.length]} />
+                  </button>
                 </div>
-                <div className="friend-info">
-                  <h3 className="friend-name">{suggestion.name}</h3>
-                  <span className="friend-username">{suggestion.username}</span>
-                  <span className="friend-mutual">{suggestion.mutualFriends} mutual friends</span>
-                </div>
-                <button className="btn-add-friend" title="Add Friend">
-                  <PlusIcon size={22} color={themeColors[index % themeColors.length]} />
-                </button>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
       </div>

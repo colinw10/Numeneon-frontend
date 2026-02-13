@@ -53,6 +53,12 @@ const friendsService = {
   remove: async (userId) => {
     await apiClient.delete(`/friends/remove/${userId}/`);
   },
+
+  // GET /api/friends/suggestions/ → get suggested users (not friends, not pending)
+  getSuggestions: async () => {
+    const response = await apiClient.get("/friends/suggestions/");
+    return response.data;
+  },
 };
 
 export default friendsService;
