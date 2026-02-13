@@ -48,13 +48,21 @@
   color: rgba(79, 255, 255, 0.7);
   display: block;
   margin-bottom: 16px;
-  margin-left: -35px;
+  margin-left: 0;
+  
+  @media (max-width: 480px) {
+    margin-left: 20px;
+  }
 }
 
 .hero-title {
   @include numeneon-title;
   font-size: clamp(2.5rem, 8vw, 5rem);
-  margin-left: -35px;
+  margin-left: 0;
+  
+  @media (max-width: 480px) {
+    margin-left: 20px;
+  }
   
   // Interactive version with hoverable letters
   &--interactive {
@@ -883,7 +891,7 @@
     }
     
     p {
-      color: rgba(0, 0, 0, 0.65);
+      color: rgba(0, 0, 0, 0.85);
     }
   }
   
@@ -925,7 +933,7 @@
   .river-timeline {
     .river-col {
       .col-desc {
-        color: rgba(0, 0, 0, 0.5);
+        color: rgba(0, 0, 0, 0.85);
       }
       
       // Light mode holographic background

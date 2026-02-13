@@ -383,6 +383,14 @@
   --breakpoint-wide: 1280px;
 }
 
+/* Mobile: Bump up body text sizes for better readability */
+@media (max-width: 480px) {
+  :root {
+    --font-size-sm: 1rem;         // 16px (was 14px)
+    --font-size-body: 1rem;       // 16px (was 15.2px)
+  }
+}
+
 // ================================================
 // SASS VARIABLES (for use in mixins)
 // These mirror CSS custom properties for Sass use

@@ -89,11 +89,16 @@
 
   /* Post content */
   .river-post-text {
-    color: #000000 !important;
+    color: rgba(0, 0, 0, 0.85) !important;
   }
 
   .river-post-content {
-    color: #000000 !important;
+    color: rgba(0, 0, 0, 0.85) !important;
+  }
+
+  /* Thread replies */
+  .reply-content {
+    color: rgba(0, 0, 0, 0.85) !important;
   }
 
   /* Column headers */
