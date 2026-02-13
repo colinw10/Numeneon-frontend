@@ -43,7 +43,7 @@
   overflow: hidden;
 }
 
-// Content Container
+// Content Container - Cyberpunk holographic card matching PostCard
 .post-detail-content {
   display: flex;
   flex-direction: column;
@@ -52,44 +52,58 @@
   max-height: 85vh;
   cursor: default;
   animation: slideUp 0.3s ease;
-  background: var(--bg-card-solid);
-  border: 1px solid var(--border-default);
-  border-radius: 16px;
-  overflow: hidden;
+  position: relative;
+  overflow: visible;
+  
+  /* Cyberpunk cut corners */
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  
+  /* Glowing border edge */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+      135deg,
+      rgba(79, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(79, 255, 255, 0.4) 100%
+    );
+    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+    z-index: -2;
+    pointer-events: none;
+  }
+  
+  /* Holographic black background */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background:
+      linear-gradient(145deg, #0a0a0a, #000000),
+      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
+      linear-gradient(
+        45deg,
+        rgba(138, 43, 226, 0.05),
+        rgba(0, 212, 255, 0.05),
+        rgba(138, 43, 226, 0.05)
+      );
+    background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
+    background-position: 0% 50%, 75% 75%, 75% 75%, 50% 50%;
+    background-blend-mode: overlay, multiply, overlay;
+    clip-path: polygon(13px 0, 100% 0, 100% calc(100% - 13px), calc(100% - 13px) 100%, 0 100%, 0 13px);
+    z-index: -1;
+    pointer-events: none;
+  }
+  
   box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5),
               0 0 40px rgba(0, 212, 255, 0.1);
-  position: relative;
   
   &--loading {
     min-height: 200px;
     align-items: center;
     justify-content: center;
-  }
-  
-  // Cyan ambient glow - top left
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50px;
-    left: -50px;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(0, 212, 255, 0.15), transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-  
-  // Purple ambient glow - bottom right
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -50px;
-    right: -50px;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.1), transparent 70%);
-    pointer-events: none;
-    z-index: 0;
   }
 }
 
@@ -142,24 +156,31 @@
 }
 
 .post-detail-avatar {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(168, 85, 247, 0.2));
-  border: 1px solid rgba(0, 212, 255, 0.3);
+  background: var(--bg-card-solid);
+  border: 1px solid var(--border-default);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  overflow: hidden;
   
   &:hover {
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+    filter: drop-shadow(0 0 8px var(--cyan));
+    transform: scale(1.05);
+  }
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   
   svg {
-    color: var(--accent-cyan);
+    color: var(--blue-primary);
   }
 }
 
@@ -170,24 +191,40 @@
 }
 
 .post-detail-author {
-  font-weight: 600;
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 400;
   color: var(--text-primary);
+  margin: 0;
+  line-height: 1.2;
+  background: linear-gradient(180deg, var(--text-primary) 22%, rgba(79, 88, 88, 0.699) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
   
   &:hover {
-    color: var(--accent-cyan);
+    background: linear-gradient(180deg, var(--cyan) 22%, rgba(79, 255, 255, 0.699) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 8px var(--cyan));
   }
 }
 
 .post-detail-username {
+  font-family: var(--font-main);
   font-size: 13px;
-  color: var(--text-tertiary);
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
 .post-detail-timestamp {
+  font-family: "new-science-mono", sans-serif;
   font-size: 12px;
-  color: var(--text-tertiary);
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
 // Post body
@@ -196,11 +233,15 @@
 }
 
 .post-detail-text {
-  color: var(--text-primary);
-  font-size: 15px;
-  line-height: 1.5;
+  font-family: var(--font-main);
+  font-size: var(--font-size-body);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--content-text);
   margin: 0;
   white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .post-detail-media {
@@ -422,14 +463,16 @@
 }
 
 .post-detail-comment-author {
-  font-weight: 500;
-  font-size: 13px;
-  color: var(--text-primary);
+  font-family: 'sweet-square-pro', sans-serif;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--color-white);
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
   
   &:hover {
-    color: var(--accent-cyan);
+    color: var(--cyan);
+    filter: drop-shadow(0 0 6px var(--cyan));
   }
 }
 
@@ -465,16 +508,19 @@
 }
 
 .post-detail-comment-text {
-  color: var(--text-secondary);
-  font-size: 14px;
+  font-family: var(--font-main);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
   line-height: 1.4;
   margin: 0;
   word-wrap: break-word;
 }
 
 .post-detail-comment-time {
+  font-family: "new-science-mono", sans-serif;
   font-size: 11px;
-  color: var(--text-tertiary);
+  font-weight: 400;
+  color: var(--text-muted);
   margin-top: 4px;
   display: block;
 }
