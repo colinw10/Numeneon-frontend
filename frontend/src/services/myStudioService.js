@@ -4,7 +4,21 @@
 import apiClient from "./apiClient";
 
 /**
- * Get any user's MyStudio profile data (including playlist)
+ * Get current user's MyStudio profile (authenticated)
+ * @returns {Promise} MyStudio profile data
+ */
+export const getMyProfile = async () => {
+  try {
+    const response = await apiClient.get("/mystudio/profile/");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching MyStudio profile:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get any user's MyStudio profile data (public)
  * @param {string} username - The username to fetch
  * @returns {Promise} MyStudio profile data
  */
@@ -19,14 +33,13 @@ export const getMyStudioProfile = async (username) => {
 };
 
 /**
- * Update own MyStudio profile settings
- * @param {string} username - The username to update
+ * Update own MyStudio profile settings (authenticated)
  * @param {object} data - Profile data to update
  * @returns {Promise} Updated profile data
  */
-export const updateMyStudioProfile = async (username, data) => {
+export const updateMyStudioProfile = async (data) => {
   try {
-    const response = await apiClient.put(`/mystudio/${username}/`, data);
+    const response = await apiClient.put("/mystudio/", data);
     return response.data;
   } catch (error) {
     console.error("Error updating MyStudio profile:", error);
@@ -41,7 +54,7 @@ export const updateMyStudioProfile = async (username, data) => {
  */
 export const addSongToPlaylist = async (song) => {
   try {
-    const response = await apiClient.post("/mystudio/playlist/add/", {
+    const response = await apiClient.post("/mystudio/playlist/", {
       title: song.title,
       artist: song.artist,
       external_id: song.external_id || song.deezer_id || song.id,
@@ -62,9 +75,7 @@ export const addSongToPlaylist = async (song) => {
  */
 export const removeSongFromPlaylist = async (songId) => {
   try {
-    const response = await apiClient.delete(
-      `/mystudio/playlist/${songId}/remove/`,
-    );
+    const response = await apiClient.delete(`/mystudio/playlist/${songId}/`);
     return response.data;
   } catch (error) {
     console.error("Error removing song:", error);
@@ -111,6 +122,7 @@ export const searchSongs = async (query) => {
 };
 
 export default {
+  getMyProfile,
   getMyStudioProfile,
   updateMyStudioProfile,
   addSongToPlaylist,
