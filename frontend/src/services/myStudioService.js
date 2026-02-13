@@ -4,13 +4,27 @@
 import apiClient from "./apiClient";
 
 /**
- * Get a user's MyStudio profile data (including playlist)
+ * Get current user's MyStudio profile data (including playlist)
+ * @returns {Promise} MyStudio profile data
+ */
+export const getMyProfile = async () => {
+  try {
+    const response = await apiClient.get("/mystudio/profile/");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching MyStudio profile:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get any user's MyStudio profile data (including playlist)
  * @param {string} username - The username to fetch
  * @returns {Promise} MyStudio profile data
  */
 export const getMyStudioProfile = async (username) => {
   try {
-    const response = await apiClient.get(`/mystudio/${username}/`);
+    const response = await apiClient.get(`/mystudio/profile/${username}/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching MyStudio profile:", error);
@@ -25,7 +39,7 @@ export const getMyStudioProfile = async (username) => {
  */
 export const updateMyStudioProfile = async (data) => {
   try {
-    const response = await apiClient.put("/mystudio/", data);
+    const response = await apiClient.put("/mystudio/profile/", data);
     return response.data;
   } catch (error) {
     console.error("Error updating MyStudio profile:", error);
@@ -35,12 +49,18 @@ export const updateMyStudioProfile = async (data) => {
 
 /**
  * Add a song to the playlist
- * @param {object} song - Song data { title, artist, duration, preview_url, spotify_id?, album_art? }
+ * @param {object} song - Song data { title, artist, external_id, preview_url, album_art }
  * @returns {Promise} Added song data
  */
 export const addSongToPlaylist = async (song) => {
   try {
-    const response = await apiClient.post("/mystudio/playlist/", song);
+    const response = await apiClient.post("/mystudio/playlist/add/", {
+      title: song.title,
+      artist: song.artist,
+      external_id: song.external_id || song.deezer_id || song.id,
+      preview_url: song.preview_url,
+      album_art: song.album_art,
+    });
     return response.data;
   } catch (error) {
     console.error("Error adding song:", error);
@@ -55,7 +75,7 @@ export const addSongToPlaylist = async (song) => {
  */
 export const removeSongFromPlaylist = async (songId) => {
   try {
-    const response = await apiClient.delete(`/mystudio/playlist/${songId}/`);
+    const response = await apiClient.delete(`/mystudio/playlist/${songId}/remove/`);
     return response.data;
   } catch (error) {
     console.error("Error removing song:", error);
@@ -64,30 +84,34 @@ export const removeSongFromPlaylist = async (songId) => {
 };
 
 /**
- * Reorder playlist
- * @param {array} songIds - Array of song IDs in new order
- * @returns {Promise}
+ * Set the main profile song (displayed on profile)
+ * @param {object} song - Song data { title, artist, external_id, preview_url, album_art }
+ * @returns {Promise} Updated profile data
  */
-export const reorderPlaylist = async (songIds) => {
+export const setProfileSong = async (song) => {
   try {
-    const response = await apiClient.put("/mystudio/playlist/reorder/", {
-      song_ids: songIds,
+    const response = await apiClient.post("/mystudio/profile-song/", {
+      title: song.title,
+      artist: song.artist,
+      external_id: song.external_id || song.deezer_id || song.id,
+      preview_url: song.preview_url,
+      album_art: song.album_art,
     });
     return response.data;
   } catch (error) {
-    console.error("Error reordering playlist:", error);
+    console.error("Error setting profile song:", error);
     throw error;
   }
 };
 
 /**
- * Search for songs via backend proxy (Spotify/Deezer)
+ * Search for songs via backend (Deezer/iTunes with preview URLs)
  * @param {string} query - Search query
- * @returns {Promise} Array of song results
+ * @returns {Promise} Array of song results with preview_url
  */
 export const searchSongs = async (query) => {
   try {
-    const response = await apiClient.get("/music/search/", {
+    const response = await apiClient.get("/mystudio/search/", {
       params: { q: query },
     });
     return response.data;
@@ -98,10 +122,11 @@ export const searchSongs = async (query) => {
 };
 
 export default {
+  getMyProfile,
   getMyStudioProfile,
   updateMyStudioProfile,
   addSongToPlaylist,
   removeSongFromPlaylist,
-  reorderPlaylist,
+  setProfileSong,
   searchSongs,
 };

@@ -8,7 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './MyStudio.scss';
 import { useAuth, useFriends } from '@contexts';
 import { ChevronLeftIcon } from '@assets/icons';
-import { getMyStudioProfile, updateMyStudioProfile, addSongToPlaylist, removeSongFromPlaylist } from '@services/myStudioService';
+import { getMyProfile, getMyStudioProfile, updateMyStudioProfile, addSongToPlaylist, removeSongFromPlaylist } from '@services/myStudioService';
 
 // Subcomponents
 import { MusicPlayer, Top8Friends, ThemePicker, ProfileSection, SearchBar, MyStudioSetup } from './components';
@@ -216,7 +216,10 @@ function MyStudio() {
     
     (async () => {
       try {
-        const data = await getMyStudioProfile(targetUsername);
+        // Use getMyProfile() for own space, getMyStudioProfile(username) for others
+        const data = isOwnSpace 
+          ? await getMyProfile()
+          : await getMyStudioProfile(targetUsername);
         if (!cancelled) {
           // Merge data, but keep default playlist if API returns empty
           const mergedData = { ...DEFAULT_MYSPACE_DATA, ...data };
@@ -244,7 +247,7 @@ function MyStudio() {
     })();
     
     return () => { cancelled = true; };
-  }, [username, currentUser?.username]);
+  }, [username, currentUser?.username, isOwnSpace]);
 
   // Save to backend when editing is done
   const handleSaveChanges = async () => {
