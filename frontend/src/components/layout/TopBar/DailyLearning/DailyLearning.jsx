@@ -79,7 +79,7 @@ function DailyLearning({ variant = 'topbar' }) {
       <div className={`daily-learning-sidebar ${allKnown ? 'all-known' : ''} ${allKnown && !isExpanded ? 'minimized' : ''}`}>
         {/* Title + Letter tabs */}
         <div className="dls-left">
-          <div className="dls-title">Learn</div>
+          <div className="dls-title">{allKnown ? 'Learned*' : 'Learn'}</div>
           <div className="dls-tabs">
             {categories.map((cat, idx) => {
               const catIsKnown = isKnown(cat.key, cat.data.id);
@@ -103,14 +103,24 @@ function DailyLearning({ variant = 'topbar' }) {
               );
             })}
           </div>
+          
+          {/* Checkmark at end of row when all known */}
+          {allKnown && (
+            <span 
+              className="dls-check-icon" 
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsExpanded(!isExpanded);
+              }}
+              title={isExpanded ? 'collapse' : 'tap to review'}
+            >
+              ✓
+            </span>
+          )}
         </div>
         
         {/* Minimized state ONLY when ALL items are known */}
-        {allKnown && !isExpanded ? (
-          <div className="dls-minimized" onClick={() => setIsExpanded(true)} title="tap to review">
-            <span className="dls-known-badge">✓</span>
-          </div>
-        ) : (
+        {allKnown && !isExpanded ? null : (
           <>
             {/* Content - clickable to go to /learn */}
             <div className="dls-content" onClick={handleContentClick}>
