@@ -75,8 +75,18 @@ function DailyLearning({ variant = 'topbar' }) {
     // Check if ALL categories are known
     const allKnown = categories.every(cat => isKnown(cat.key, cat.data.id));
     
+    // When minimized, clicking the card expands it
+    const handleCardClick = () => {
+      if (allKnown && !isExpanded) {
+        setIsExpanded(true);
+      }
+    };
+    
     return (
-      <div className={`daily-learning-sidebar ${allKnown ? 'all-known' : ''} ${allKnown && !isExpanded ? 'minimized' : ''}`}>
+      <div 
+        className={`daily-learning-sidebar ${allKnown ? 'all-known' : ''} ${allKnown && !isExpanded ? 'minimized' : ''}`}
+        onClick={handleCardClick}
+      >
         {/* Title + Letter tabs */}
         <div className="dls-left">
           <div className="dls-title">{allKnown ? 'Learned*' : 'Learn'}</div>
@@ -89,8 +99,10 @@ function DailyLearning({ variant = 'topbar' }) {
                   className={`dls-tab ${activeCategory === idx ? 'active' : ''} ${catIsKnown ? 'known' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setUserSelected(true); // User manually clicked, don't auto-shift
+                    setUserSelected(true);
                     setActiveCategory(idx);
+                    // Navigate to /learn with this category
+                    navigate(`/learn?tab=${cat.key}`);
                   }}
                   title={catIsKnown ? `${cat.label} ✓` : cat.label}
                   style={{ 
@@ -103,24 +115,18 @@ function DailyLearning({ variant = 'topbar' }) {
               );
             })}
           </div>
-          
-          {/* Checkmark at end of row when all known */}
-          {allKnown && (
-            <span 
-              className="dls-check-icon" 
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsExpanded(!isExpanded);
-              }}
-              title={isExpanded ? 'collapse' : 'tap to review'}
-            >
-              ✓
-            </span>
-          )}
         </div>
         
-        {/* Minimized state ONLY when ALL items are known */}
-        {allKnown && !isExpanded ? null : (
+        {/* Checkmark shown when all known - centered in card */}
+        {allKnown && !isExpanded && (
+          <div className="dls-check-row">
+            <span className="dls-check-icon">✓</span>
+            <span className="dls-expand-hint">tap to review</span>
+          </div>
+        )}
+        
+        {/* Content - only show if not minimized */}
+        {(!allKnown || isExpanded) && (
           <>
             {/* Content - clickable to go to /learn */}
             <div className="dls-content" onClick={handleContentClick}>

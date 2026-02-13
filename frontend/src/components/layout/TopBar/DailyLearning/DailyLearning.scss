@@ -666,19 +666,34 @@
   transition: color 0.2s ease;
 }
 
-/* Checkmark icon at end of tabs row when all learned */
-.dls-check-icon {
-  font-size: 1.2rem;
-  color: #4ade80;
-  text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+/* Checkmark row - shown when all learned and minimized */
+.dls-check-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  flex: 1;
   cursor: pointer;
-  margin-left: 0.5rem;
-  transition: all 0.2s ease;
   
   &:hover {
-    transform: scale(1.1);
-    text-shadow: 0 0 20px rgba(74, 222, 128, 0.8);
+    .dls-check-icon {
+      text-shadow: 0 0 20px rgba(74, 222, 128, 0.9);
+      transform: scale(1.1);
+    }
+    
+    .dls-expand-hint {
+      color: #4ade80;
+    }
   }
+}
+
+/* Checkmark icon at end of tabs row when all learned */
+.dls-check-icon {
+  font-size: 1.5rem;
+  color: #4ade80;
+  text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+  transition: all 0.2s ease;
 }
 
 /* Collapse button */
@@ -791,8 +806,8 @@
     width: 100%;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    justify-content: flex-start;
+    gap: 1rem;
   }
   
   .dls-header {
@@ -804,26 +819,30 @@
   .dls-title {
     display: block;
     flex-shrink: 0;
+    min-width: 60px;
   }
   
-  /* Keep tabs horizontal on mobile */
+  /* Keep tabs horizontal on mobile - centered */
   .dls-tabs {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    gap: 0.2rem;
+    gap: 0.25rem;
     margin-bottom: 0;
+    flex: 1;
+    justify-content: center;
     flex-shrink: 0;
   }
   
   .dls-tab {
-    padding: 0.15rem 0.25rem;
-    font-size: 0.6rem;
-    min-height: 26px;
+    padding: 0.2rem 0.35rem;
+    font-size: 0.65rem;
+    min-height: 30px;
+    min-width: 28px;
   }
   
   .dls-tab-letter {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
   }
   
   .dls-tab-dot {
@@ -861,9 +880,20 @@
     font-size: 0.6rem;
   }
   
-  /* Mobile check icon */
+  /* Mobile: checkmark row is horizontal */
+  .dls-check-row {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    flex: 0;
+    padding: 0.25rem 0;
+  }
+  
   .dls-check-icon {
     font-size: 1rem;
-    margin-left: 0.3rem;
+  }
+  
+  .dls-expand-hint {
+    font-size: 0.55rem;
   }
 }
