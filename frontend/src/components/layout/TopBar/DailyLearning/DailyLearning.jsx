@@ -86,16 +86,22 @@ function DailyLearning({ variant = 'topbar' }) {
       <div 
         className={`daily-learning-sidebar ${allKnown ? 'all-known' : ''} ${allKnown && !isExpanded ? 'minimized' : ''}`}
         onClick={handleCardClick}
+        role="region"
+        aria-label="Daily learning"
+        aria-expanded={allKnown ? isExpanded : true}
       >
         {/* Title + Letter tabs */}
         <div className="dls-left">
           <div className="dls-title">{allKnown ? 'Learned*' : 'Learn'}</div>
-          <div className="dls-tabs">
+          <div className="dls-tabs" role="tablist" aria-label="Learning categories">
             {categories.map((cat, idx) => {
               const catIsKnown = isKnown(cat.key, cat.data.id);
               return (
                 <button
                   key={cat.key}
+                  role="tab"
+                  aria-selected={activeCategory === idx}
+                  aria-label={`${cat.label}${catIsKnown ? ', completed' : ''}`}
                   className={`dls-tab ${activeCategory === idx ? 'active' : ''} ${catIsKnown ? 'known' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -109,8 +115,8 @@ function DailyLearning({ variant = 'topbar' }) {
                     borderColor: activeCategory === idx ? (catIsKnown ? '#4ade80' : cat.color) : 'transparent'
                   }}
                 >
-                  <span className="dls-tab-letter" style={{ color: cat.color }}>{cat.icon}</span>
-                  {catIsKnown && <span className="dls-tab-dot">•</span>}
+                  <span className="dls-tab-letter" style={{ color: cat.color }} aria-hidden="true">{cat.icon}</span>
+                  {catIsKnown && <span className="dls-tab-dot" aria-hidden="true">•</span>}
                 </button>
               );
             })}
@@ -119,10 +125,13 @@ function DailyLearning({ variant = 'topbar' }) {
         
         {/* Checkmark shown when all known - centered in card */}
         {allKnown && !isExpanded && (
-          <div className="dls-check-row">
-            <span className="dls-check-icon">✓</span>
+          <button 
+            className="dls-check-row"
+            aria-label="All categories learned. Tap to review."
+          >
+            <span className="dls-check-icon" aria-hidden="true">✓</span>
             <span className="dls-expand-hint">tap to review</span>
-          </div>
+          </button>
         )}
         
         {/* Content - only show if not minimized */}
@@ -160,8 +169,9 @@ function DailyLearning({ variant = 'topbar' }) {
                   e.stopPropagation();
                   setIsExpanded(false);
                 }}
+                aria-label="Collapse learning card"
               >
-                Collapse
+                ▲
               </button>
             )}
           </>
