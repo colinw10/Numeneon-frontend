@@ -828,7 +828,7 @@
     min-width: 60px;
   }
   
-  /* Keep tabs horizontal on mobile - centered */
+  /* Keep tabs horizontal on mobile - left aligned */
   .dls-tabs {
     display: flex;
     flex-direction: row;
@@ -836,7 +836,7 @@
     gap: 0.25rem;
     margin-bottom: 0;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-start;
     flex-shrink: 0;
   }
   
