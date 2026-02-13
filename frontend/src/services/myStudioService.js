@@ -4,27 +4,13 @@
 import apiClient from "./apiClient";
 
 /**
- * Get current user's MyStudio profile data (including playlist)
- * @returns {Promise} MyStudio profile data
- */
-export const getMyProfile = async () => {
-  try {
-    const response = await apiClient.get("/mystudio/profile/");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching MyStudio profile:", error);
-    throw error;
-  }
-};
-
-/**
  * Get any user's MyStudio profile data (including playlist)
  * @param {string} username - The username to fetch
  * @returns {Promise} MyStudio profile data
  */
 export const getMyStudioProfile = async (username) => {
   try {
-    const response = await apiClient.get(`/mystudio/profile/${username}/`);
+    const response = await apiClient.get(`/mystudio/${username}/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching MyStudio profile:", error);
@@ -34,12 +20,13 @@ export const getMyStudioProfile = async (username) => {
 
 /**
  * Update own MyStudio profile settings
+ * @param {string} username - The username to update
  * @param {object} data - Profile data to update
  * @returns {Promise} Updated profile data
  */
-export const updateMyStudioProfile = async (data) => {
+export const updateMyStudioProfile = async (username, data) => {
   try {
-    const response = await apiClient.put("/mystudio/profile/", data);
+    const response = await apiClient.put(`/mystudio/${username}/`, data);
     return response.data;
   } catch (error) {
     console.error("Error updating MyStudio profile:", error);
@@ -75,7 +62,9 @@ export const addSongToPlaylist = async (song) => {
  */
 export const removeSongFromPlaylist = async (songId) => {
   try {
-    const response = await apiClient.delete(`/mystudio/playlist/${songId}/remove/`);
+    const response = await apiClient.delete(
+      `/mystudio/playlist/${songId}/remove/`,
+    );
     return response.data;
   } catch (error) {
     console.error("Error removing song:", error);
@@ -122,7 +111,6 @@ export const searchSongs = async (query) => {
 };
 
 export default {
-  getMyProfile,
   getMyStudioProfile,
   updateMyStudioProfile,
   addSongToPlaylist,

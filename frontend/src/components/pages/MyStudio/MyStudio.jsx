@@ -8,7 +8,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './MyStudio.scss';
 import { useAuth, useFriends } from '@contexts';
 import { ChevronLeftIcon } from '@assets/icons';
-import { getMyProfile, getMyStudioProfile, updateMyStudioProfile, addSongToPlaylist, removeSongFromPlaylist } from '@services/myStudioService';
+import { getMyStudioProfile, updateMyStudioProfile, addSongToPlaylist, removeSongFromPlaylist } from '@services/myStudioService';
 
 // Subcomponents
 import { MusicPlayer, Top8Friends, ThemePicker, ProfileSection, SearchBar, MyStudioSetup } from './components';
@@ -201,7 +201,7 @@ function MyStudio() {
     
     // Try to save to backend
     try {
-      await updateMyStudioProfile(newData);
+      await updateMyStudioProfile(displayUsername, newData);
     } catch {
       // Fallback saved to localStorage already
     }
@@ -216,10 +216,8 @@ function MyStudio() {
     
     (async () => {
       try {
-        // Use getMyProfile() for own space, getMyStudioProfile(username) for others
-        const data = isOwnSpace 
-          ? await getMyProfile()
-          : await getMyStudioProfile(targetUsername);
+        // Always use getMyStudioProfile with username
+        const data = await getMyStudioProfile(targetUsername);
         if (!cancelled) {
           // Merge data, but keep default playlist if API returns empty
           const mergedData = { ...DEFAULT_MYSPACE_DATA, ...data };
@@ -254,7 +252,7 @@ function MyStudio() {
     if (!isOwnSpace) return;
     
     try {
-      await updateMyStudioProfile(mySpaceData);
+      await updateMyStudioProfile(displayUsername, mySpaceData);
     } catch {
       // API save failed, using localStorage fallback (but don't save playlist - needs API)
       const dataToSave = { ...mySpaceData };

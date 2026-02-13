@@ -64,14 +64,7 @@ const SLIDER_STYLES = [
   { id: 10, name: 'cross', colors: ['#22c55e', '#4ade80'] },
 ];
 
-// Fallback experimental/ambient audio (royalty-free from archive.org)
-const FALLBACK_AUDIO = [
-  'https://ia800500.us.archive.org/5/items/ExperimentalSection/Experimental_Section_01_Drone.mp3',
-  'https://ia803402.us.archive.org/24/items/experiments_201908/noise_experiment_1.mp3',
-  'https://ia800208.us.archive.org/4/items/Ambient_Music_Library/Ambient_Track_07.mp3',
-  'https://ia600500.us.archive.org/5/items/ExperimentalSection/Experimental_Section_03_Glitch.mp3',
-  'https://ia800208.us.archive.org/4/items/Ambient_Music_Library/Ambient_Track_12.mp3',
-];
+
 
 // Format seconds to M:SS
 const formatTime = (seconds) => {
@@ -128,22 +121,8 @@ function MusicPlayer({
       setAudioError(null); // Clear error on successful load
     };
     const handleError = () => {
-      // Try fallback audio on error
-      const fallbackUrl = FALLBACK_AUDIO[currentTrack % FALLBACK_AUDIO.length];
-      if (audioRef.current.src !== fallbackUrl) {
-        console.log('Primary URL failed, trying fallback...');
-        audioRef.current.src = fallbackUrl;
-        audioRef.current.load();
-        if (isPlaying) {
-          audioRef.current.play().catch(() => {
-            setAudioError('Preview unavailable');
-            onUpdateField('isPlaying', false);
-          });
-        }
-      } else {
-        setAudioError('Preview unavailable');
-        onUpdateField('isPlaying', false);
-      }
+      setAudioError('Preview unavailable');
+      onUpdateField('isPlaying', false);
     };
     const handleEnded = () => {
       if (repeat) {
@@ -176,12 +155,10 @@ function MusicPlayer({
     };
   }, [currentTrack, playlist.length, repeat, shuffle, isPlaying, onUpdateField]);
 
-  // Get the audio URL - use preview_url or fallback
+  // Get the audio URL - only use preview_url
   const getAudioUrl = (trackIndex) => {
     const t = playlist?.[trackIndex];
-    if (t?.preview_url) return t.preview_url;
-    // Use fallback audio when no preview URL
-    return FALLBACK_AUDIO[trackIndex % FALLBACK_AUDIO.length];
+    return t?.preview_url || null;
   };
 
   // Handle track change
@@ -189,21 +166,29 @@ function MusicPlayer({
     if (audioRef.current) {
       const audioUrl = getAudioUrl(currentTrack);
       setAudioError(null);
-      audioRef.current.src = audioUrl;
-      audioRef.current.load();
-      audioRef.current.currentTime = 0;
+      if (audioUrl) {
+        audioRef.current.src = audioUrl;
+        audioRef.current.load();
+        audioRef.current.currentTime = 0;
+      } else {
+        setAudioError('No preview available');
+      }
     }
   }, [currentTrack]);
 
   // Handle play/pause
   useEffect(() => {
     if (audioRef.current) {
-      if (isPlaying) {
+      const audioUrl = getAudioUrl(currentTrack);
+      if (isPlaying && audioUrl) {
         audioRef.current.play().catch(err => {
           console.log('Playback error:', err);
           setAudioError('Preview unavailable');
           onUpdateField('isPlaying', false);
         });
+      } else if (!audioUrl && isPlaying) {
+        setAudioError('No preview available');
+        onUpdateField('isPlaying', false);
       } else {
         audioRef.current.pause();
       }
