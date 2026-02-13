@@ -686,7 +686,9 @@
     text-transform: lowercase;
     
     &::placeholder {
-      color: #555;
+      color: #00ff88;
+      font-weight: 600;
+      opacity: 0.8;
     }
     
     &:focus {
