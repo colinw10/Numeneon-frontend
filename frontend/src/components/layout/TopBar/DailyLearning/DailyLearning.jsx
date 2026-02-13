@@ -86,11 +86,11 @@ function DailyLearning({ variant = 'topbar' }) {
                   }}
                   title={catIsKnown ? `${cat.label} ✓` : cat.label}
                   style={{ 
-                    color: catIsKnown ? 'rgba(74, 222, 128, 0.8)' : cat.color,
                     borderColor: activeCategory === idx ? (catIsKnown ? '#4ade80' : cat.color) : 'transparent'
                   }}
                 >
-                  {catIsKnown ? '✓' : cat.icon}
+                  <span className="dls-tab-letter" style={{ color: cat.color }}>{cat.icon}</span>
+                  {catIsKnown && <span className="dls-tab-dot">•</span>}
                 </button>
               );
             })}
@@ -99,9 +99,8 @@ function DailyLearning({ variant = 'topbar' }) {
         
         {/* Minimized state when current item is known */}
         {currentIsKnown && !isExpanded ? (
-          <div className="dls-minimized" onClick={() => toggleExpand(currentCat.key)}>
-            <span className="dls-known-badge">✓ Known</span>
-            <span className="dls-expand-hint">tap to review</span>
+          <div className="dls-minimized" onClick={() => toggleExpand(currentCat.key)} title="tap to review">
+            <span className="dls-known-badge">✓</span>
           </div>
         ) : (
           <>

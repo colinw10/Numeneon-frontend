@@ -370,6 +370,10 @@
 }
 
 .dls-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid transparent;
   border-radius: 4px;
@@ -380,6 +384,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   line-height: 1;
+  min-height: 32px;
   
   &:hover {
     background: rgba(255, 255, 255, 0.15);
@@ -388,6 +393,18 @@
   &.active {
     background: rgba(255, 255, 255, 0.1);
   }
+}
+
+.dls-tab-letter {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.dls-tab-dot {
+  color: #4ade80;
+  font-size: 0.6rem;
+  line-height: 1;
+  text-shadow: 0 0 6px rgba(74, 222, 128, 0.8);
 }
 
 .dls-content {
@@ -616,35 +633,27 @@
 /* Minimized content display */
 .dls-minimized {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
   flex: 1;
   cursor: pointer;
   transition: all 0.2s ease;
   
   &:hover {
-    transform: scale(1.02);
+    transform: scale(1.05);
     
-    .dls-expand-hint {
-      color: #4ade80;
+    .dls-known-badge {
+      text-shadow: 0 0 20px rgba(74, 222, 128, 0.8);
     }
   }
 }
 
 .dls-known-badge {
   font-family: var(--font-title);
-  font-size: 0.85rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: #4ade80;
   text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
-}
-
-.dls-expand-hint {
-  font-size: 0.55rem;
-  color: var(--text-secondary, #888);
-  transition: color 0.2s ease;
 }
 
 /* Collapse button */
