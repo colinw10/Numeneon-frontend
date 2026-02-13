@@ -117,7 +117,7 @@ export const searchSongs = async (query) => {
     // Backend returns { results: [...] } with duration_ms
     // Frontend expects array with duration formatted as "M:SS"
     const results = response.data.results || response.data || [];
-    return results.map(song => ({
+    return results.map((song) => ({
       ...song,
       duration: formatDuration(song.duration_ms || song.duration),
     }));
@@ -129,11 +129,11 @@ export const searchSongs = async (query) => {
 
 // Convert milliseconds to "M:SS" format
 const formatDuration = (ms) => {
-  if (!ms || typeof ms === 'string') return ms || '0:00';
+  if (!ms || typeof ms === "string") return ms || "0:00";
   const totalSeconds = Math.floor(ms / 1000);
   const mins = Math.floor(totalSeconds / 60);
   const secs = totalSeconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
 };
 
 export default {

@@ -288,8 +288,13 @@ function MyStudio() {
     setMySpaceData(prev => ({ ...prev, [field]: value }));
   };
 
-  // Add a song to the playlist
+  // Add a song to the playlist (max 5 songs)
   const handleAddSong = async (song) => {
+    // Check frontend limit first
+    if (mySpaceData.playlist.length >= 5) {
+      alert('max 5 songs allowed - remove one first');
+      return;
+    }
     try {
       const addedSong = await addSongToPlaylist(song);
       setMySpaceData(prev => ({
@@ -298,6 +303,9 @@ function MyStudio() {
       }));
     } catch (error) {
       console.error('Failed to add song:', error);
+      // Show user-friendly error
+      const message = error.response?.data?.detail || error.response?.data?.error || 'failed to add song';
+      alert(message);
     }
   };
 
