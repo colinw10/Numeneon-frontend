@@ -1,5 +1,6 @@
 // MusicPlayer.jsx - Retro MySpace-style music player with actual audio playback
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { searchSongs } from '@services/myStudioService';
 import './MusicPlayer.scss';
 
 // Custom SVG Icons for player controls
@@ -87,7 +88,9 @@ function MusicPlayer({
   volume, 
   sliderStyle,
   isEditing,
-  onUpdateField 
+  onUpdateField,
+  onAddSong,
+  onRemoveSong
 }) {
   const audioRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -95,6 +98,13 @@ function MusicPlayer({
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
   const [audioError, setAudioError] = useState(null);
+  
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const searchTimeoutRef = useRef(null);
 
   const track = playlist?.[currentTrack] || playlist?.[0] || { 
     title: 'no music', 
@@ -166,26 +176,39 @@ function MusicPlayer({
     };
   }, [currentTrack, playlist.length, repeat, shuffle, isPlaying, onUpdateField]);
 
+  // Get the audio URL - use preview_url or fallback
+  const getAudioUrl = (trackIndex) => {
+    const t = playlist?.[trackIndex];
+    if (t?.preview_url) return t.preview_url;
+    // Use fallback audio when no preview URL
+    return FALLBACK_AUDIO[trackIndex % FALLBACK_AUDIO.length];
+  };
+
   // Handle track change
   useEffect(() => {
-    if (audioRef.current && track.preview_url) {
-      setAudioError(null); // Reset error when changing tracks
-      audioRef.current.src = track.preview_url;
+    if (audioRef.current) {
+      const audioUrl = getAudioUrl(currentTrack);
+      setAudioError(null);
+      audioRef.current.src = audioUrl;
       audioRef.current.load();
       audioRef.current.currentTime = 0;
     }
-  }, [currentTrack, track.preview_url]);
+  }, [currentTrack]);
 
   // Handle play/pause
   useEffect(() => {
-    if (audioRef.current && track.preview_url) {
+    if (audioRef.current) {
       if (isPlaying) {
-        audioRef.current.play().catch(err => console.log('Playback error:', err));
+        audioRef.current.play().catch(err => {
+          console.log('Playback error:', err);
+          setAudioError('Preview unavailable');
+          onUpdateField('isPlaying', false);
+        });
       } else {
         audioRef.current.pause();
       }
     }
-  }, [isPlaying, track.preview_url]);
+  }, [isPlaying, onUpdateField]);
 
   // Handle volume change
   useEffect(() => {
@@ -193,6 +216,58 @@ function MusicPlayer({
       audioRef.current.volume = (volume || 75) / 100;
     }
   }, [volume]);
+
+  // Debounced search effect
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    // Debounce search by 400ms
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const results = await searchSongs(searchQuery);
+        setSearchResults(results || []);
+        setShowResults(true);
+      } catch (error) {
+        console.error('Search error:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 400);
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery]);
+
+  // Handle adding a song
+  const handleAddSong = async (song) => {
+    if (onAddSong) {
+      await onAddSong(song);
+      setSearchQuery('');
+      setSearchResults([]);
+      setShowResults(false);
+    }
+  };
+
+  // Handle removing a song
+  const handleRemoveSong = async (songId, e) => {
+    e.stopPropagation();
+    if (onRemoveSong) {
+      await onRemoveSong(songId);
+    }
+  };
 
   // Progress bar click handler
   const handleProgressClick = (e) => {
@@ -240,9 +315,9 @@ function MusicPlayer({
             <PrevIcon />
           </button>
           <button 
-            className={`control-btn play-btn ${(!track.preview_url || audioError) ? 'disabled' : ''}`}
-            onClick={() => track.preview_url && !audioError && onUpdateField('isPlaying', !isPlaying)}
-            title={audioError ? 'Preview expired' : !track.preview_url ? 'No preview available' : isPlaying ? 'Pause' : 'Play'}
+            className={`control-btn play-btn ${audioError ? 'disabled' : ''}`}
+            onClick={() => !audioError && onUpdateField('isPlaying', !isPlaying)}
+            title={audioError ? 'Preview unavailable' : isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? <PauseIcon /> : <PlayIcon />}
           </button>
@@ -321,16 +396,60 @@ function MusicPlayer({
                 <span className="track-artist">{t.artist}</span>
               </span>
               <span className="track-duration">{t.duration}</span>
+              {isEditing && (
+                <button 
+                  className="track-remove"
+                  onClick={(e) => handleRemoveSong(t.id, e)}
+                  title="Remove from playlist"
+                >
+                  ×
+                </button>
+              )}
             </div>
           ))}
         </div>
 
-        {/* Add Song (Edit Mode) */}
+        {/* Search & Add Song (Edit Mode) */}
         {isEditing && (
-          <div className="add-song">
-            <input type="text" placeholder="song title" className="song-input" />
-            <input type="text" placeholder="artist" className="song-input" />
-            <button className="add-song-btn">+ add</button>
+          <div className="song-search">
+            <div className="search-input-wrapper">
+              <input 
+                type="text" 
+                placeholder="search songs on deezer..." 
+                className="song-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {isSearching && <span className="search-spinner">...</span>}
+            </div>
+            
+            {/* Search Results */}
+            {showResults && searchResults.length > 0 && (
+              <div className="search-results">
+                {searchResults.map((song) => (
+                  <div key={song.id || song.deezer_id} className="search-result-item">
+                    {song.album_art && (
+                      <img src={song.album_art} alt="" className="result-art" />
+                    )}
+                    <div className="result-info">
+                      <span className="result-title">{song.title}</span>
+                      <span className="result-artist">{song.artist}</span>
+                    </div>
+                    <span className="result-duration">{song.duration}</span>
+                    <button 
+                      className="result-add-btn"
+                      onClick={() => handleAddSong(song)}
+                    >
+                      +
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {showResults && searchResults.length === 0 && !isSearching && (
+              <div className="search-no-results">no results found</div>
+            )}
           </div>
         )}
       </div>

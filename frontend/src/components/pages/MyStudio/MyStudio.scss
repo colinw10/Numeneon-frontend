@@ -561,3 +561,192 @@ html:has(.mystudio-page) {
     z-index: 1;
   }
 }
+
+// ============================================
+// INVITE SECTION - Crystal's SearchBar
+// ============================================
+
+.mystudio-invite-section {
+  padding: 16px 24px;
+  @include holographic-black;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  
+  @media (max-width: 768px) {
+    padding: 12px 16px;
+  }
+}
+
+// SearchBar styles matching MyStudio aesthetic
+.search-bar-container {
+  position: relative;
+  max-width: 400px;
+  
+  .search-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0;
+    color: var(--ms-text);
+    font-family: 'Doto', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+    
+    &::placeholder {
+      color: var(--ms-text-muted);
+      text-transform: lowercase;
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: var(--ms-accent);
+      box-shadow: 0 0 15px var(--ms-glow);
+    }
+  }
+  
+  .search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: none;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 100;
+  }
+  
+  .search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 0 20px var(--ms-glow);
+    }
+    
+    .search-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      svg {
+        color: var(--ms-text-muted);
+      }
+    }
+    
+    .username {
+      font-family: 'Doto', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ms-text);
+      text-transform: lowercase;
+      letter-spacing: 1px;
+    }
+    
+    .myspace-badge {
+      font-family: 'Doto', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      background: var(--ms-accent);
+      color: #000;
+      text-transform: lowercase;
+      letter-spacing: 1px;
+    }
+    
+    .add-friend-btn {
+      margin-left: auto;
+      font-family: 'Doto', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      background: transparent;
+      border: 1px solid rgba(220, 8, 188, 0.5);
+      color: #dc08bc;
+      text-transform: lowercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:hover:not(:disabled) {
+        background: rgba(220, 8, 188, 0.2);
+        border-color: #dc08bc;
+        box-shadow: 0 0 10px rgba(220, 8, 188, 0.4);
+      }
+      
+      &.pending, &:disabled {
+        opacity: 0.5;
+        cursor: default;
+        color: rgba(255, 255, 255, 0.5);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+    
+    .friend-badge {
+      margin-left: auto;
+      font-family: 'Doto', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #22c55e;
+      text-transform: lowercase;
+      letter-spacing: 1px;
+    }
+  }
+  
+  .search-loading {
+    padding: 12px 16px;
+    font-family: 'Doto', monospace;
+    font-size: 12px;
+    color: var(--ms-text-muted);
+    text-transform: lowercase;
+  }
+  
+  .no-results {
+    padding: 16px;
+    text-align: center;
+    color: var(--ms-text-muted);
+    font-family: 'Doto', monospace;
+    font-size: 12px;
+    text-transform: lowercase;
+  }
+  
+  p {
+    font-family: 'Doto', monospace;
+    font-size: 12px;
+    color: var(--ms-text-muted);
+    text-transform: lowercase;
+  }
+}

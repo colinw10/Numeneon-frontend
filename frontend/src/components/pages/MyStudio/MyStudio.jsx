@@ -8,10 +8,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './MyStudio.scss';
 import { useAuth, useFriends } from '@contexts';
 import { ChevronLeftIcon } from '@assets/icons';
-import { getMyStudioProfile, updateMyStudioProfile } from '@services/myStudioService';
+import { getMyStudioProfile, updateMyStudioProfile, addSongToPlaylist, removeSongFromPlaylist } from '@services/myStudioService';
 
 // Subcomponents
-import { MusicPlayer, Top8Friends, ThemePicker, ProfileSection } from './components';
+import { MusicPlayer, Top8Friends, ThemePicker, ProfileSection, SearchBar, MyStudioSetup } from './components';
 
 // Import local rebel avatars
 
@@ -177,6 +177,36 @@ function MyStudio() {
   }));
   const [isEditing, setIsEditing] = useState(false);
   
+  // Check if user has completed setup (only for own space)
+  const [hasCompletedSetup, setHasCompletedSetup] = useState(() => {
+    if (!isOwnSpace) return true; // Always show others' spaces
+    const saved = localStorage.getItem(`mystudio_setup_${displayUsername}`);
+    return saved === 'true';
+  });
+  
+  // Handle setup completion
+  const handleSetupComplete = async (setupData) => {
+    // Save setup data
+    const newData = {
+      ...mySpaceData,
+      customBio: setupData.customBio,
+      selectedAvatar: setupData.avatar,
+    };
+    setMySpaceData(newData);
+    
+    // Mark setup as complete
+    localStorage.setItem(`mystudio_setup_${displayUsername}`, 'true');
+    localStorage.setItem(`myspace_${displayUsername}`, JSON.stringify(newData));
+    setHasCompletedSetup(true);
+    
+    // Try to save to backend
+    try {
+      await updateMyStudioProfile(newData);
+    } catch {
+      // Fallback saved to localStorage already
+    }
+  };
+  
   // Re-load data when username changes (navigating to different user's space)
   useEffect(() => {
     const targetUsername = username || currentUser?.username;
@@ -257,9 +287,36 @@ function MyStudio() {
     setMySpaceData(prev => ({ ...prev, [field]: value }));
   };
 
-  // Get avatar for current view
+  // Add a song to the playlist
+  const handleAddSong = async (song) => {
+    try {
+      const addedSong = await addSongToPlaylist(song);
+      setMySpaceData(prev => ({
+        ...prev,
+        playlist: [...prev.playlist, addedSong]
+      }));
+    } catch (error) {
+      console.error('Failed to add song:', error);
+    }
+  };
+
+  // Remove a song from the playlist
+  const handleRemoveSong = async (songId) => {
+    try {
+      await removeSongFromPlaylist(songId);
+      setMySpaceData(prev => ({
+        ...prev,
+        playlist: prev.playlist.filter(s => s.id !== songId),
+        currentTrack: Math.min(prev.currentTrack, Math.max(0, prev.playlist.length - 2))
+      }));
+    } catch (error) {
+      console.error('Failed to remove song:', error);
+    }
+  };
+
+  // Get avatar for current view (prioritize custom avatar from library if set)
   const avatarSrc = isOwnSpace 
-    ? (currentUser?.profile_picture || MY_AVATAR)
+    ? (mySpaceData.customAvatarSrc || currentUser?.profile_picture || MY_AVATAR)
     : (viewedUser?.profile_picture || TOP8_AVATARS[topFriends.findIndex(f => f?.username === username)] || REBEL_AVATARS[0]);
 
   // Get wallpaper style (supports both image and CSS gradient wallpapers)
@@ -275,6 +332,16 @@ function MyStudio() {
     background: cssWallpaper,
     backgroundAttachment: 'fixed',
   } : {};
+  
+  // Show setup flow for first-time users (only when viewing own space)
+  if (isOwnSpace && !hasCompletedSetup) {
+    return (
+      <MyStudioSetup 
+        username={displayUsername} 
+        onComplete={handleSetupComplete} 
+      />
+    );
+  }
   
   return (
     <div 
@@ -310,6 +377,13 @@ function MyStudio() {
         </div>
       </header>
       
+      {/* Search to invite users - only visible to owner */}
+      {isOwnSpace && (
+        <div className="mystudio-invite-section">
+          <SearchBar />
+        </div>
+      )}
+      
       {/* Main Content */}
       <main className="mystudio-content">
         {/* Left Column - Profile Info */}
@@ -322,6 +396,12 @@ function MyStudio() {
           customBio={mySpaceData.customBio}
           isEditing={isEditing}
           onUpdateField={updateField}
+          isOwnSpace={isOwnSpace}
+          onAvatarChange={(src, id) => {
+            updateField('selectedAvatar', id);
+            updateField('customAvatarSrc', src);
+          }}
+          userProfilePicture={currentUser?.profile_picture}
         />
         
         {/* Right Column - Music Player & Friends */}
@@ -335,6 +415,8 @@ function MyStudio() {
             sliderStyle={mySpaceData.sliderStyle}
             isEditing={isEditing}
             onUpdateField={updateField}
+            onAddSong={handleAddSong}
+            onRemoveSong={handleRemoveSong}
           />
           
           {/* Top 8 Friends */}
