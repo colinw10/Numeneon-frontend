@@ -38,6 +38,7 @@
 .conversations-title-row {
   display: none;
   padding: 1rem;
+  min-height: 56px; /* Ensure enough height for touch targets */
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--glass-bg-subtle);
@@ -60,8 +61,10 @@
   background: transparent;
   border: none;
   color: rgba(255, 85, 221, 0.8);
-  width: 32px;
-  height: 32px;
+  width: 44px;  /* Larger touch target for mobile */
+  height: 44px; /* Larger touch target for mobile */
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -12,16 +12,16 @@ Real music playback in MyStudio using Deezer's API for 30-second song previews. 
 
 ## Features
 
-| Feature | Description | Status |
-|---------|-------------|--------|
-| **Song Search** | Search Deezer catalog via backend proxy | ✅ |
-| **Preview Playback** | 30-second MP3 previews from Deezer CDN | ✅ |
-| **Playlist Management** | Add/remove songs (max 5 per user) | ✅ |
-| **Album Art** | Display album covers from Deezer | ✅ |
-| **Duration Display** | Convert ms to M:SS format | ✅ |
-| **Volume Control** | Adjustable playback volume | ✅ |
-| **Shuffle/Repeat** | Playback mode toggles | ✅ |
-| **Auto-advance** | Automatically play next track | ✅ |
+| Feature                 | Description                             | Status |
+| ----------------------- | --------------------------------------- | ------ |
+| **Song Search**         | Search Deezer catalog via backend proxy | ✅     |
+| **Preview Playback**    | 30-second MP3 previews from Deezer CDN  | ✅     |
+| **Playlist Management** | Add/remove songs (max 5 per user)       | ✅     |
+| **Album Art**           | Display album covers from Deezer        | ✅     |
+| **Duration Display**    | Convert ms to M:SS format               | ✅     |
+| **Volume Control**      | Adjustable playback volume              | ✅     |
+| **Shuffle/Repeat**      | Playback mode toggles                   | ✅     |
+| **Auto-advance**        | Automatically play next track           | ✅     |
 
 ---
 
@@ -29,12 +29,12 @@ Real music playback in MyStudio using Deezer's API for 30-second song previews. 
 
 ### Backend (Django)
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/mystudio/search/?q={query}` | Search songs via Deezer API |
-| `GET` | `/api/mystudio/{username}/` | Get user's MyStudio profile + playlist |
-| `POST` | `/api/mystudio/playlist/` | Add song to playlist |
-| `DELETE` | `/api/mystudio/playlist/{id}/` | Remove song from playlist |
+| Method   | Endpoint                          | Description                            |
+| -------- | --------------------------------- | -------------------------------------- |
+| `GET`    | `/api/mystudio/search/?q={query}` | Search songs via Deezer API            |
+| `GET`    | `/api/mystudio/{username}/`       | Get user's MyStudio profile + playlist |
+| `POST`   | `/api/mystudio/playlist/`         | Add song to playlist                   |
+| `DELETE` | `/api/mystudio/playlist/{id}/`    | Remove song from playlist              |
 
 ### Response Format (Search)
 
@@ -69,7 +69,7 @@ export const searchSongs = async (query) => {
   });
   // Backend returns { results: [...] } with duration_ms
   const results = response.data.results || response.data || [];
-  return results.map(song => ({
+  return results.map((song) => ({
     ...song,
     duration: formatDuration(song.duration_ms),
   }));
@@ -77,11 +77,11 @@ export const searchSongs = async (query) => {
 
 // Convert ms to "M:SS"
 const formatDuration = (ms) => {
-  if (!ms || typeof ms === 'string') return ms || '0:00';
+  if (!ms || typeof ms === "string") return ms || "0:00";
   const totalSeconds = Math.floor(ms / 1000);
   const mins = Math.floor(totalSeconds / 60);
   const secs = totalSeconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
 };
 
 // Add song to playlist (max 5)
@@ -100,6 +100,7 @@ export const addSongToPlaylist = async (song) => {
 ### Component (`MusicPlayer.jsx`)
 
 Key features:
+
 - **Audio element** via `useRef` for HTML5 Audio API
 - **Debounced search** (400ms) to avoid excessive API calls
 - **Error handling** shows "Preview unavailable" if audio fails
@@ -118,14 +119,14 @@ const getAudioUrl = (trackIndex) => {
 // Debounced search
 useEffect(() => {
   if (!searchQuery.trim()) return;
-  
+
   const timeout = setTimeout(async () => {
     setIsSearching(true);
     const results = await searchSongs(searchQuery);
     setSearchResults(results || []);
     setIsSearching(false);
   }, 400);
-  
+
   return () => clearTimeout(timeout);
 }, [searchQuery]);
 ```
@@ -147,18 +148,21 @@ useEffect(() => {
 ## Technical Decisions
 
 ### Why Deezer?
+
 - Free API with no OAuth required for search
 - 30-second MP3 previews (Spotify previews often restricted)
 - Album art and metadata included
 - Reliable CDN for audio delivery
 
 ### Why Backend Proxy?
+
 - Hide API keys from frontend
 - Rate limiting control
 - Response normalization
 - CORS handling
 
 ### Why Max 5 Songs?
+
 - MySpace nostalgia (original had limited songs)
 - Prevents abuse/spam
 - Faster page loads
@@ -177,12 +181,12 @@ useEffect(() => {
 
 ## Files Modified
 
-| File | Changes |
-|------|---------|
-| `frontend/src/services/myStudioService.js` | Added search, playlist CRUD, duration formatting |
-| `frontend/src/components/pages/MyStudio/MyStudio.jsx` | handleAddSong, handleRemoveSong with error handling |
-| `frontend/src/components/pages/MyStudio/components/MusicPlayer/MusicPlayer.jsx` | Audio playback, search UI, playlist display |
-| `frontend/src/components/pages/MyStudio/components/MusicPlayer/MusicPlayer.scss` | Styling for search input, results, playlist |
+| File                                                                             | Changes                                             |
+| -------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `frontend/src/services/myStudioService.js`                                       | Added search, playlist CRUD, duration formatting    |
+| `frontend/src/components/pages/MyStudio/MyStudio.jsx`                            | handleAddSong, handleRemoveSong with error handling |
+| `frontend/src/components/pages/MyStudio/components/MusicPlayer/MusicPlayer.jsx`  | Audio playback, search UI, playlist display         |
+| `frontend/src/components/pages/MyStudio/components/MusicPlayer/MusicPlayer.scss` | Styling for search input, results, playlist         |
 
 ---
 

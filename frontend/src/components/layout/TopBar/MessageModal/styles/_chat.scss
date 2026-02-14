@@ -84,12 +84,14 @@
 .chat-close-btn {
   display: none;
   position: absolute;
-  right: 1rem;
+  right: 0.75rem;
   background: transparent;
   border: none;
   color: rgba(255, 85, 221, 0.8);
-  width: 32px;
-  height: 32px;
+  width: 44px;  /* Larger touch target for mobile */
+  height: 44px; /* Larger touch target for mobile */
+  min-width: 44px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
   cursor: pointer;

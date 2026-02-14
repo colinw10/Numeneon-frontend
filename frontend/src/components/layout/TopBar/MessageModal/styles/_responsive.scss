@@ -160,6 +160,24 @@
     padding-top: env(safe-area-inset-top, 0px);
   }
   
+  /* Browser mode - add extra top padding for Safari/Chrome address bar */
+  @media (display-mode: browser) {
+    .message-modal {
+      /* Extra padding for browser chrome (address bar) */
+      padding-top: max(env(safe-area-inset-top, 0px), 20px);
+    }
+    
+    /* Extra breathing room for the title row close button */
+    .conversations-title-row {
+      padding-top: max(1rem, env(safe-area-inset-top, 12px));
+    }
+    
+    /* Extra breathing room for chat header */
+    .chat-header {
+      margin-top: max(0px, calc(env(safe-area-inset-top, 0px) - 10px));
+    }
+  }
+  
   /* Hide main header on mobile - each view has its own header */
   .message-modal-header {
     display: none;
@@ -371,6 +389,11 @@
   @media (display-mode: browser) {
     .chat-composer {
       padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 50px)) !important;
+    }
+    
+    /* Extra top padding for browser chrome on smaller iPhones */
+    .conversations-title-row {
+      padding-top: max(1.25rem, env(safe-area-inset-top, 16px));
     }
   }
 }
