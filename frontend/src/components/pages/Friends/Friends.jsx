@@ -51,18 +51,22 @@ function Friends() {
       setLoadingSuggestions(true);
       try {
         const data = await friendsService.getSuggestions();
+        console.log('🔵 Suggestions API response:', data);
         // Map backend data to component shape
-        const mapped = data.map(user => ({
+        // Backend returns profile_picture at top level (from avatar field)
+        const mapped = (data || []).map(user => ({
           id: user.id,
           name: getDisplayName(user),
           username: user.username,
           avatar: getInitials(user),
-          profile_picture: user.profile?.profile_picture || null,
+          profile_picture: user.profile_picture || user.profile?.avatar || null,
           mutualFriends: user.mutual_friends_count || 0,
         }));
+        console.log('🔵 Mapped suggestions:', mapped);
         setSuggestions(mapped);
       } catch (error) {
         console.error('Failed to fetch suggestions:', error);
+        console.error('Error details:', error.response?.data || error.message);
       } finally {
         setLoadingSuggestions(false);
       }
