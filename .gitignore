@@ -30,3 +30,5 @@ docs/collapsible-cards-files.md
 docs/DeploymentChanges.md
 docs/deployment/
 
+.vercel
+.env*.local

@@ -2,17 +2,17 @@
 import './ThemePicker.scss';
 
 // Import wallpapers
-import bipolarInvert from '@assets/wallpapers/Bipolar-invert.png';
-import bipolarPink from '@assets/wallpapers/Bipolar-pink.png';
-import bipolarTeal from '@assets/wallpapers/Bipolar-teal.png';
-import triad from '@assets/wallpapers/triad.png';
-import triad2 from '@assets/wallpapers/triad-2.png';
-import triad3 from '@assets/wallpapers/triad-3.png';
-import triad31 from '@assets/wallpapers/triad-3-1.png';
+import bipolarInvert from '@assets/wallpapers/Bipolar-invert.webp';
+import bipolarPink from '@assets/wallpapers/Bipolar-pink.webp';
+import bipolarTeal from '@assets/wallpapers/Bipolar-teal.webp';
+import triad from '@assets/wallpapers/triad.webp';
+import triad2 from '@assets/wallpapers/triad-2.webp';
+import triad3 from '@assets/wallpapers/triad-3.webp';
+import triad31 from '@assets/wallpapers/triad-3-1.webp';
 
-import peacockWarp from '@assets/wallpapers/PEACOCK-warp.jpg';
-import triasPattern from '@assets/wallpapers/trias-pattern.png';
-import colorsVertical from '@assets/wallpapers/colors-vertical.png';
+import peacockWarp from '@assets/wallpapers/PEACOCK-warp.webp';
+import triasPattern from '@assets/wallpapers/trias-pattern.webp';
+import colorsVertical from '@assets/wallpapers/colors-vertical.webp';
 
 const THEME_OPTIONS = [
   { id: 'classic', name: 'Classic', preview: '#003366' },
