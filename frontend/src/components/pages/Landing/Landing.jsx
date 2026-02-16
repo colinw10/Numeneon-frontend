@@ -115,6 +115,11 @@ function Landing() {
       <button className="btn-about" onClick={() => navigate('/about')}>
         about
       </button>
+      
+      {/* Copyright Footer */}
+      <footer className="copyright-footer">
+        <span>© 2026 Pablo Cordero & NUMENEON Contributors</span>
+      </footer>
     </div>
   );
 }

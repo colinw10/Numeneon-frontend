@@ -1,3 +1,24 @@
+/**
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║                    [ ARCHITECTURAL SIGNATURE ]                               ║
+ * ║   ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀   ║
+ * ║   PROFILE FLIP CARD SYSTEM v1.0                                              ║
+ * ║   ─────────────────────────────────────────────────────────────────────────  ║
+ * ║                                                                              ║
+ * ║   Designed & Authored by: Pablo Cordero                                      ║
+ * ║   With contributions from: Natalia Pricop                                    ║
+ * ║                                                                              ║
+ * ║   This module implements the dual-sided profile card with 3D flip           ║
+ * ║   animation and integrated analytics dashboard.                              ║
+ * ║   Logic belongs to the creator.                                              ║
+ * ║                                                                              ║
+ * ║   ⚠️  NOTICE: Unauthorized replication or commercial use is prohibited       ║
+ * ║       under CC BY-NC-ND 4.0                                                  ║
+ * ║                                                                              ║
+ * ║   © 2026 NUMENEON Contributors. All Rights Reserved.                         ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ */
+
 // 🔵 PABLO - UI/Styling | 🟡 NATALIA - User Data Logic
 // ProfileCard.jsx - User profile card with flip animation
 // Now a thin container that orchestrates subcomponents

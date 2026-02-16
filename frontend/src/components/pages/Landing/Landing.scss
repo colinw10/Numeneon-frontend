@@ -1259,3 +1259,54 @@
     transform: translateY(-5px) scale(1.05);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COPYRIGHT FOOTER - © 2026 Pablo Cordero
+   ═══════════════════════════════════════════════════════════════════════════ */
+.copyright-footer {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-main);
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.25);
+  text-transform: uppercase;
+  white-space: nowrap;
+  
+  span {
+    background: linear-gradient(
+      90deg,
+      rgba(0, 212, 255, 0.4),
+      rgba(201, 168, 255, 0.4),
+      rgba(26, 231, 132, 0.4)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+@media (max-width: 480px) {
+  .copyright-footer {
+    font-size: 0.55rem;
+    letter-spacing: 1px;
+    bottom: 1rem;
+  }
+}
+
+/* Light mode copyright */
+[data-theme="light"] {
+  .copyright-footer span {
+    background: linear-gradient(
+      90deg,
+      rgba(26, 115, 231, 0.6),
+      rgba(128, 0, 255, 0.6),
+      rgba(26, 115, 231, 0.6)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}

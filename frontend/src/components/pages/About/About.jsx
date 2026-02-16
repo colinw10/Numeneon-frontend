@@ -226,6 +226,11 @@ function About() {
           <span className="cta-text">Your feed should be yours.</span>
         </div>
       </div>
+      
+      {/* Copyright Footer */}
+      <footer className="copyright-footer">
+        <span>© 2026 Pablo Cordero & NUMENEON Contributors</span>
+      </footer>
     </div>
   );
 }

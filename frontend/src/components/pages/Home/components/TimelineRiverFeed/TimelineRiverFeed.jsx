@@ -1,3 +1,24 @@
+/**
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║                    [ ARCHITECTURAL SIGNATURE ]                               ║
+ * ║   ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀   ║
+ * ║   RIVER TIMELINE PROTOCOL v1.0                                               ║
+ * ║   ─────────────────────────────────────────────────────────────────────────  ║
+ * ║                                                                              ║
+ * ║   Designed & Authored by: Pablo Cordero                                      ║
+ * ║   With contributions from: Colin Weir, Crystal Ruiz, Natalia Pricop, Tito    ║
+ * ║                                                                              ║
+ * ║   This module implements the RIVER TIMELINE architecture—a proprietary       ║
+ * ║   3-column feed design that groups posts into parallel streams.              ║
+ * ║   Logic belongs to the creator.                                              ║
+ * ║                                                                              ║
+ * ║   ⚠️  NOTICE: Unauthorized replication, modification, or commercial use      ║
+ * ║       of this River Timeline protocol is prohibited under CC BY-NC-ND 4.0   ║
+ * ║                                                                              ║
+ * ║   © 2026 NUMENEON Contributors. All Rights Reserved.                         ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ */
+
 // 🔵 PABLO - UI/Styling | 🟢 COLIN + 🟠 TITO - Posts Data Logic
 // TimelineRiverFeed.jsx - Main timeline feed with 3-column river layout
 //
