@@ -800,12 +800,12 @@ export const TRANSLATIONS = {
 
 // Helper function to get translated content
 // Supports both embedded _es fields and legacy TRANSLATIONS lookup
+// MERGES both sources - embedded fields take priority, but TRANSLATIONS fills gaps
 export function getTranslatedItem(item, category, language) {
   if (language === "en") return item;
 
-  // Check for embedded Spanish translations first (new format)
+  // Start with the original item
   const translatedItem = { ...item };
-  let hasEmbeddedTranslations = false;
 
   // Fields that can have _es versions
   const translatableFields = [
@@ -823,32 +823,36 @@ export function getTranslatedItem(item, category, language) {
     "culture",
   ];
 
+  // First, apply embedded _es fields from the JSON
   for (const field of translatableFields) {
     const esField = `${field}_es`;
     if (item[esField]) {
       translatedItem[field] = item[esField];
-      hasEmbeddedTranslations = true;
     }
   }
 
   // Handle synonyms_es array
   if (item.synonyms_es) {
     translatedItem.synonyms = item.synonyms_es;
-    hasEmbeddedTranslations = true;
   }
 
-  if (hasEmbeddedTranslations) {
-    return translatedItem;
-  }
-
-  // Fall back to legacy TRANSLATIONS lookup
+  // Second, check TRANSLATIONS lookup and fill in any MISSING fields
+  // This ensures sentence translations from TRANSLATIONS are used when not in JSON
   const translations = TRANSLATIONS[category]?.[item.id]?.es;
-  if (!translations) return item;
+  if (translations) {
+    for (const field of translatableFields) {
+      // Only apply if we don't already have a translation for this field
+      if (translations[field] && !item[`${field}_es`]) {
+        translatedItem[field] = translations[field];
+      }
+    }
+    // Handle synonyms from TRANSLATIONS if not in embedded
+    if (translations.synonyms && !item.synonyms_es) {
+      translatedItem.synonyms = translations.synonyms;
+    }
+  }
 
-  return {
-    ...item,
-    ...translations,
-  };
+  return translatedItem;
 }
 
 // Get translated UI label
