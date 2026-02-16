@@ -409,36 +409,15 @@
 
 .dls-content {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   padding: 0.25rem 0.25rem 0.25rem 0;
   cursor: pointer;
-  min-height: 2.5rem; /* Ensure term is always visible */
-  
-  /* Slim scrollbar styling */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 255, 255, 0.3) transparent;
-  
-  &::-webkit-scrollbar {
-    width: 4px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: rgba(0, 255, 255, 0.3);
-    border-radius: 2px;
-    
-    &:hover {
-      background: rgba(0, 255, 255, 0.5);
-    }
-  }
+  min-height: 2.5rem;
+  max-height: 4.5rem; /* Limit preview height */
 }
 
 .dls-term {
@@ -456,6 +435,10 @@
   color: var(--text-secondary, #aaa);
   line-height: 1.5;
   margin-bottom: 0.4rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .dls-code {

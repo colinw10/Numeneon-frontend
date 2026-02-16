@@ -107,8 +107,7 @@ function DailyLearning({ variant = 'topbar' }) {
                     e.stopPropagation();
                     setUserSelected(true);
                     setActiveCategory(idx);
-                    // Navigate to /learn with this category
-                    navigate(`/learn?tab=${cat.key}`);
+                    // Just show preview - don't navigate
                   }}
                   title={catIsKnown ? `${cat.label} ✓` : cat.label}
                   style={{ 
@@ -141,20 +140,6 @@ function DailyLearning({ variant = 'topbar' }) {
             <div className="dls-content" onClick={handleContentClick}>
               <div className="dls-term">{currentCat.data.term}</div>
               <div className="dls-definition">{currentCat.data.definition}</div>
-              
-              {/* Show extra fields if available */}
-              {currentCat.data.code && (
-                <SyntaxHighlight code={currentCat.data.code} className="dls-code" />
-              )}
-              {currentCat.data.gotcha && (
-                <div className="dls-gotcha">⚠️ {currentCat.data.gotcha}</div>
-              )}
-              {currentCat.data.example && (
-                <div className="dls-example">{currentCat.data.example}</div>
-              )}
-              {currentCat.data.myth && (
-                <div className="dls-myth">{currentCat.data.myth}</div>
-              )}
             </div>
 
             <div className="dls-footer" onClick={handleContentClick}>

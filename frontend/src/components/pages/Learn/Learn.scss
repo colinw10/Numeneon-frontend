@@ -20,8 +20,8 @@
   
   .back-btn {
     position: absolute;
-    top: 85px;
-    left: 0;
+    top: .5rem;
+    left: 3rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -871,7 +871,8 @@
     margin-bottom: 1rem;
     
     .back-btn {
-      top: calc(75px + env(safe-area-inset-top, 0px));
+      top: .5rem;
+      left: 1rem;
       padding: 0.4rem 0.75rem;
       font-size: 0.7rem;
     }
@@ -1055,7 +1056,8 @@
     margin-bottom: 0.75rem;
     
     .back-btn {
-      top: calc(65px + env(safe-area-inset-top, 0px));
+      top: .5rem;
+      left: 0.5rem;
       padding: 0.3rem 0.5rem;
       font-size: 0.6rem;
       
