@@ -117,6 +117,11 @@ const MY_AVATAR = myAvatar;
 // All avatars (for hash fallback)
 const REBEL_AVATARS = [av2, av3, av4, av5, av6, av7, av8, av9, av10, av11, av12, av13, av14, av15, av16, av17];
 
+// ID → imported src map (used to restore avatar from backend selectedAvatar field)
+const AVATAR_SRC_MAP = {
+  av2, av3, av4, av5, av6, av7, av8, av9, av10, av11, av12, av13, av14, av15, av16, av17,
+};
+
 // Mock data until backend is ready (fallback)
 // Backend will provide preview_url from Spotify/Deezer API
 const DEFAULT_MYSPACE_DATA = {
@@ -177,33 +182,44 @@ function MyStudio() {
   }));
   const [isEditing, setIsEditing] = useState(false);
   
-  // Check if user has completed setup (only for own space)
+  // Check if user has completed setup (only for own space).
+  // Default to true if displayUsername isn't known yet (auth still loading) so the
+  // setup wizard doesn't flash incorrectly. The useEffect below corrects the value
+  // once displayUsername resolves.
   const [hasCompletedSetup, setHasCompletedSetup] = useState(() => {
-    if (!isOwnSpace) return true; // Always show others' spaces
+    if (!isOwnSpace) return true;
+    if (!displayUsername) return true; // auth still loading — useEffect will correct
     const saved = localStorage.getItem(`mystudio_setup_${displayUsername}`);
     return saved === 'true';
   });
+
+  // Re-check setup flag once displayUsername is known (fixes logout → login race condition)
+  useEffect(() => {
+    if (!isOwnSpace || !displayUsername) return;
+    const saved = localStorage.getItem(`mystudio_setup_${displayUsername}`);
+    setHasCompletedSetup(saved === 'true');
+  }, [displayUsername, isOwnSpace]);
   
   // Handle setup completion
   const handleSetupComplete = async (setupData) => {
-    // Save setup data
     const newData = {
       ...mySpaceData,
       customBio: setupData.customBio,
       selectedAvatar: setupData.avatar,
+      customAvatarSrc: setupData.avatarSrc,
     };
     setMySpaceData(newData);
-    
-    // Mark setup as complete
+
+    // Mark setup as complete in localStorage
     localStorage.setItem(`mystudio_setup_${displayUsername}`, 'true');
     localStorage.setItem(`myspace_${displayUsername}`, JSON.stringify(newData));
     setHasCompletedSetup(true);
-    
-    // Try to save to backend
+
+    // Sync avatar choice to backend so it persists across devices
     try {
-      await updateMyStudioProfile(newData);
+      await updateMyStudioProfile({ avatar: setupData.avatar });
     } catch {
-      // Fallback saved to localStorage already
+      // localStorage already saved as fallback
     }
   };
   
@@ -223,6 +239,14 @@ function MyStudio() {
           const mergedData = { ...DEFAULT_MYSPACE_DATA, ...data };
           if (!data.playlist || data.playlist.length === 0) {
             mergedData.playlist = DEFAULT_MYSPACE_DATA.playlist;
+          }
+          // Restore avatar src from selectedAvatar ID (backend stores ID, not blob src)
+          if (data.selectedAvatar && !mergedData.customAvatarSrc) {
+            if (data.selectedAvatar === 'profile-picture') {
+              mergedData.customAvatarSrc = currentUser?.profile_picture || null;
+            } else {
+              mergedData.customAvatarSrc = AVATAR_SRC_MAP[data.selectedAvatar] || null;
+            }
           }
           setMySpaceData(mergedData);
           setIsEditing(false);
@@ -345,9 +369,10 @@ function MyStudio() {
   // Show setup flow for first-time users (only when viewing own space)
   if (isOwnSpace && !hasCompletedSetup) {
     return (
-      <MyStudioSetup 
-        username={displayUsername} 
-        onComplete={handleSetupComplete} 
+      <MyStudioSetup
+        username={displayUsername}
+        userProfilePicture={currentUser?.profile_picture}
+        onComplete={handleSetupComplete}
       />
     );
   }
@@ -409,6 +434,8 @@ function MyStudio() {
           onAvatarChange={(src, id) => {
             updateField('selectedAvatar', id);
             updateField('customAvatarSrc', src);
+            // Sync to backend so avatar persists across devices
+            updateMyStudioProfile({ avatar: id }).catch(() => {});
           }}
           userProfilePicture={currentUser?.profile_picture}
         />

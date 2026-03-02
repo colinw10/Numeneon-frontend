@@ -44,7 +44,7 @@ const AVATAR_LIBRARY = [
   { id: 'av17', src: av17 },
 ];
 
-function MyStudioSetup({ username, onComplete }) {
+function MyStudioSetup({ username, userProfilePicture, onComplete }) {
   const [step, setStep] = useState(0); // 0: welcome, 1: avatar, 2: bio
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [bio, setBio] = useState('');
@@ -97,7 +97,22 @@ function MyStudioSetup({ username, onComplete }) {
           <div className="setup-step setup-avatar">
             <h2 className="setup-title">pick your avatar</h2>
             <p className="setup-subtitle">choose your studio persona</p>
-            
+
+            {/* Numeneon profile picture option */}
+            <div className="profile-pic-option">
+              {userProfilePicture ? (
+                <button
+                  className={`use-profile-pic-btn ${selectedAvatar?.id === 'profile-picture' ? 'avatar-option--selected' : ''}`}
+                  onClick={() => handleAvatarSelect({ id: 'profile-picture', src: userProfilePicture })}
+                >
+                  <img src={userProfilePicture} alt="your numeneon profile pic" className="profile-pic-preview" />
+                  <span>use my numeneon profile pic</span>
+                </button>
+              ) : (
+                <p className="no-pic-message">upload a profile pic in numeneon to use it here</p>
+              )}
+            </div>
+
             <div className="avatar-grid">
               {AVATAR_LIBRARY.map((avatar) => (
                 <button

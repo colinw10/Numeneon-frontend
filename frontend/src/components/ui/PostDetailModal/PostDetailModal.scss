@@ -693,18 +693,22 @@
   .post-detail-overlay {
     padding: 0;
   }
-  
+
   .post-detail-content {
     max-height: 100vh;
     height: 100vh;
     border-radius: 0;
     max-width: 100%;
   }
-  
+
+  .post-detail-close {
+    top: calc(16px + env(safe-area-inset-top, 0px));
+  }
+
   .post-detail-main {
     padding: var(--space-md);
   }
-  
+
   .post-detail-comments {
     padding: var(--space-md);
   }
